@@ -1,0 +1,8 @@
+{
+    "Auth": true,
+    "Master": true,
+    "Transaction": true,
+    "Report": true,
+    "Setting": true,
+    "Purchase": true
+}
