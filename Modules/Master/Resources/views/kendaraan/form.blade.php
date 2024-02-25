@@ -37,4 +37,3 @@
 </div>
 
 
-<script src="{{ asset('js/master/barang/form.js') }}"></script>

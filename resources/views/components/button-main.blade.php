@@ -1,14 +1,23 @@
-@props(['title', 'className' => '', 'typeModal' => '', 'urlCreate' => ''])
+@props([
+    'title' => '',
+    'className' => '',
+    'typeModal' => '',
+    'urlCreate' => '',
+    'icon' => '<i class="bx bx-plus me-sm-1"></i>',
+    'color' => 'btn-primary',
+    'style' => '',
+])
 
 <button
     {{ $attributes->merge([
-        'class' => 'btn btn-secondary btn-add btn-primary ' . $className,
+        'class' => 'btn ' . $color . ' ' . $className,
         'data-typemodal' => $typeModal,
         'data-urlcreate' => $urlCreate,
+        'style' => $style
     ]) }}
     type="button">
     <span>
-        <i class="bx bx-plus me-sm-1"></i>
-        {{ $title }}
+        {!! $icon !!}
+        {{ $title ?? '' }}
     </span>
 </button>

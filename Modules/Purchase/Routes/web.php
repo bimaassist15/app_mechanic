@@ -13,4 +13,9 @@
 
 Route::prefix('purchase')->group(function() {
     Route::get('/', 'PurchaseController@index');
+    Route::resource('kasir', 'KasirController');
+    Route::resource('penjualan', 'PenjualanController');
+    Route::get('penjualan/print/purchase', 'PenjualanController@print')->name('penjualan.print');
+    Route::get('belumLunas', 'BelumLunasController@index')->name('belumLunas.index');
+    Route::get('lunas', 'LunasController@index')->name('lunas.index');
 });

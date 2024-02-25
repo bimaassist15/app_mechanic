@@ -1,0 +1,11 @@
+{
+    "name": "TransferStock",
+    "alias": "transferstock",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\TransferStock\\Providers\\TransferStockServiceProvider"
+    ],
+    "files": []
+}

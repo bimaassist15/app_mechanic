@@ -52,3 +52,96 @@ Breadcrumbs::for('hargaServis', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Harga Service', url('master/hargaServis'));
 });
+// Home > cabang
+Breadcrumbs::for('cabang', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Cabang', url('master/cabang'));
+});
+// Home > user
+Breadcrumbs::for('user', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('User', url('master/user'));
+});
+// Home > backup
+Breadcrumbs::for('backup', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Backup', url('master/backup'));
+});
+// Home > restore
+Breadcrumbs::for('restore', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Restore', url('master/restore'));
+});
+// Home > kasir
+Breadcrumbs::for('kasir', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Kasir', url('purchase/kasir'));
+});
+// Home > penjualan
+Breadcrumbs::for('penjualan', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Penjualan', url('purchase/penjualan'));
+});
+
+// Home > belumLunas
+Breadcrumbs::for('belumLunas', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Belum Lunas', url('purchase/belumLunas'));
+});
+// Home > lunas
+Breadcrumbs::for('lunas', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Belum Lunas', url('purchase/lunas'));
+});
+
+// Home > kasir
+Breadcrumbs::for('kasirTransaction', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Kasir', url('transaction/kasir'));
+});
+// Home > pembelian
+Breadcrumbs::for('pembelian', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Pembelian', url('transaction/pembelian'));
+});
+
+// Home > belumLunas
+Breadcrumbs::for('belumLunasTransaction', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Belum Lunas', url('transaction/belumLunas'));
+});
+// Home > lunas
+Breadcrumbs::for('lunasTransaction', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Lunas', url('transaction/lunas'));
+});
+// Home > transferStock
+Breadcrumbs::for('transferStock', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Transfer Stok', url('transferstock/stock'));
+});
+// Home > stokmasuk
+Breadcrumbs::for('stokmasuk', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Stok Masuk', url('stokmasuk/stock'));
+});
+// Home > stokkeluar
+Breadcrumbs::for('stokkeluar', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Stok Keluar', url('stokkeluar/stock'));
+});
+// Home > penerimaanServis
+Breadcrumbs::for('penerimaanServis', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Penerimaan Servis', url('service/penerimaanServis'));
+});
+// Home > pengembalianServis
+Breadcrumbs::for('pengembalianServis', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Pengembalian Servis', url('service/pengembalianServis'));
+});
+// Home > kendaraanServis
+Breadcrumbs::for('kendaraanServis', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Kendaraan Servis', url('service/kendaraanServis'));
+});

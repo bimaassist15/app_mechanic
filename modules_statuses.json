@@ -4,5 +4,7 @@
     "Transaction": true,
     "Report": true,
     "Setting": true,
-    "Purchase": true
+    "Purchase": true,
+    "TransferStock": true,
+    "Service": true
 }

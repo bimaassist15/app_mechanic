@@ -13,4 +13,8 @@
 
 Route::prefix('setting')->group(function() {
     Route::get('/', 'SettingController@index');
+    Route::resource('cabang', 'CabangController');
+    Route::resource('user', 'UserController');
+    Route::resource('backup', 'BackupController');
+    Route::resource('restore', 'RestoreController');
 });
