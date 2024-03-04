@@ -5,11 +5,12 @@
     data-template="vertical-menu-template-free">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8" />
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Tables - Basic Tables | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
+    <title>@yield('title')</title>
 
     <meta name="description" content="" />
 
@@ -49,6 +50,7 @@
     <link rel="stylesheet" href="{{ asset('library/select2-develop/dist/css/select2.min.css') }}">
     <link rel="stylesheet"
         href="{{ asset('library/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/sweetalert2/dist/sweetalert2.min.css') }}">
 
     <!-- Helpers -->
     <script src="{{ asset('backend/sneat-bootstrap-html-admin-template-free') }}/assets/vendor/js/helpers.js"></script>
@@ -100,6 +102,7 @@
     <x-modal-main title="Judul Modal" id="mediumModal" size="modal-md"></x-modal-main>
     <x-modal-main title="Judul Modal" id="largeModal" size="modal-lg"></x-modal-main>
     <x-modal-main title="Judul Modal" id="extraLargeModal" size="modal-xl"></x-modal-main>
+    <x-toast title="title" description="description" />
 
 
     <!-- build:js assets/vendor/js/core.js -->
@@ -127,10 +130,19 @@
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="{{ asset('library/select2-develop/dist/js/select2.min.js') }}"></script>
+    <script src="{{ asset('backend/sneat-bootstrap-html-admin-template-free/assets/js/ui-toasts.js') }}"></script>
 
     <script src="{{ asset('js/utils/index.js') }}"></script>
     <script src="{{ asset('js/modal/index.js') }}"></script>
+    <script src="{{ asset('library/sweetalert2/dist/sweetalert2.min.js') }}"></script>
 
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
     @stack('custom_js')
 </body>
 

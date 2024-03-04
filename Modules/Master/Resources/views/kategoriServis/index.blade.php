@@ -1,5 +1,9 @@
 @extends('layouts.app.index')
 
+@section('title')
+    Halaman Kategori Servis
+@endsection
+
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         {{ Breadcrumbs::render('kategoriServis') }}
@@ -21,14 +25,12 @@
                 <table class="table" id="dataTable">
                     <thead>
                         <tr>
-                            <th>No.</th>
+                            <th style="width: 10%;">No.</th>
                             <th>Kategori</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="table-border-bottom-0">
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -37,7 +39,6 @@
 
     @push('custom_js')
         <script class="url_datatable" data-url="{{ route('kategoriServis.index') }}"></script>
-
         <script src="{{ asset('js/master/kategoriServis/index.js') }}"></script>
     @endpush
 @endsection

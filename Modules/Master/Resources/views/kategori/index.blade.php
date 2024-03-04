@@ -1,5 +1,9 @@
 @extends('layouts.app.index')
 
+@section('title')
+    Kategori Page
+@endsection
+
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         {{ Breadcrumbs::render('kategori') }}
@@ -17,19 +21,21 @@
                     </div>
                 </div>
             </h5>
-            <div class="table-responsive text-nowrap px-3">
-                <table class="table" id="dataTable">
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Kategori</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-                    </tbody>
-                </table>
+            <div class="card-body">
+                <div class="table-responsive text-nowrap px-3">
+                    <table class="table" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th width="10%;">No.</th>
+                                <th>Kategori</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <!--/ Basic Bootstrap Table -->
@@ -37,7 +43,6 @@
 
     @push('custom_js')
         <script class="url_datatable" data-url="{{ route('kategori.index') }}"></script>
-
         <script src="{{ asset('js/master/kategori/index.js') }}"></script>
     @endpush
 @endsection

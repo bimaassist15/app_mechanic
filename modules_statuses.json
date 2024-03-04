@@ -6,5 +6,6 @@
     "Setting": true,
     "Purchase": true,
     "TransferStock": true,
-    "Service": true
+    "Service": true,
+    "Dashboard": true
 }

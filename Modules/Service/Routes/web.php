@@ -17,6 +17,7 @@ Route::prefix('service')->group(function() {
     Route::get('pengembalianServis', 'PengembalianServisController@index')->name('pengembalianServis.index');
     Route::resource('kendaraanServis', 'KendaraanServisController');
     Route::get('kendaraanServis/detailKendaraanServis/service', 'KendaraanServisController@detailKendaraanServis')->name('kendaraanServis.detailKendaraanServis.service');
+    Route::get('kendaraanServis/print/service', 'KendaraanServisController@print')->name('kendaraanServis.print.service');
 
 
 });

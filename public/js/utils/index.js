@@ -1,9 +1,9 @@
 var disableButton = `
-<div class="spinner-border text-primary" role="status">
+<div class="spinner-border text-dark" role="status">
 <span class="visually-hidden">Loading...</span>
 </div>`;
 
-var enableButton = `<i class="fa-regular fa-paper-plane"></i> Submit`;
+var enableButton = `<i class="fa-regular fa-paper-plane"></i> &nbsp; Submit`;
 
 function ajaxErrorMessage(jqXHR, exception) {
     var msgerror = "";
@@ -57,6 +57,15 @@ function basicDatatable({
             data: dataAjaxUrl,
         },
         columns: columns,
+        drawCallback: function () {
+            var info = datatable.page.info();
+            datatable
+                .column(0, { search: "applied", order: "applied" })
+                .nodes()
+                .each(function (cell, i) {
+                    cell.innerHTML = info.start + i + 1;
+                });
+        },
     });
 }
 
@@ -73,6 +82,9 @@ function basicDeleteConfirmDatatable({ urlDelete = "", data = {}, text = "" }) {
         text: text,
         icon: "warning",
         dangerMode: true,
+        showCancelButton: true,
+        confirmButtonText: "Ya, hapus",
+        cancelButtonText: "Tidak",
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
@@ -80,12 +92,13 @@ function basicDeleteConfirmDatatable({ urlDelete = "", data = {}, text = "" }) {
                 type: "post",
                 dataType: "json",
                 data: data,
-                beforeSend: function () {},
                 success: function (data) {
-                    notifAlert("Successfully", data, "success");
-                },
-                error: function (jqXHR, exception) {
-                    ajaxErrorMessage(jqXHR, exception);
+                    runToast({
+                        type: "bg-success",
+                        title: "Successfully",
+                        description: data,
+                    });
+                    datatable.ajax.reload();
                 },
             });
         }
@@ -175,3 +188,134 @@ function select2Server({
         templateSelection: formatRepoSelection,
     });
 }
+
+// toastr
+// Bootstrap toasts example
+// --------------------------------------------------------------------
+const toastPlacementExample = document.querySelector(".toast-placement-ex");
+const titleToast = document.querySelector(".title-toast");
+const descriptionToast = document.querySelector(".description-toast");
+
+let selectedType, selectedPlacement, toastPlacement;
+
+// Dispose toast when open another
+function toastDispose(toast) {
+    if (toast && toast._element !== null) {
+        if (toastPlacementExample) {
+            toastPlacementExample.classList.remove(selectedType);
+            DOMTokenList.prototype.remove.apply(
+                toastPlacementExample.classList,
+                selectedPlacement
+            );
+        }
+        toast.dispose();
+    }
+}
+// run toast
+var bgType = [
+    "bg-primary",
+    "bg-secondary",
+    "bg-success",
+    "bg-danger",
+    "bg-warning",
+    "bg-info",
+    "bg-dark",
+];
+const runToast = ({ type = "bg-primary", title = "", description = "" }) => {
+    if (toastPlacement) {
+        toastDispose(toastPlacement);
+    }
+    selectedType = type;
+    selectedPlacement = ["bottom-0", "start-0"];
+
+    toastPlacementExample.classList.add(selectedType);
+    DOMTokenList.prototype.add.apply(
+        toastPlacementExample.classList,
+        selectedPlacement
+    );
+    toastPlacement = new bootstrap.Toast(toastPlacementExample);
+    titleToast.textContent = title;
+    descriptionToast.textContent = description;
+    toastPlacement.show();
+};
+
+clearError422 = () => {
+    const getInput = $("#form-submit input");
+    if (getInput.length > 0) {
+        $.each(getInput, function (index, value) {
+            const name = $(this).attr("name");
+            $('input[name="' + name + '"]').removeClass("border border-danger");
+            $('small[data-name="' + name + '"]').remove();
+        });
+    }
+    const getSelect = $("#form-submit select");
+    if (getSelect.length > 0) {
+        $.each(getSelect, function (index, value) {
+            const name = $(this).attr("name");
+            $('select[name="' + name + '"]').removeClass(
+                "border border-danger"
+            );
+            $('small[data-name="' + name + '"]').remove();
+        });
+    }
+    const getTextarea = $("#form-submit textarea");
+    if (getTextarea.length > 0) {
+        $.each(getTextarea, function (index, value) {
+            const name = $(this).attr("name");
+            $('textarea[name="' + name + '"]').removeClass(
+                "border border-danger"
+            );
+            $('small[data-name="' + name + '"]').remove();
+        });
+    }
+};
+
+const showErrors422 = (jqXHR) => {
+    runToast({
+        type: "bg-danger",
+        title: "Invalid Form Validation",
+        description: "Periksa kembali Form Inputan Anda",
+    });
+
+    const responseJSON = jqXHR.responseJSON.errors;
+    Object.keys(responseJSON).map((name, index) => {
+        const message = responseJSON[name][0];
+
+        var newElement = document.createElement("small");
+
+        newElement.classList.add("text-danger");
+        newElement.innerText = message;
+        newElement.setAttribute("data-name", name);
+
+        var inputElement = document.querySelector('input[name="' + name + '"]');
+        if (inputElement !== null) {
+            inputElement.classList.add("border", "border-danger");
+            inputElement.parentNode.insertBefore(
+                newElement,
+                inputElement.nextSibling
+            );
+        }
+
+        var inputElement = document.querySelector(
+            'select[name="' + name + '"]'
+        );
+        if (inputElement !== null) {
+            inputElement.classList.add("border", "border-danger");
+            inputElement.parentNode.insertBefore(
+                newElement,
+                inputElement.nextSibling
+            );
+        }
+
+        var inputElement = document.querySelector(
+            'textarea[name="' + name + '"]'
+        );
+        if (inputElement !== null) {
+            inputElement.classList.add("border", "border-danger");
+            inputElement.parentNode.insertBefore(
+                newElement,
+                inputElement.nextSibling
+            );
+        }
+    });
+};
