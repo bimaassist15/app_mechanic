@@ -2,9 +2,13 @@
 
 namespace Modules\Master\Http\Controllers;
 
+use App\Models\Customer;
+use App\Models\Kendaraan;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Master\Http\Requests\FormKendaraanRequest;
+use DataTables;
 
 class KendaraanController extends Controller
 {
@@ -12,8 +16,38 @@ class KendaraanController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->ajax()){
+            $data = Kendaraan::query()->with('customer');
+            return DataTables::eloquent($data)
+                ->addColumn('action', function ($row) {
+                    $buttonUpdate = '
+                    <a class="btn btn-warning btn-edit btn-sm" 
+                    data-typemodal="extraLargeModal"
+                    data-urlcreate="' . route('kendaraan.edit', $row->id) . '"
+                    data-modalId="extraLargeModal"
+                    >
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    ';
+                    $buttonDelete = '
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('master/kendaraan/'.$row->id).'?_method=delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                    ';
+
+                    $button = '
+                <div class="text-center">
+                    ' . $buttonUpdate . '
+                    ' . $buttonDelete . '
+                </div>
+                ';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->toJson();
+        }
         return view('master::kendaraan.index');
     }
 
@@ -23,7 +57,16 @@ class KendaraanController extends Controller
      */
     public function create()
     {
-        return view('master::kendaraan.form');
+        $action = route('kendaraan.store');
+        $customer = Customer::all();
+        $array_customer = [];
+        foreach ($customer as $key => $value) {
+           $array_customer[] = [
+            'id' => $value->id,
+            'label' => $value->nama_customer. ' '.'('.$value->nowa_customer.')'
+           ];
+        }
+        return view('master::kendaraan.form', compact('action', 'array_customer'));
     }
 
     /**
@@ -31,9 +74,25 @@ class KendaraanController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(FormKendaraanRequest $request)
     {
         //
+        $data = [
+            'customer_id' => $request->input('customer_id'),
+            'nopol_kendaraan' => $request->input('nopol_kendaraan'),
+            'merek_kendaraan' => $request->input('merek_kendaraan'),
+            'tipe_kendaraan' => $request->input('tipe_kendaraan'),
+            'jenis_kendaraan' => $request->input('jenis_kendaraan'),
+            'tahunbuat_kendaraan' => $request->input('tahunbuat_kendaraan'),
+            'tahunrakit_kendaraan' => $request->input('tahunrakit_kendaraan'),
+            'silinder_kendaraan' => $request->input('silinder_kendaraan'),
+            'warna_kendaraan' => $request->input('warna_kendaraan'),
+            'norangka_kendaraan' => $request->input('norangka_kendaraan'),
+            'nomesin_kendaraan' => $request->input('nomesin_kendaraan'),
+            'keterangan_kendaraan' => $request->input('keterangan_kendaraan'),
+        ];
+        Kendaraan::create($data);
+        return response()->json('Berhasil tambah data', 201);
     }
 
     /**
@@ -53,7 +112,17 @@ class KendaraanController extends Controller
      */
     public function edit($id)
     {
-        return view('master::edit');
+        $action = url('master/kendaraan/'.$id.'?_method=put');
+        $row = Kendaraan::find($id);
+        $customer = Customer::all();
+        $array_customer = [];
+        foreach ($customer as $key => $value) {
+           $array_customer[] = [
+            'id' => $value->id,
+            'label' => $value->nama_customer. ' '.'('.$value->nowa_customer.')'
+           ];
+        }
+        return view('master::kendaraan.form', compact('action', 'row', 'array_customer'));
     }
 
     /**
@@ -65,6 +134,22 @@ class KendaraanController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $data = [
+            'customer_id' => $request->input('customer_id'),
+            'nopol_kendaraan' => $request->input('nopol_kendaraan'),
+            'merek_kendaraan' => $request->input('merek_kendaraan'),
+            'tipe_kendaraan' => $request->input('tipe_kendaraan'),
+            'jenis_kendaraan' => $request->input('jenis_kendaraan'),
+            'tahunbuat_kendaraan' => $request->input('tahunbuat_kendaraan'),
+            'tahunrakit_kendaraan' => $request->input('tahunrakit_kendaraan'),
+            'silinder_kendaraan' => $request->input('silinder_kendaraan'),
+            'warna_kendaraan' => $request->input('warna_kendaraan'),
+            'norangka_kendaraan' => $request->input('norangka_kendaraan'),
+            'nomesin_kendaraan' => $request->input('nomesin_kendaraan'),
+            'keterangan_kendaraan' => $request->input('keterangan_kendaraan'),
+        ];
+        Kendaraan::find($id)->update($data);
+        return response()->json('Berhasil update data', 200);
     }
 
     /**
@@ -75,5 +160,7 @@ class KendaraanController extends Controller
     public function destroy($id)
     {
         //
+        Kendaraan::destroy($id);
+        return response()->json('Berhasil hapus data', 200);
     }
 }

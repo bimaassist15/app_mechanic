@@ -1,5 +1,9 @@
 @extends('layouts.app.index')
 
+@section('title')
+    Halaman Kendaraan
+@endsection
+
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         {{ Breadcrumbs::render('kendaraan') }}
@@ -21,13 +25,13 @@
                 <table class="table" id="dataTable">
                     <thead>
                         <tr>
-                            <th>No.</th>
+                            <th style="width: 5%;">No.</th>
                             <th>Nama</th>
                             <th>Tlpn/Wa</th>
                             <th>Merek</th>
                             <th>No. Pol</th>
                             <th>Jenis</th>
-                            <th>Aksi</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">

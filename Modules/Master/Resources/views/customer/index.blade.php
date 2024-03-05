@@ -25,13 +25,13 @@
                 <table class="table" id="dataTable">
                     <thead>
                         <tr>
-                            <th>No.</th>
+                            <th style="width: 5%;">No.</th>
                             <th>Nama</th>
                             <th>No.HP</th>
                             <th>Pembelian</th>
                             <th>Servis</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">

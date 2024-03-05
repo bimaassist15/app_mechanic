@@ -1,4 +1,4 @@
-@props(['label', 'name', 'data'])
+@props(['label', 'name', 'data', 'value'])
 
 <div class="row mb-3">
     <label for="{{ $name }}" class="form-label col-sm-3">{{ $label }}</label>
@@ -9,7 +9,8 @@
                 @php
                     $item = (object) $item;
                 @endphp
-                <option value="{{ $item->id }}">{{ $item->label }}</option>
+                <option value="{{ $item->id }}" {{ $item->id == $value ? 'selected' : '' }}>{{ $item->label }}
+                </option>
             @endforeach
         </select>
     </div>
