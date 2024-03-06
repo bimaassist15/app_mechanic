@@ -14,4 +14,20 @@ return [
         'L' => 'Laki-laki',
         'P' => 'Perempuan'
     ],
+    'status_barang' => [
+        'dijual' => 'Dijual',
+        'khusus servis' => 'Khusus Servis',
+        'dijual & untuk servis' => 'Dijual & Untuk Servis',
+        'tidak dijual' => 'Tidak Dijual'
+    ],
+    'status_serial' => [
+        'sn' => 'Serial Number',
+        'non sn' => 'Non Serial Number',
+    ],
+    'status_serial_barang' => [
+        'ready' => 'Ready', 
+        'return' => 'Return', 
+        'cancel transaction' => 'Cancel Transaction', 
+        'not sold' => 'Not Sold'
+    ],
 ];

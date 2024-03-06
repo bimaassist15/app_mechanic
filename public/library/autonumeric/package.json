@@ -1,0 +1,172 @@
+{
+  "name": "autonumeric",
+  "version": "4.6.2",
+  "description": "autoNumeric is a standalone Javascript library that provides live *as-you-type* formatting for international numbers and currencies. It supports most international numeric formats and currencies including those used in Europe, Asia, and North and South America.",
+  "main": "dist/autoNumeric.js",
+  "browser": "dist/autoNumeric.min.js",
+  "module": "src/main.js",
+  "readmeFilename": "README.md",
+  "keywords": [
+    "currency",
+    "money",
+    "monetary",
+    "Euro",
+    "Dollar",
+    "Pound",
+    "number",
+    "numeric",
+    "format",
+    "form",
+    "input",
+    "mask",
+    "as-you-type",
+    "live"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Robert Knothe",
+    "email": "bob@decorplanit.com"
+  },
+  "contributors": [
+    {
+      "name": "Alexandre Bonneau",
+      "email": "alexandre.bonneau@linuxfr.eu"
+    },
+    {
+      "name": "Sokolov Yura"
+    },
+    {
+      "name": "Carlos Gonzales"
+    },
+    {
+      "name": "Ney Estrabelli"
+    },
+    {
+      "name": "Carlos Ghan"
+    },
+    {
+      "name": "Boris Cherny"
+    },
+    {
+      "name": "Maxwell Barvian"
+    },
+    {
+      "name": "Sasha Koss"
+    },
+    {
+      "name": "Mic Biert"
+    },
+    {
+      "name": "Peter Boccia"
+    },
+    {
+      "name": "Bruno Batista"
+    },
+    {
+      "name": "Jarin Udom"
+    },
+    {
+      "name": "Raymond Lehnhoff"
+    },
+    {
+      "name": "Cory Foy"
+    }
+  ],
+  "homepage": "https://github.com/autoNumeric/autoNumeric/",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.4.3",
+    "@babel/eslint-parser": "^7.19.1",
+    "@babel/plugin-transform-object-assign": "^7.2.0",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/register": "^7.4.0",
+    "@wdio/cli": "^8.3.5",
+    "@wdio/codemod": "^0.12.0",
+    "@wdio/jasmine-framework": "^8.3.5",
+    "@wdio/local-runner": "^8.3.5",
+    "@wdio/selenium-standalone-service": "^8.3.2",
+    "@wdio/spec-reporter": "^8.3.0",
+    "@wdio/static-server-service": "^8.3.0",
+    "babel-loader": "^9.1.2",
+    "compression-webpack-plugin": "^10.0.0",
+    "core-js": "^3.28.0",
+    "coveralls": "^3.0.6",
+    "es-check": "^7.1.0",
+    "eslint": "^8.34.0",
+    "eslint-webpack-plugin": "^4.0.0",
+    "imports-loader": "^4.0.1",
+    "jasmine-core": "^4.5.0",
+    "karma": "^6.4.1",
+    "karma-chrome-launcher": "^3.1.1",
+    "karma-coverage": "^2.0.1",
+    "karma-firefox-launcher": "^2.1.2",
+    "karma-jasmine": "^5.1.0",
+    "karma-mocha-reporter": "^2.2.5",
+    "karma-sourcemap-loader": "^0.4.0",
+    "karma-spec-reporter": "^0.0.36",
+    "karma-webpack": "^5.0.0",
+    "loader-utils": "^3.2.1",
+    "puppeteer": "^19.7.2",
+    "rimraf": "^4.1.2",
+    "uglify-js": "^3.5.4",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "webdriverio": "^8.3.5",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-merge": "^5.8.0"
+  },
+  "scripts": {
+    "authors": "sh tools/authors.sh",
+    "postinstall": "node yarnfix.js",
+    "build:dev": "webpack --config config/webpack.config.dev.js",
+    "build:prd": "webpack --config config/webpack.config.prd.js",
+    "build": "yarn clean:build && yarn build:dev && yarn build:prd && yarn es-check",
+    "clean:build": "rimraf dist",
+    "clean:coverage": "rimraf test/unit/coverage",
+    "clean:e2e": "rimraf test/e2e/reports/* && rimraf test/e2e/screenshots/*",
+    "clean:log": "rimraf npm-debug.log selenium-debug.log test/e2e/selenium.log yarn-error.log",
+    "clean": "yarn clean:build && yarn clean:coverage && yarn clean:log && yarn clean:e2e",
+    "lint": "eslint --ext .js src test/unit test/e2e",
+    "lintfix": "eslint --fix --ext .js src test/unit test/e2e",
+    "test": "yarn test:unit && yarn test:e2e",
+    "test:unit": "karma start test/unit/karma.conf.js --single-run",
+    "test:unitprogress": "karma start test/unit/karma.conf.js --single-run --reporters 'progress'",
+    "test:unitp": "karma start test/unit/karma.conf.js --single-run --browsers PhantomJS",
+    "test:unitf": "karma start test/unit/karma.conf.js --single-run --browsers Firefox",
+    "test:unitc": "karma start test/unit/karma.conf.js --single-run --browsers Chrome",
+    "test:unitpp": "karma start test/unit/karma.conf.js --single-run --browsers PhantomJS --reporters 'progress'",
+    "test:unitfp": "karma start test/unit/karma.conf.js --single-run --browsers Firefox --reporters 'progress'",
+    "test:unitfhp": "karma start test/unit/karma.conf.js --single-run --browsers FirefoxDeveloperHeadless --reporters 'progress'",
+    "test:unitcp": "karma start test/unit/karma.conf.js --single-run --browsers Chrome --reporters 'progress'",
+    "test:unitchp": "karma start test/unit/karma.conf.js --single-run --browsers ChromeHeadless --reporters 'progress'",
+    "test:unitheadless": "karma start test/unit/karma.conf.js --single-run --browsers FirefoxDeveloperHeadless,ChromeHeadless --reporters 'progress'",
+    "test:e2e": "wdio test/e2e/wdio.local.conf.js",
+    "testwdio": "wdio test/e2e/wdio.conf.js",
+    "travis:test": "yarn test:unitheadless",
+    "travis:lint": "yarn lint",
+    "es-check": "es-check es5 dist/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/autoNumeric/autoNumeric.git"
+  },
+  "bugs": {
+    "url": "https://github.com/autoNumeric/autoNumeric/issues"
+  },
+  "autoupdate": {
+    "source": "git",
+    "target": "git://github.com/autoNumeric/autoNumeric.git",
+    "basePath": "",
+    "files": [
+      "src/AutoNumeric.js",
+      "src/AutoNumericDefaultSettings.js",
+      "src/AutoNumericEnum.js",
+      "src/AutoNumericEvents.js",
+      "src/AutoNumericHelper.js",
+      "src/AutoNumericOptions.js",
+      "src/AutoNumericPredefinedOptions.js",
+      "src/main.js"
+    ]
+  }
+}

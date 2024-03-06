@@ -27,6 +27,18 @@ Breadcrumbs::for('barang', function (BreadcrumbTrail $trail) {
     $trail->push('barang', url('master/barang'));
 });
 
+// Home > serial barang
+Breadcrumbs::for('serialBarang', function (BreadcrumbTrail $trail) {
+    $trail->parent('barang');
+    $trail->push('Serial Barang', url('master/serialBarang?barang_id='.request()->query('barang_id')));
+});
+
+// Home > generate barang
+Breadcrumbs::for('generateBarang', function (BreadcrumbTrail $trail) {
+    $trail->parent('barang');
+    $trail->push('Generate Barang', url('master/generateBarang?barang_id='.request()->query('barang_id')));
+});
+
 // Home > customer
 Breadcrumbs::for('customer', function (BreadcrumbTrail $trail) {
     $trail->parent('home');

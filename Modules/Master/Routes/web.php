@@ -17,6 +17,9 @@ Route::prefix('master')->group(function() {
     Route::resource('kategori', 'KategoriController');
     Route::resource('satuan', 'SatuanController');
     Route::resource('barang', 'BarangController');
+    Route::resource('serialBarang', 'SerialBarangController');
+    Route::get('generateBarcode', 'GenerateBarcodeController@index')->name('master.generateBarcode.index');
+    Route::get('generateBarcode/print', 'GenerateBarcodeController@print')->name('master.generateBarcode.print');
     Route::resource('customer', 'CustomerController');
     Route::resource('kendaraan', 'KendaraanController');
     Route::resource('supplier', 'SupplierController');

@@ -10,4 +10,9 @@ class Satuan extends Model
     use HasFactory;
     protected $table = 'satuan';
     protected $guarded = [];
+
+    public function barang()
+    {
+        return $this->hasMany(Barang::class);
+    }
 }

@@ -51,6 +51,7 @@
     <link rel="stylesheet"
         href="{{ asset('library/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min.css') }}">
     <link rel="stylesheet" href="{{ asset('library/sweetalert2/dist/sweetalert2.min.css') }}">
+    @stack('custom_css')
 
     <!-- Helpers -->
     <script src="{{ asset('backend/sneat-bootstrap-html-admin-template-free') }}/assets/vendor/js/helpers.js"></script>
@@ -135,6 +136,8 @@
     <script src="{{ asset('js/utils/index.js') }}"></script>
     <script src="{{ asset('js/modal/index.js') }}"></script>
     <script src="{{ asset('library/sweetalert2/dist/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('library/autonumeric/dist/autoNumeric.min.js') }}"></script>
+    <script src="{{ asset('library/jQuery-Plugin-To-Print-Any-Part-Of-Your-Page-Print/dist/jQuery.print.min.js') }}"></script>
 
     <script>
         $.ajaxSetup({
