@@ -2,9 +2,12 @@
 
 namespace Modules\Master\Http\Controllers;
 
+use App\Models\Supplier;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use DataTables;
+use Modules\Master\Http\Requests\FormSupplierRequest;
 
 class SupplierController extends Controller
 {
@@ -12,8 +15,44 @@ class SupplierController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->ajax()){
+            $data = Supplier::query();
+            return DataTables::eloquent($data)
+            ->addColumn('status_supplier', function ($row) {
+                $output = $row->status_supplier ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+                return '<div class="text-center">
+                '.$output.'
+                </div>';
+            })
+                ->addColumn('action', function ($row) {
+                    $buttonUpdate = '
+                    <a class="btn btn-warning btn-edit btn-sm" 
+                    data-typemodal="extraLargeModal"
+                    data-urlcreate="' . route('supplier.edit', $row->id) . '"
+                    data-modalId="extraLargeModal"
+                    >
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    ';
+                    $buttonDelete = '
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('master/supplier/'.$row->id).'?_method=delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                    ';
+
+                    $button = '
+                <div class="text-center">
+                    ' . $buttonUpdate . '
+                    ' . $buttonDelete . '
+                </div>
+                ';
+                    return $button;
+                })
+                ->rawColumns(['action', 'status_supplier'])
+                ->toJson();
+        }
         return view('master::supplier.index');
     }
 
@@ -23,7 +62,8 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        return view('master::supplier.form');
+        $action = route('supplier.store');
+        return view('master::supplier.form', compact('action'));
     }
 
     /**
@@ -31,9 +71,18 @@ class SupplierController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(FormSupplierRequest $request)
     {
         //
+        $data = [
+            'nama_supplier' => $request->input('nama_supplier'),
+            'nowa_supplier' => $request->input('nowa_supplier'),
+            'deskripsi_supplier' => $request->input('deskripsi_supplier'),
+            'perusahaan_supplier' => $request->input('perusahaan_supplier'),
+            'status_supplier' => $request->input('status_supplier') !== null ? true : false,
+        ];
+        Supplier::create($data);
+        return response()->json('Berhasil tambah data', 201);
     }
 
     /**
@@ -53,7 +102,9 @@ class SupplierController extends Controller
      */
     public function edit($id)
     {
-        return view('master::edit');
+        $action = url('master/supplier/'.$id.'?_method=put');
+        $row = Supplier::find($id);
+        return view('master::supplier.form', compact('action','row'));
     }
 
     /**
@@ -62,9 +113,18 @@ class SupplierController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(FormSupplierRequest $request, $id)
     {
         //
+        $data = [
+            'nama_supplier' => $request->input('nama_supplier'),
+            'nowa_supplier' => $request->input('nowa_supplier'),
+            'deskripsi_supplier' => $request->input('deskripsi_supplier'),
+            'perusahaan_supplier' => $request->input('perusahaan_supplier'),
+            'status_supplier' => $request->input('status_supplier') !== null ? true : false,
+        ];
+        Supplier::find($id)->update($data);
+        return response()->json('Berhasil update data', 200);
     }
 
     /**
@@ -75,5 +135,7 @@ class SupplierController extends Controller
     public function destroy($id)
     {
         //
+        Supplier::destroy($id);
+        return response()->json('Berhasil hapus data', 200);
     }
 }

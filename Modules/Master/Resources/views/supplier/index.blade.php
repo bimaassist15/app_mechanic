@@ -1,5 +1,9 @@
 @extends('layouts.app.index')
 
+@section('title')
+    Halaman Supplier
+@endsection
+
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         {{ Breadcrumbs::render('supplier') }}
@@ -25,8 +29,8 @@
                             <th>Nama</th>
                             <th>No. Wa</th>
                             <th>Nama Perusahaan</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
