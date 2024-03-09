@@ -1,5 +1,9 @@
 @extends('layouts.app.index')
 
+@section('title')
+    Halaman Kasir
+@endsection
+
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         {{ Breadcrumbs::render('kasirTransaction') }}
@@ -7,10 +11,10 @@
         <!-- Basic Bootstrap Table -->
         <div class="card">
             <h5 class="card-header">
-                <div class="mb-3 border-bottom border-dark pb-3">
+                {{-- <div class="mb-3 border-bottom border-dark pb-3">
                     <x-button-main title="Cash" icon='<i class="fa-solid fa-money-bill"></i>' />
                     <x-button-main title="Piutang" icon='<i class="fa-solid fa-money-bill-1-wave"></i>' />
-                </div>
+                </div> --}}
                 <div class="d-flex flex-wrap justify-content-between">
                     <div>
                         <strong>No. Invoice: 328923823</strong>

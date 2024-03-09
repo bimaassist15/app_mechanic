@@ -27,8 +27,11 @@ return new class extends Migration
             $table->string('norangka_kendaraan');
             $table->string('nomesin_kendaraan')->nullable();
             $table->string('keterangan_kendaraan')->nullable();
+            $table->bigInteger('cabang_id')->unsigned();
+
             $table->timestamps();
 
+            $table->foreign('cabang_id')->references('id')->on('cabang')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('customer_id')->references('id')->on('customer')->onDelete('cascade')->onUpdate('cascade');
         });
     }

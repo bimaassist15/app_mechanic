@@ -157,3 +157,8 @@ Breadcrumbs::for('kendaraanServis', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Kendaraan Servis', url('service/kendaraanServis'));
 });
+// Home > roles
+Breadcrumbs::for('roles', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Roles', url('setting/roles'));
+});

@@ -1,9 +1,9 @@
-@props(['label', 'name', 'data'])
+@props(['label', 'name', 'data', 'value' => ''])
 
 <div class="form-group mb-3">
     <label for="{{ $name }}" class="form-label">{{ $label }}</label>
     <select name="{{ $name }}" class="form-select" id="{{ $name }}">
-        <option selected>-- Pilih {{ $label }} --</option>
+        <option selected value="">-- Pilih {{ $label }} --</option>
         @foreach ($data as $index => $item)
             @php
                 $item = (object) $item;

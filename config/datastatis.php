@@ -30,4 +30,8 @@ return [
         'cancel transaction' => 'Cancel Transaction', 
         'not sold' => 'Not Sold'
     ],
+    'tipe_print' => [
+        'thermal' => 'Thermal', 
+        'biasa' => 'Biasa', 
+    ],
 ];

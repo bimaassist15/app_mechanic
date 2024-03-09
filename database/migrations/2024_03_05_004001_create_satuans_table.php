@@ -17,7 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('nama_satuan');
             $table->boolean('status_satuan')->default(true);
+            $table->bigInteger('cabang_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('cabang_id')->references('id')->on('cabang')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

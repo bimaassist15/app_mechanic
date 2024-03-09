@@ -2,9 +2,14 @@
 
 namespace Modules\Master\Http\Controllers;
 
+use App\Models\HargaServis;
+use App\Models\KategoriServis;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use DataTables;
+use Modules\Master\Http\Requests\FormHargaServisRequest;
+use Modules\Master\Http\Requests\FormHargaServisUpdateRequest;
 
 class HargaServisController extends Controller
 {
@@ -12,8 +17,48 @@ class HargaServisController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->ajax()){
+            $data = HargaServis::query()->with('kategoriServis');
+            return DataTables::eloquent($data)
+            ->addColumn('status_hargaservis', function ($row) {
+                $output = $row->status_hargaservis ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+                return '<div class="text-center">
+                '.$output.'
+                </div>';
+            })
+            ->addColumn('total_hargaservis', function ($row) {
+                $output = number_format($row->total_hargaservis,0,'.',',');
+                return $output;
+            })
+                ->addColumn('action', function ($row) {
+                    $buttonUpdate = '
+                    <a class="btn btn-warning btn-edit btn-sm" 
+                    data-typemodal="extraLargeModal"
+                    data-urlcreate="' . route('hargaServis.edit', $row->id) . '"
+                    data-modalId="extraLargeModal"
+                    >
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    ';
+                    $buttonDelete = '
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('master/hargaServis/'.$row->id).'?_method=delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                    ';
+
+                    $button = '
+                <div class="text-center">
+                    ' . $buttonUpdate . '
+                    ' . $buttonDelete . '
+                </div>
+                ';
+                    return $button;
+                })
+                ->rawColumns(['action', 'status_hargaservis'])
+                ->toJson();
+        }
         return view('master::hargaServis.index');
     }
 
@@ -23,7 +68,16 @@ class HargaServisController extends Controller
      */
     public function create()
     {
-        return view('master::hargaServis.form');
+        $kategoriServis = KategoriServis::where('status_kservis',true)->get();
+        $array_kategori_servis = [];
+        foreach ($kategoriServis as $key => $value) {
+            $array_kategori_servis[] = [
+                'id' => $value->id,
+                'label' => $value->nama_kservis,
+            ];
+        }
+        $action = route('hargaServis.store');
+        return view('master::hargaServis.form', compact('array_kategori_servis', 'action'));
     }
 
     /**
@@ -31,9 +85,21 @@ class HargaServisController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(FormHargaServisRequest $request)
     {
-        //
+        // 
+        $data = [
+            'kode_hargaservis' => $request->input('kode_hargaservis'),
+            'nama_hargaservis' => $request->input('nama_hargaservis'),
+            'jasa_hargaservis' => $request->input('jasa_hargaservis'),
+            'deskripsi_hargaservis' => $request->input('deskripsi_hargaservis'),
+            'profit_hargaservis' => $request->input('profit_hargaservis'),
+            'total_hargaservis' => $request->input('total_hargaservis'),
+            'status_hargaservis' => $request->input('status_hargaservis') !== null ? true : false,
+            'kategori_servis_id' => $request->input('kategori_servis_id'),
+        ];
+        HargaServis::create($data);
+        return response()->json('Berhasil tambah data', 201);
     }
 
     /**
@@ -53,7 +119,17 @@ class HargaServisController extends Controller
      */
     public function edit($id)
     {
-        return view('master::edit');
+        $kategoriServis = KategoriServis::where('status_kservis',true)->get();
+        $array_kategori_servis = [];
+        foreach ($kategoriServis as $key => $value) {
+            $array_kategori_servis[] = [
+                'id' => $value->id,
+                'label' => $value->nama_kservis,
+            ];
+        }
+        $action = url('master/hargaServis/'.$id.'?_method=put');
+        $row = HargaServis::with('kategoriServis')->find($id);
+        return view('master::hargaServis.form', compact('array_kategori_servis', 'action', 'row'));
     }
 
     /**
@@ -62,9 +138,21 @@ class HargaServisController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(FormHargaServisUpdateRequest $request, $id)
     {
         //
+        $data = [
+            'kode_hargaservis' => $request->input('kode_hargaservis'),
+            'nama_hargaservis' => $request->input('nama_hargaservis'),
+            'jasa_hargaservis' => $request->input('jasa_hargaservis'),
+            'deskripsi_hargaservis' => $request->input('deskripsi_hargaservis'),
+            'profit_hargaservis' => $request->input('profit_hargaservis'),
+            'total_hargaservis' => $request->input('total_hargaservis'),
+            'status_hargaservis' => $request->input('status_hargaservis') !== null ? true : false,
+            'kategori_servis_id' => $request->input('kategori_servis_id'),
+        ];
+        HargaServis::find($id)->update($data);
+        return response()->json('Berhasil update data', 200);
     }
 
     /**
@@ -75,5 +163,8 @@ class HargaServisController extends Controller
     public function destroy($id)
     {
         //
+        HargaServis::destroy($id);
+        return response()->json('Berhasil hapus data', 200);
+
     }
 }

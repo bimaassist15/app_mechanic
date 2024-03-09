@@ -15,3 +15,4 @@ use Modules\Auth\Http\Controllers\AuthController;
 */
 
 Route::get('/', [AuthController::class, 'index']);
+Route::post('/auth/login', [AuthController::class, 'store'])->name('auth.login');

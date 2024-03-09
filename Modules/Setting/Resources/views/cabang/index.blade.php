@@ -1,5 +1,9 @@
 @extends('layouts.app.index')
 
+@section('title')
+    Halaman Cabang
+@endsection
+
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         {{ Breadcrumbs::render('cabang') }}
@@ -39,7 +43,6 @@
 
     @push('custom_js')
         <script class="url_datatable" data-url="{{ route('cabang.index') }}"></script>
-
         <script src="{{ asset('js/setting/cabang/index.js') }}"></script>
     @endpush
 @endsection

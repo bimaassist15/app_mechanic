@@ -20,7 +20,10 @@ return new class extends Migration
             $table->string('email_customer')->nullable();
             $table->string('alamat_customer')->nullable();
             $table->string('status_customer');
+            $table->bigInteger('cabang_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('cabang_id')->references('id')->on('cabang')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

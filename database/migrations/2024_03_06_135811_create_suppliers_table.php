@@ -20,7 +20,10 @@ return new class extends Migration
             $table->text('deskripsi_supplier')->nullable();
             $table->string('perusahaan_supplier');
             $table->boolean('status_supplier')->default(true);
+            $table->bigInteger('cabang_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('cabang_id')->references('id')->on('cabang')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

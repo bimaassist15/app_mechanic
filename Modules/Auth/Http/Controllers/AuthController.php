@@ -2,9 +2,11 @@
 
 namespace Modules\Auth\Http\Controllers;
 
+use App\Http\Requests\LoginValidation;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -36,9 +38,18 @@ class AuthController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(LoginValidation $request)
     {
-        //
+        $credentials = $request->only('email_or_username', 'password');
+
+        if (Auth::attempt(['email' => $credentials['email_or_username'], 'password' => $credentials['password']]) || 
+            Auth::attempt(['username' => $credentials['email_or_username'], 'password' => $credentials['password']])) {
+                $user = Auth::user();
+                dd($user);
+                $request->session()->put('user', $user);
+                return redirect()->intended('/dashboard');
+
+        }
     }
 
     /**

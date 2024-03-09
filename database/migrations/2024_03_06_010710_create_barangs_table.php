@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('barang', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('barcode_barang');
             $table->string('nama_barang');
             $table->bigInteger('satuan_id')->unsigned();
@@ -25,10 +25,12 @@ return new class extends Migration
             $table->string('lokasi_barang');
             $table->bigInteger('kategori_id')->unsigned();
             $table->enum('status_barang', ['dijual', 'khusus servis', 'dijual & untuk servis', 'tidak dijual']);
+            $table->bigInteger('cabang_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('satuan_id')->references('id')->on('satuan')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('kategori_id')->references('id')->on('kategori')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('cabang_id')->references('id')->on('cabang')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

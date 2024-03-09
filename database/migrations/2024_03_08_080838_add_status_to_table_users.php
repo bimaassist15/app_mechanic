@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('barang', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
-            $table->bigIncrements('id')->change();
+            $table->boolean('status_users')->default(true);
         });
     }
 
@@ -26,9 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('barang', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
-            $table->dropColumn('id');
+            $table->dropColumn('status_users');
         });
     }
 };

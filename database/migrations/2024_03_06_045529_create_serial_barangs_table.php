@@ -18,9 +18,11 @@ return new class extends Migration
             $table->string('nomor_serial_barang');
             $table->enum('status_serial_barang', ['ready', 'return', 'cancel transaction', 'not sold']);
             $table->bigInteger('barang_id')->unsigned();
+            $table->bigInteger('cabang_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('barang_id')->references('id')->on('barang')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('cabang_id')->references('id')->on('cabang')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
