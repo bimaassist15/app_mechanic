@@ -88,8 +88,12 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Transaksi Toko</span>
         </li>
+
+        @php
+            $activeRoutePurchase = ['purchase/kasir', 'purchase/penjualan', 'purchase/belumLunas', 'purchase/lunas'];
+        @endphp
         <li
-            class="menu-item {{ collect($activeRoutesMaster)->contains(function ($route) {
+            class="menu-item {{ collect($activeRoutePurchase)->contains(function ($route) {
                 return request()->is($route) || str_starts_with(request()->url(), url($route));
             })
                 ? 'active'
@@ -99,54 +103,24 @@
                 <div data-i18n="Penjualan">Penjualan</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item {{ request()->is('master/kategori') ? 'active' : '' }}">
-                    <a href="{{ url('master/kategori') }}" class="menu-link">
-                        <div data-i18n="Kategori">Kategori</div>
+                <li class="menu-item {{ request()->is('purchase/kasir') ? 'active' : '' }}">
+                    <a href="{{ url('purchase/kasir') }}" class="menu-link">
+                        <div data-i18n="Kasir">Kasir</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->is('master/satuan') ? 'active' : '' }}">
-                    <a href="{{ url('master/satuan') }}" class="menu-link">
-                        <div data-i18n="Satuan">Satuan</div>
+                <li class="menu-item {{ request()->is('purchase/penjualan') ? 'active' : '' }}">
+                    <a href="{{ url('purchase/penjualan') }}" class="menu-link">
+                        <div data-i18n="Invoice Penjualan">Invoice Penjualan</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->is('master/barang') ? 'active' : '' }}">
-                    <a href="{{ url('master/barang') }}" class="menu-link">
-                        <div data-i18n="Barang">Barang</div>
+                <li class="menu-item {{ request()->is('purchase/belumLunas') ? 'active' : '' }}">
+                    <a href="{{ url('purchase/belumLunas') }}" class="menu-link">
+                        <div data-i18n="Belum Lunas">Invoice Hutang</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->is('master/customer') ? 'active' : '' }}">
-                    <a href="{{ url('master/customer') }}" class="menu-link">
-                        <div data-i18n="Customer">Customer</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ request()->is('master/kendaraan') ? 'active' : '' }}">
-                    <a href="{{ url('master/kendaraan') }}" class="menu-link">
-                        <div data-i18n="Kendaraan">Kendaraan</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ request()->is('master/supplier') ? 'active' : '' }}">
-                    <a href="{{ url('master/supplier') }}" class="menu-link">
-                        <div data-i18n="Supplier">Supplier</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ request()->is('master/kategoriServis') ? 'active' : '' }}">
-                    <a href="{{ url('master/kategoriServis') }}" class="menu-link">
-                        <div data-i18n="Kategori Servis">Kategori Servis</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ request()->is('master/hargaServis') ? 'active' : '' }}">
-                    <a href="{{ url('master/hargaServis') }}" class="menu-link">
-                        <div data-i18n="Harga Servis">Harga Servis</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ request()->is('master/kategoriPembayaran') ? 'active' : '' }}">
-                    <a href="{{ url('master/kategoriPembayaran') }}" class="menu-link">
-                        <div data-i18n="Kategori Pembayaran">Kategori Pembayaran</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ request()->is('master/subPembayaran') ? 'active' : '' }}">
-                    <a href="{{ url('master/subPembayaran') }}" class="menu-link">
-                        <div data-i18n="Sub Pembayaran">Sub Pembayaran</div>
+                <li class="menu-item {{ request()->is('purchase/lunas') ? 'active' : '' }}">
+                    <a href="{{ url('purchase/lunas') }}" class="menu-link">
+                        <div data-i18n="Invoice Lunas">Invoice Lunas</div>
                     </a>
                 </li>
             </ul>
