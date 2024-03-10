@@ -11,6 +11,11 @@ class Barang extends Model
     protected $table = 'barang';
     protected $guarded = [];
 
+    public function scopeDataTable($query)
+    {
+        return $query->where('cabang_id', session()->get('cabang_id'));
+    }
+
     public function kategori()
     {
         return $this->belongsTo(Kategori::class);

@@ -18,7 +18,7 @@ class SatuanController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = Satuan::query();
+            $data = Satuan::dataTable();
             return DataTables::eloquent($data)
             ->addColumn('status_satuan', function ($row) {
                 $output = $row->status_satuan ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
@@ -77,6 +77,7 @@ class SatuanController extends Controller
         $data = [
             'nama_satuan' => $request->input('nama_satuan'),
             'status_satuan' => $request->input('status_satuan') !== null ? true : false,
+            'cabang_id' => session()->get('cabang_id'),
         ];
         Satuan::create($data);
         return response()->json('Berhasil tambah data', 201);
@@ -116,6 +117,7 @@ class SatuanController extends Controller
         $data = [
             'nama_satuan' => $request->input('nama_satuan'),
             'status_satuan' => $request->input('status_satuan') !== null ? true : false,
+            'cabang_id' => session()->get('cabang_id'),
         ];
         Satuan::find($id)->update($data);
         return response()->json('Berhasil update data', 200);

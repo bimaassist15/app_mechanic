@@ -17,7 +17,7 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = Customer::query();
+            $data = Customer::dataTable();
             return DataTables::eloquent($data)
             ->addColumn('pembelian_customer', function ($row) {
                 $output = '';
@@ -85,6 +85,7 @@ class CustomerController extends Controller
             'email_customer' => $request->input('email_customer'),
             'alamat_customer' => $request->input('alamat_customer'),
             'status_customer' => $request->input('status_customer') !== null ? true : false,
+            'cabang_id' => session()->get('cabang_id'),
         ];
         Customer::create($data);
         return response()->json('Berhasil tambah data', 201);
@@ -127,6 +128,7 @@ class CustomerController extends Controller
             'email_customer' => $request->input('email_customer'),
             'alamat_customer' => $request->input('alamat_customer'),
             'status_customer' => $request->input('status_customer') !== null ? true : false,
+            'cabang_id' => session()->get('cabang_id'),
         ];
         Customer::find($id)->update($data);
         return response()->json('Berhasil update data', 200);

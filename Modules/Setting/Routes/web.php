@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('setting')->group(function() {
+Route::prefix('setting')->middleware('auth')->group(function() {
     Route::get('/', 'SettingController@index');
     Route::resource('cabang', 'CabangController');
     Route::resource('roles', 'RolesController');

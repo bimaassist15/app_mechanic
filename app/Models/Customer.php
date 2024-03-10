@@ -11,6 +11,11 @@ class Customer extends Model
     protected $table = 'customer';
     protected $guarded = [];
 
+    public function scopeDataTable($query)
+    {
+        return $query->where('cabang_id', session()->get('cabang_id'));
+    }
+
     public function kendaraan()
     {
         return $this->hasMany(Kendaraan::class);

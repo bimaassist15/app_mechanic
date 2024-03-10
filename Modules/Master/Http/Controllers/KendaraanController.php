@@ -19,7 +19,7 @@ class KendaraanController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = Kendaraan::query()->with('customer');
+            $data = Kendaraan::dataTable()->with('customer');
             return DataTables::eloquent($data)
                 ->addColumn('action', function ($row) {
                     $buttonUpdate = '
@@ -58,7 +58,7 @@ class KendaraanController extends Controller
     public function create()
     {
         $action = route('kendaraan.store');
-        $customer = Customer::all();
+        $customer = Customer::dataTable()->get();
         $array_customer = [];
         foreach ($customer as $key => $value) {
            $array_customer[] = [
@@ -90,6 +90,7 @@ class KendaraanController extends Controller
             'norangka_kendaraan' => $request->input('norangka_kendaraan'),
             'nomesin_kendaraan' => $request->input('nomesin_kendaraan'),
             'keterangan_kendaraan' => $request->input('keterangan_kendaraan'),
+            'cabang_id' => session()->get('cabang_id'),
         ];
         Kendaraan::create($data);
         return response()->json('Berhasil tambah data', 201);
@@ -114,7 +115,7 @@ class KendaraanController extends Controller
     {
         $action = url('master/kendaraan/'.$id.'?_method=put');
         $row = Kendaraan::find($id);
-        $customer = Customer::all();
+        $customer = Customer::dataTable()->get();
         $array_customer = [];
         foreach ($customer as $key => $value) {
            $array_customer[] = [
@@ -147,6 +148,7 @@ class KendaraanController extends Controller
             'norangka_kendaraan' => $request->input('norangka_kendaraan'),
             'nomesin_kendaraan' => $request->input('nomesin_kendaraan'),
             'keterangan_kendaraan' => $request->input('keterangan_kendaraan'),
+            'cabang_id' => session()->get('cabang_id'),
         ];
         Kendaraan::find($id)->update($data);
         return response()->json('Berhasil update data', 200);

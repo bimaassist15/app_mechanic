@@ -162,3 +162,15 @@ Breadcrumbs::for('roles', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Roles', url('setting/roles'));
 });
+
+// Home > kategoriPembayaran
+Breadcrumbs::for('kategoriPembayaran', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Kategori Pembayaran', url('master/kategoriPembayaran'));
+});
+
+// Home > subPembayaran
+Breadcrumbs::for('subPembayaran', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Sub Pembayaran', url('master/subPembayaran'));
+});

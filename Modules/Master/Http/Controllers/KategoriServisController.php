@@ -18,7 +18,7 @@ class KategoriServisController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = KategoriServis::query();
+            $data = KategoriServis::dataTable();
             return DataTables::eloquent($data)
             ->addColumn('status_kservis', function ($row) {
                 $output = $row->status_kservis ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
@@ -77,6 +77,7 @@ class KategoriServisController extends Controller
         $data = [
             'nama_kservis' => $request->input('nama_kservis'),
             'status_kservis' => $request->input('status_kservis') !== null ? true : false,
+            'cabang_id' => session()->get('cabang_id'),
         ];
         KategoriServis::create($data);
         return response()->json('Berhasil tambah data', 201);
@@ -116,6 +117,7 @@ class KategoriServisController extends Controller
         $data = [
             'nama_kservis' => $request->input('nama_kservis'),
             'status_kservis' => $request->input('status_kservis') !== null ? true : false,
+            'cabang_id' => session()->get('cabang_id'),
         ];
         KategoriServis::find($id)->update($data);
         return response()->json('Berhasil update data', 200);

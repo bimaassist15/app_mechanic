@@ -11,6 +11,11 @@ class Kendaraan extends Model
     protected $table = 'kendaraan';
     protected $guarded = [];
 
+    public function scopeDataTable($query)
+    {
+        return $query->where('cabang_id', session()->get('cabang_id'));
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);

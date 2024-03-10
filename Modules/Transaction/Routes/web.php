@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('transaction')->group(function() {
+Route::prefix('transaction')->middleware('auth')->group(function() {
     Route::get('/', 'TransactionController@index');
     Route::resource('kasir', 'KasirController');
     Route::resource('pembelian', 'PembelianController');

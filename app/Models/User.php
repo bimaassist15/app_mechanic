@@ -48,6 +48,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+
+    public function scopeDataTable($query)
+    {
+        return $query->where('cabang_id', session()->get('cabang_id'));
+    }
+    
     public function profile()
     {
         return $this->hasOne(Profile::class, 'users_id', 'id');

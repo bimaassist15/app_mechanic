@@ -20,7 +20,7 @@ class HargaServisController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = HargaServis::query()->with('kategoriServis');
+            $data = HargaServis::dataTable()->with('kategoriServis');
             return DataTables::eloquent($data)
             ->addColumn('status_hargaservis', function ($row) {
                 $output = $row->status_hargaservis ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
@@ -68,7 +68,7 @@ class HargaServisController extends Controller
      */
     public function create()
     {
-        $kategoriServis = KategoriServis::where('status_kservis',true)->get();
+        $kategoriServis = KategoriServis::dataTable()->where('status_kservis',true)->get();
         $array_kategori_servis = [];
         foreach ($kategoriServis as $key => $value) {
             $array_kategori_servis[] = [
@@ -97,6 +97,7 @@ class HargaServisController extends Controller
             'total_hargaservis' => $request->input('total_hargaservis'),
             'status_hargaservis' => $request->input('status_hargaservis') !== null ? true : false,
             'kategori_servis_id' => $request->input('kategori_servis_id'),
+            'cabang_id' => session()->get('cabang_id'),
         ];
         HargaServis::create($data);
         return response()->json('Berhasil tambah data', 201);
@@ -119,7 +120,7 @@ class HargaServisController extends Controller
      */
     public function edit($id)
     {
-        $kategoriServis = KategoriServis::where('status_kservis',true)->get();
+        $kategoriServis = KategoriServis::dataTable()->where('status_kservis',true)->get();
         $array_kategori_servis = [];
         foreach ($kategoriServis as $key => $value) {
             $array_kategori_servis[] = [
@@ -150,6 +151,7 @@ class HargaServisController extends Controller
             'total_hargaservis' => $request->input('total_hargaservis'),
             'status_hargaservis' => $request->input('status_hargaservis') !== null ? true : false,
             'kategori_servis_id' => $request->input('kategori_servis_id'),
+            'cabang_id' => session()->get('cabang_id'),
         ];
         HargaServis::find($id)->update($data);
         return response()->json('Berhasil update data', 200);

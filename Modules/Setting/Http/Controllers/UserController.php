@@ -214,7 +214,7 @@ class UserController extends Controller
             'users_id' => $id,
             'cabang_id' => $request->input('cabang_id'),
         ];
-        Profile::where('users_id', $id)->update($dataProfile);
+        Profile::dataTable()->where('users_id', $id)->update($dataProfile);
 
         // roles
         $roles = Role::find($request->input('roles_id'));

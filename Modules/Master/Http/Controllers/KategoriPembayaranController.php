@@ -2,26 +2,33 @@
 
 namespace Modules\Master\Http\Controllers;
 
-use App\Models\Kategori;
+use App\Models\KategoriPembayaran;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Master\Http\Requests\FormKategoriRequest;
+use Modules\Master\Http\Requests\FormKPembayaranRequest;
 use DataTables;
+use Illuminate\Support\Facades\Config;
 
-class KategoriController extends Controller
+class KategoriPembayaranController extends Controller
 {
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
+
+    public $datastatis;
+    public function __construct() {
+        $this->datastatis = Config::get('datastatis');
+    }
+
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = Kategori::dataTable();
+            $data = KategoriPembayaran::dataTable();
             return DataTables::eloquent($data)
-            ->addColumn('status_kategori', function ($row) {
-                $output = $row->status_kategori ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+            ->addColumn('status_kpembayaran', function ($row) {
+                $output = $row->status_kpembayaran ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
                 return '<div class="text-center">
                 '.$output.'
                 </div>';
@@ -30,14 +37,14 @@ class KategoriController extends Controller
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="mediumModal"
-                    data-urlcreate="' . route('kategori.edit', $row->id) . '"
+                    data-urlcreate="' . route('kategoriPembayaran.edit', $row->id) . '"
                     data-modalId="mediumModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
                     </a>
                     ';
                     $buttonDelete = '
-                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('master/kategori/'.$row->id).'?_method=delete">
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('master/kategoriPembayaran/'.$row->id).'?_method=delete">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                     ';
@@ -50,10 +57,10 @@ class KategoriController extends Controller
                 ';
                     return $button;
                 })
-                ->rawColumns(['action', 'status_kategori'])
+                ->rawColumns(['action', 'status_kpembayaran'])
                 ->toJson();
         }
-        return view('master::kategori.index');
+        return view('master::kategoriPembayaran.index');
     }
 
     /**
@@ -62,8 +69,15 @@ class KategoriController extends Controller
      */
     public function create()
     {
-        $action = route('kategori.store');
-        return view('master::kategori.form', compact('action'));
+        $action = route('kategoriPembayaran.store');
+        $array_tipe_pembayaran = [];
+        foreach ($this->datastatis['tipe_pembayaran'] as $value => $item) {
+            $array_tipe_pembayaran[] = [
+                'id' => $value,
+                'label' => $item
+            ];
+        }
+        return view('master::kategoriPembayaran.form', compact('action', 'array_tipe_pembayaran'));
     }
 
     /**
@@ -71,14 +85,16 @@ class KategoriController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(FormKategoriRequest $request)
+    public function store(FormKPembayaranRequest $request)
     {
+        //
         $data = [
-            'nama_kategori' => $request->input('nama_kategori'),
-            'status_kategori' => $request->input('status_kategori') !== null ? true : false,
+            'nama_kpembayaran' => $request->input('nama_kpembayaran'),
+            'tipe_kpembayaran' => $request->input('tipe_kpembayaran'),
+            'status_kpembayaran' => $request->input('status_kpembayaran') !== null ? true : false,
             'cabang_id' => session()->get('cabang_id'),
         ];
-        Kategori::create($data);
+        KategoriPembayaran::create($data);
         return response()->json('Berhasil tambah data', 201);
     }
 
@@ -99,9 +115,16 @@ class KategoriController extends Controller
      */
     public function edit($id)
     {
-        $action = url('master/kategori/'.$id.'?_method=put');
-        $row = Kategori::find($id);
-        return view('master::kategori.form', compact('action','row'));
+        $action = url('master/kategoriPembayaran/'.$id.'?_method=put');
+        $array_tipe_pembayaran = [];
+        foreach ($this->datastatis['tipe_pembayaran'] as $value => $item) {
+            $array_tipe_pembayaran[] = [
+                'id' => $value,
+                'label' => $item
+            ];
+        }
+        $row = KategoriPembayaran::find($id);
+        return view('master::kategoriPembayaran.form', compact('action', 'row', 'array_tipe_pembayaran'));
     }
 
     /**
@@ -110,14 +133,16 @@ class KategoriController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(FormKategoriRequest $request, $id)
+    public function update(FormKPembayaranRequest $request, $id)
     {
+        //
         $data = [
-            'nama_kategori' => $request->input('nama_kategori'),
-            'status_kategori' => $request->input('status_kategori') !== null ? true : false,
+            'nama_kpembayaran' => $request->input('nama_kpembayaran'),
+            'tipe_kpembayaran' => $request->input('tipe_kpembayaran'),
+            'status_kpembayaran' => $request->input('status_kpembayaran') !== null ? true : false,
             'cabang_id' => session()->get('cabang_id'),
         ];
-        Kategori::find($id)->update($data);
+        KategoriPembayaran::find($id)->update($data);
         return response()->json('Berhasil update data', 200);
     }
 
@@ -129,7 +154,7 @@ class KategoriController extends Controller
     public function destroy($id)
     {
         //
-        Kategori::destroy($id);
+        KategoriPembayaran::destroy($id);
         return response()->json('Berhasil hapus data', 200);
     }
 }

@@ -45,10 +45,9 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $credentials['email_or_username'], 'password' => $credentials['password']]) || 
             Auth::attempt(['username' => $credentials['email_or_username'], 'password' => $credentials['password']])) {
                 $user = Auth::user();
-                dd($user);
                 $request->session()->put('user', $user);
+                $request->session()->put('cabang_id', $user->cabang_id);
                 return redirect()->intended('/dashboard');
-
         }
     }
 

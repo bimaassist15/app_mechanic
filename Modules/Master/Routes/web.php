@@ -11,9 +11,8 @@
 |
 */
 
-Route::prefix('master')->group(function() {
+Route::prefix('master')->middleware('auth')->group(function() {
     Route::get('/', 'MasterController@index');
-
     Route::resource('kategori', 'KategoriController');
     Route::resource('satuan', 'SatuanController');
     Route::resource('barang', 'BarangController');
@@ -25,4 +24,7 @@ Route::prefix('master')->group(function() {
     Route::resource('supplier', 'SupplierController');
     Route::resource('kategoriServis', 'KategoriServisController');
     Route::resource('hargaServis', 'HargaServisController');
+    Route::resource('kategoriPembayaran', 'KategoriPembayaranController');
+    Route::resource('subPembayaran', 'SubPembayaranController');
+
 });

@@ -13,7 +13,7 @@ class GenerateBarcodeController extends Controller
     {
         $barang_id = $request->query('barang_id');
         $barang = Barang::find($request->query('barang_id'));
-        $serialBarang = SerialBarang::where('barang_id', $barang_id)->get();
+        $serialBarang = SerialBarang::dataTable()->where('barang_id', $barang_id)->get();
  
         return view('master::generateBarang.index', compact('barang', 'serialBarang'));
     }
@@ -22,7 +22,7 @@ class GenerateBarcodeController extends Controller
     {
         $barang_id = $request->query('barang_id');
         $barang = Barang::find($request->query('barang_id'));
-        $serialBarang = SerialBarang::where('barang_id', $barang_id)->get();
+        $serialBarang = SerialBarang::dataTable()->where('barang_id', $barang_id)->get();
  
         return view('master::generateBarang.print', compact('barang', 'serialBarang'));
     }

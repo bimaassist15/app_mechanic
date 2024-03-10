@@ -11,6 +11,6 @@
 |
 */
 
-Route::prefix('report')->group(function() {
+Route::prefix('report')->middleware('auth')->group(function() {
     Route::get('/', 'ReportController@index');
 });

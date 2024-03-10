@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('purchase')->group(function() {
+Route::prefix('purchase')->middleware('auth')->group(function() {
     Route::get('/', 'PurchaseController@index');
     Route::resource('kasir', 'KasirController');
     Route::resource('penjualan', 'PenjualanController');

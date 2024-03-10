@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('transferstock')->group(function() {
+Route::prefix('transferstock')->middleware('auth')->group(function() {
     Route::get('/stock', 'TransferStockController@index')->name('stock.index');
     Route::get('/stokmasuk', 'StockMasukController@index')->name('stokmasuk.index');
     Route::get('/stokkeluar', 'StockKeluarController@index')->name('stokkeluar.index');

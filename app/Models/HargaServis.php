@@ -11,6 +11,11 @@ class HargaServis extends Model
     protected $table = 'harga_servis';
     protected $guarded = [];
 
+    public function scopeDataTable($query)
+    {
+        return $query->where('cabang_id', session()->get('cabang_id'));
+    }
+
     public function kategoriServis()
     {
         return $this->belongsTo(KategoriServis::class);

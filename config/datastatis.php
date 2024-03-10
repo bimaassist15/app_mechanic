@@ -34,4 +34,13 @@ return [
         'thermal' => 'Thermal', 
         'biasa' => 'Biasa', 
     ],
+    'tipe_diskon' => [
+        'fix' => 'Fix', 
+        '%' => '%', 
+    ],
+    'tipe_pembayaran' => [
+        'cash' => 'Cash', 
+        'transfer' => 'Transfer', 
+        'deposit' => 'Deposit',
+    ],
 ];

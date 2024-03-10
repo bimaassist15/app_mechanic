@@ -18,7 +18,7 @@ class SupplierController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = Supplier::query();
+            $data = Supplier::dataTable();
             return DataTables::eloquent($data)
             ->addColumn('status_supplier', function ($row) {
                 $output = $row->status_supplier ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
@@ -80,6 +80,7 @@ class SupplierController extends Controller
             'deskripsi_supplier' => $request->input('deskripsi_supplier'),
             'perusahaan_supplier' => $request->input('perusahaan_supplier'),
             'status_supplier' => $request->input('status_supplier') !== null ? true : false,
+            'cabang_id' => session()->get('cabang_id'),
         ];
         Supplier::create($data);
         return response()->json('Berhasil tambah data', 201);
@@ -122,6 +123,7 @@ class SupplierController extends Controller
             'deskripsi_supplier' => $request->input('deskripsi_supplier'),
             'perusahaan_supplier' => $request->input('perusahaan_supplier'),
             'status_supplier' => $request->input('status_supplier') !== null ? true : false,
+            'cabang_id' => session()->get('cabang_id'),
         ];
         Supplier::find($id)->update($data);
         return response()->json('Berhasil update data', 200);

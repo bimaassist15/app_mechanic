@@ -27,7 +27,7 @@ class BarangController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = Barang::query()->with('kategori','satuan');
+            $data = Barang::dataTable()->with('kategori','satuan');
             return DataTables::eloquent($data)
             ->addColumn('hargajual_barang', function ($row) {
                 $output = number_format($row->hargajual_barang,'0',',','.');
@@ -70,7 +70,7 @@ class BarangController extends Controller
         $action = route('barang.store');
         $status_barang = $this->datastatis['status_barang'];
         $status_serial = $this->datastatis['status_serial'];
-        $kategori = Kategori::where('status_kategori', true)->get();
+        $kategori = Kategori::dataTable()->where('status_kategori', true)->get();
         $array_kategori = [];
         foreach ($kategori as $key => $item) {
             $array_kategori[] = [
@@ -78,7 +78,7 @@ class BarangController extends Controller
                 'label' => $item->nama_kategori,
             ];
         }
-        $satuan = Satuan::where('status_satuan',true)->get();
+        $satuan = Satuan::dataTable()->where('status_satuan',true)->get();
         $array_satuan = [];
         foreach ($satuan as $key => $item) {
             $array_satuan[] = [
@@ -123,6 +123,7 @@ class BarangController extends Controller
             'lokasi_barang' => $request->input('lokasi_barang'),
             'kategori_id' => $request->input('kategori_id'),
             'status_barang' => $request->input('status_barang'),
+            'cabang_id' => session()->get('cabang_id'),
         ];
         Barang::create($data);
         return response()->json('Berhasil tambah data', 201);
@@ -150,7 +151,7 @@ class BarangController extends Controller
         $status_barang = $this->datastatis['status_barang'];
         $status_serial = $this->datastatis['status_serial'];
         $row = Barang::find($id);
-        $kategori = Kategori::where('status_kategori', true)->get();
+        $kategori = Kategori::dataTable()->where('status_kategori', true)->get();
         $array_kategori = [];
         foreach ($kategori as $key => $item) {
             $array_kategori[] = [
@@ -158,7 +159,7 @@ class BarangController extends Controller
                 'label' => $item->nama_kategori,
             ];
         }
-        $satuan = Satuan::where('status_satuan',true)->get();
+        $satuan = Satuan::dataTable()->where('status_satuan', true)->get();
         $array_satuan = [];
         foreach ($satuan as $key => $item) {
             $array_satuan[] = [
@@ -204,6 +205,7 @@ class BarangController extends Controller
             'lokasi_barang' => $request->input('lokasi_barang'),
             'kategori_id' => $request->input('kategori_id'),
             'status_barang' => $request->input('status_barang'),
+            'cabang_id' => session()->get('cabang_id'),
         ];
         Barang::find($id)->update($data);
         return response()->json('Berhasil update data', 200);

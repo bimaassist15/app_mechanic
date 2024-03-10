@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('service')->group(function() {
+Route::prefix('service')->middleware('auth')->group(function() {
     Route::get('/', 'ServiceController@index');
     Route::resource('penerimaanServis', 'PenerimaanServisController');
     Route::get('pengembalianServis', 'PengembalianServisController@index')->name('pengembalianServis.index');
