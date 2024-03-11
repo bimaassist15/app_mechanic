@@ -65,7 +65,11 @@
         <script class="url_print_kasir" data-url="{{ route('penjualan.print') }}"></script>
         <script class="url_simpan_kasir" data-url="{{ url('purchase/kasir') }}"></script>
         <script class="url_invoice_penjualan" data-url="{{ url('purchase/penjualan') }}"></script>
-        <script class="url_purchase_kasir" data-url="{{ url('purchase/kasir') }}"></script>
+        <script class="isEdit" data-value="{{ $isEdit }}"></script>
+        <script class="penjualan_id" data-value="{{ $penjualan_id }}"></script>
+        <script class="url_purchase_kasir"
+            data-url="{{ $isEdit == 'true' ? url('purchase/kasir?penjualan_id=' . $penjualan_id . '&isEdit=' . $isEdit) : url('purchase/kasir') }}">
+        </script>
         <script src="{{ asset('js/purchase/kasir/index.js') }}"></script>
     @endpush
 @endsection

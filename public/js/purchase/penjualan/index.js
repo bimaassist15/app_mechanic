@@ -1,12 +1,13 @@
 // "use strict";
 var datatable;
+var myModal;
 
 $(document).ready(function () {
     function initDatatable() {
-        datatable = basicDatatable(
-            $("#dataTable"),
-            $(".url_datatable").data("url"),
-            [
+        datatable = basicDatatable({
+            tableId: $("#dataTable"),
+            ajaxUrl: $(".url_datatable").data("url"),
+            columns: [
                 {
                     data: null,
                     orderable: false,
@@ -14,13 +15,28 @@ $(document).ready(function () {
                     className: "text-center",
                 },
                 {
-                    data: "nama_kategori",
-                    name: "nama_kategori",
+                    data: "invoice_penjualan",
+                    name: "invoice_penjualan",
                     searchable: true,
                 },
                 {
-                    data: "status_kategori",
-                    name: "status_kategori",
+                    data: "transaksi_penjualan",
+                    name: "transaksi_penjualan",
+                    searchable: true,
+                },
+                {
+                    data: "customer",
+                    name: "customer",
+                    searchable: true,
+                },
+                {
+                    data: "users.profile.nama_profile",
+                    name: "users.profile.nama_profile",
+                    searchable: true,
+                },
+                {
+                    data: "total_penjualan",
+                    name: "total_penjualan",
                     searchable: true,
                 },
                 {
@@ -29,10 +45,11 @@ $(document).ready(function () {
                     searchable: false,
                     orderable: false,
                 },
-            ]
-        );
+            ],
+            dataAjaxUrl: {},
+        });
     }
-    // initDatatable();
+    initDatatable();
 
     var body = $("body");
     // handle btn add data

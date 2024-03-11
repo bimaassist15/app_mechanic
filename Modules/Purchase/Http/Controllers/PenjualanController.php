@@ -3,10 +3,12 @@
 namespace Modules\Purchase\Http\Controllers;
 
 use App\Http\Helpers\UtilsHelper;
+use App\Models\Barang;
 use App\Models\Penjualan;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use DataTables;
 
 class PenjualanController extends Controller
 {
@@ -14,8 +16,44 @@ class PenjualanController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $data = Penjualan::dataTable()->with('customer', 'users', 'users.profile');
+            return DataTables::eloquent($data)
+                ->addColumn('transaksi_penjualan', function ($row) {
+                    $output = UtilsHelper::tanggalBulanTahunKonversi($row->transaksi_penjualan);
+                    return $output;
+                })
+                ->addColumn('total_penjualan', function ($row) {
+                    $output = UtilsHelper::formatUang($row->total_penjualan);
+                    return $output;
+                })
+                ->addColumn('customer', function ($row) {
+                    $output = $row->customer->nama_customer ?? 'Umum';
+                    return $output;
+                })
+                ->addColumn('action', function ($row) {
+                    $buttonDetail = '
+                    <a class="btn btn-info btn-detail btn-sm" 
+                    data-typemodal="extraLargeModal"
+                    data-urlcreate="' . route('penjualan.show', $row->id) . '"
+                    data-modalId="extraLargeModal"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    ';
+
+                    $button = '
+                <div class="text-center">
+                    ' . $buttonDetail . '
+                </div>
+                ';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->toJson();
+        }
         return view('purchase::penjualan.index');
     }
 
@@ -45,7 +83,9 @@ class PenjualanController extends Controller
      */
     public function show($id)
     {
-        return view('purchase::penjualan.detail');
+        $penjualan = new Penjualan();
+        $row = $penjualan->invoicePenjualan($id);
+        return view('purchase::penjualan.detail', compact('row'));
     }
 
     public function print()
@@ -85,6 +125,18 @@ class PenjualanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $penjualan = new Penjualan();
+        $getInvoice = $penjualan->invoicePenjualan($id);
+        foreach ($getInvoice->penjualanProduct as $key => $item) {
+            $barang_id = $item->barang_id;
+            $jumlah_penjualanproduct = $item->jumlah_penjualanproduct;
+
+            $barang = Barang::find($barang_id);
+            $barang->stok_barang = $barang->stok_barang + $jumlah_penjualanproduct;
+            $barang->save();
+        }
+
+        Penjualan::destroy($id);
+        return response()->json('Berhasil menghapus transaksi', 200);
     }
 }

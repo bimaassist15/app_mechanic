@@ -5,7 +5,8 @@
                 <table class="w-100">
                     <tr>
                         <td colspan="2">
-                            <h4><i class="fa-solid fa-globe"></i> No. Invoice: 2389289123</h4>
+                            <h4><i class="fa-solid fa-globe"></i> No. Invoice:
+                                {{ $row->invoice_penjualan }}</h4>
                         </td>
                     </tr>
                     <tr>
@@ -13,69 +14,72 @@
                             Dari
                         </td>
                         <td>
-                            Bima
+                            Customer
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <strong>Bengkel Motor maju lancar</strong>
+                            <strong>{{ UtilsHelp::myCabang()->bengkel_cabang }}</strong>
                         </td>
                         <td>
-                            <strong>Prog Bim</strong>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            JL. Manunggal Pekanbaru
-                        </td>
-                        <td>
-                            <a href="https://wa.me/6282277506232">Link Alamat</a>
+                            <strong>{{ $row->customer->nama_customer ?? 'Umum' }}</strong>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            Telp/Wa: 082277506232/082270595453
+                            {{ UtilsHelp::myCabang()->alamat_cabang }}
                         </td>
                         <td>
-                            Telp/Wa: 082277506232
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Email: bimaega15@gmail.com
-                        </td>
-                        <td>
-                            Email: -
+                            {{ $row->customer->nama_customer ?? '-' }}
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            Kasir: ProgBim
+                            Telp/Wa:
+                            {{ UtilsHelp::myCabang()->nowa_cabang }}/{{ UtilsHelp::myCabang()->notelpon_cabang }}
                         </td>
                         <td>
-                            Tipe Transaksi: Cash
+                            Telp/Wa: {{ $row->customer->nowa_customer ?? '-' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Email: {{ UtilsHelp::myCabang()->email_cabang }}
+                        </td>
+                        <td>
+                            Email: {{ $row->customer->email_customer ?? '-' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Kasir: {{ $row->users->profile->nama_profile }}
+                        </td>
+                        <td>
+                            Tipe Transaksi: {{ ucwords($row->tipe_penjualan) }}
                         </td>
                     </tr>
                 </table>
             </div>
             <div class="col-lg-6 text-end">
-                <h6>Tanggal: 24 Februari 2024 10:00 Wib</h6>
+                <h6>Tanggal: {{ UtilsHelp::tanggalBulanTahunKonversi($row->transaksi_penjualan) }}</h6>
                 <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false">
                     <i class="bx bx-menu me-1"></i> Aksi
                 </button>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center"><i
-                                class="bx bx-chevron-right scaleX-n1-rtl"></i>Return</a>
+                        <a href="{{ url('purchase/kasir?penjualan_id=' . $row->id . '&isEdit=true') }}"
+                            class="dropdown-item d-flex align-items-center"><i
+                                class="bx bx-chevron-right scaleX-n1-rtl"></i>Edit Transaksi</a>
                     </li>
                     <li>
                         <a target="_blank" href="{{ url('purchase/penjualan/print/purchase') }}"
-                            class="dropdown-item d-flex align-items-center"><i
+                            class="dropdown-item d-flex align-items-center btn-print"><i
                                 class="bx bx-chevron-right scaleX-n1-rtl"></i>Print</a>
                     </li>
                     <li>
-                        <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center"><i
+                        <a href="{{ url('purchase/penjualan/' . $row->id . '?_method=delete') }}"
+                            class="dropdown-item d-flex align-items-center btn-delete"><i
                                 class="bx bx-chevron-right scaleX-n1-rtl"></i>Hapus</a>
                     </li>
                 </ul>
@@ -86,7 +90,6 @@
                     <table class="table" id="dataTable">
                         <thead>
                             <tr>
-                                <th>No.</th>
                                 <th>Nama Barang</th>
                                 <th>Harga</th>
                                 <th>Qty</th>
@@ -94,29 +97,47 @@
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
-                            <tr>
-                                <td>1</td>
-                                <td>Busi Honda Supra 125 CC</td>
-                                <td>25.000</td>
-                                <td>1</td>
-                                <td>25.000</td>
-                            </tr>
+                            @foreach ($row->penjualanProduct as $item)
+                                <tr>
+                                    <td>{{ $item->barang->nama_barang }}</td>
+                                    <td>{{ UtilsHelp::formatUang($item->barang->hargajual_barang) }}</td>
+                                    <td>{{ $item->jumlah_penjualanproduct }}</td>
+                                    <td>{{ UtilsHelp::formatUang($item->subtotal_penjualanproduct) }}</td>
+                                </tr>
+                            @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="2"></td>
                                 <td><strong>Total:</strong></td>
-                                <td colspan="2" class="text-end"><strong>Rp. 25.000</strong></td>
+                                <td colspan="1" class="text-end">
+                                    <strong>{{ UtilsHelp::formatUang($row->total_penjualan) }}</strong>
+                                </td>
                             </tr>
-                            <tr>
-                                <td colspan="2"></td>
-                                <td><strong>Bayar:</strong></td>
-                                <td colspan="2" class="text-end"><strong>Rp. 50.000</strong></td>
-                            </tr>
+                            @if ($row->hutang_penjualan)
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td><strong>Hutang:</strong></td>
+                                    <td colspan="1" class="text-end">
+                                        {{ UtilsHelp::formatUang($row->hutang_penjualan) }}
+                                    </td>
+                                </tr>
+                            @endif
+                            @foreach ($row->penjualanPembayaran as $item)
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td><strong>{{ $item->kategoriPembayaran->nama_kpembayaran }}</strong></td>
+                                    <td colspan="1" class="text-end">
+                                        {{ UtilsHelp::formatUang($item->bayar_ppembayaran) }}
+                                    </td>
+                                </tr>
+                            @endforeach
                             <tr>
                                 <td colspan="2"></td>
                                 <td><strong>Kembalian:</strong></td>
-                                <td colspan="2" class="text-end"><strong>Rp. 25.000</strong></td>
+                                <td colspan="1" class="text-end">
+                                    <strong>{{ UtilsHelp::formatUang($row->kembalian_penjualan) }}</strong>
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
@@ -127,9 +148,11 @@
     <div class="modal-footer">
         <div class="row justify-content-end">
             <div class="col-sm-12">
-                <x-button-cancel-modal />
-                <x-button-submit-modal />
+                <x-button-ok-modal />
             </div>
         </div>
     </div>
 </div>
+
+<script class="penjualan_id" data-value="{{ $row->id }}"></script>
+<script src="{{ asset('js/purchase/penjualan/detail.js') }}"></script>

@@ -102,6 +102,10 @@ class KasirController extends Controller
         $dataUser = json_encode($dataUser);
         $defaultUser = Auth::id();
         $cabangId = session()->get('cabang_id');
+        $penjualanId = $request->query('penjualan_id');
+        $isEdit = $request->query('isEdit');
+        $penjualan = new Penjualan();
+        $dataPenjualan = $penjualan->invoicePenjualan($penjualanId);
 
         $data = [
             'array_customer' => $array_customer,
@@ -117,6 +121,9 @@ class KasirController extends Controller
             'dataUser' => $dataUser,
             'defaultUser' => $defaultUser,
             'cabangId' => $cabangId,
+            'penjualan_id' => $penjualanId,
+            'isEdit' => $isEdit,
+            'dataPenjualan' => $dataPenjualan,
         ];
 
         if ($request->ajax()) {
@@ -142,6 +149,25 @@ class KasirController extends Controller
      */
     public function store(Request $request)
     {
+        // jika payload is edit
+        $payloadIsEdit = $request->input('payload_is_edit');
+        if ($payloadIsEdit['isEdit'] == 'true') {
+            $penjualanId = $payloadIsEdit['penjualan_id'];
+
+            $penjualan = new Penjualan();
+            $getInvoice = $penjualan->invoicePenjualan($penjualanId);
+            foreach ($getInvoice->penjualanProduct as $key => $item) {
+                $barang_id = $item->barang_id;
+                $jumlah_penjualanproduct = $item->jumlah_penjualanproduct;
+
+                $barang = Barang::find($barang_id);
+                $barang->stok_barang = $barang->stok_barang + $jumlah_penjualanproduct;
+                $barang->save();
+            }
+
+            Penjualan::destroy($penjualanId);
+        }
+
         $penjualan = Penjualan::create($request->input('penjualan'));
         $penjualanProduct = $request->input('penjualan_product');
         $arrayPenjualanProduct = [];
