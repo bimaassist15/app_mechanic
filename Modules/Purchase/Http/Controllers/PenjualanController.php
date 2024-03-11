@@ -2,6 +2,8 @@
 
 namespace Modules\Purchase\Http\Controllers;
 
+use App\Http\Helpers\UtilsHelper;
+use App\Models\Penjualan;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -48,7 +50,11 @@ class PenjualanController extends Controller
 
     public function print()
     {
-        return view('purchase::penjualan.print');
+        $penjualan = new Penjualan();
+        $penjualan_id = request()->query('penjualan_id');
+        $penjualan = $penjualan->invoicePenjualan($penjualan_id);
+        $myCabang = UtilsHelper::myCabang();
+        return view('purchase::penjualan.print', compact('penjualan', 'myCabang'));
     }
 
     /**

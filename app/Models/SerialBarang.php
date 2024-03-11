@@ -20,4 +20,9 @@ class SerialBarang extends Model
     {
         return $this->belongsTo(Barang::class);
     }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
 }

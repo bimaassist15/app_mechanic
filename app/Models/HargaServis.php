@@ -20,4 +20,10 @@ class HargaServis extends Model
     {
         return $this->belongsTo(KategoriServis::class);
     }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
+
 }

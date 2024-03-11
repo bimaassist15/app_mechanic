@@ -10,4 +10,89 @@ class Cabang extends Model
     use HasFactory;
     protected $table = 'cabang';
     protected $guarded = [];
+
+    public function barang()
+    {
+        return $this->hasMany(Barang::class);
+    }
+
+    public function customer()
+    {
+        return $this->hasMany(Customer::class);
+    }
+
+    public function hargaServis()
+    {
+        return $this->hasMany(HargaServis::class);
+    }
+
+    public function kategori()
+    {
+        return $this->hasMany(Kategori::class);
+    }
+
+    public function kategoriPembayaran()
+    {
+        return $this->hasMany(KategoriPembayaran::class);
+    }
+
+    public function kategoriServis()
+    {
+        return $this->hasMany(KategoriServis::class);
+    }
+
+    public function kendaraan()
+    {
+        return $this->hasMany(Kendaraan::class);
+    }
+    public function penjualan()
+    {
+        return $this->hasMany(Penjualan::class);
+    }
+
+    public function penjualanPembayaran()
+    {
+        return $this->hasMany(PenjualanPembayaran::class);
+    }
+
+    public function penjualanProduct()
+    {
+        return $this->hasMany(PenjualanProduct::class);
+    }
+
+    public function profile()
+    {
+        return $this->hasMany(Profile::class);
+    }
+
+    public function roles()
+    {
+        return $this->hasMany(Roles::class);
+    }
+
+    public function satuan()
+    {
+        return $this->hasMany(Satuan::class);
+    }
+
+    public function serialBarang()
+    {
+        return $this->hasMany(SerialBarang::class);
+    }
+
+    public function subPembayaran()
+    {
+        return $this->hasMany(SubPembayaran::class);
+    }
+
+    public function supplier()
+    {
+        return $this->hasMany(Supplier::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
 }

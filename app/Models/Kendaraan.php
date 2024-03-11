@@ -20,4 +20,9 @@ class Kendaraan extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
 }

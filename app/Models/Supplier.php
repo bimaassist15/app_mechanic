@@ -15,4 +15,9 @@ class Supplier extends Model
     {
         return $query->where('cabang_id', session()->get('cabang_id'));
     }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
 }

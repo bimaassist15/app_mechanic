@@ -16,6 +16,11 @@ class Barang extends Model
         return $query->where('cabang_id', session()->get('cabang_id'));
     }
 
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
+
     public function kategori()
     {
         return $this->belongsTo(Kategori::class);
@@ -29,5 +34,10 @@ class Barang extends Model
     public function serialBarang()
     {
         return $this->hasMany(SerialBarang::class);
+    }
+
+    public function penjualanProduct()
+    {
+        return $this->hasMany(PenjualanProduct::class);
     }
 }

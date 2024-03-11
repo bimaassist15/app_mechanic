@@ -11,8 +11,18 @@ class Roles extends Model
     protected $table = 'roles';
     protected $guarded = [];
 
+    public function scopeDataTable($query)
+    {
+        return $query->where('cabang_id', session()->get('cabang_id'));
+    }
+
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
     }
 }

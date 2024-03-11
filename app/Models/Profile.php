@@ -15,4 +15,9 @@ class Profile extends Model
     {
         return $this->belongsTo(User::class, 'users_id', 'id');
     }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
 }

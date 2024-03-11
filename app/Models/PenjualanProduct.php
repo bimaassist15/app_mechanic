@@ -8,4 +8,26 @@ use Illuminate\Database\Eloquent\Model;
 class PenjualanProduct extends Model
 {
     use HasFactory;
+    protected $table = 'penjualan_product';
+    protected $guarded = [];
+
+    public function penjualan()
+    {
+        return $this->belongsTo(Penjualan::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class);
+    }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
 }

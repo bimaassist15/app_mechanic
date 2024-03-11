@@ -358,8 +358,35 @@ const formatNumber = (value) => {
     return value;
 };
 
-function removeCommas(value) {
+const removeCommas = (value) => {
     value = String(value);
     value = value.replace(/,/g, "");
     return value;
-}
+};
+
+const formatDate = () => {
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = ("0" + (date.getMonth() + 1)).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+
+    // Dapatkan jam, menit, dan detik
+    var hours = ("0" + date.getHours()).slice(-2);
+    var minutes = ("0" + date.getMinutes()).slice(-2);
+    var seconds = ("0" + date.getSeconds()).slice(-2);
+
+    // Kembalikan format tanggal dan waktu
+    return (
+        year +
+        "-" +
+        month +
+        "-" +
+        day +
+        " " +
+        hours +
+        ":" +
+        minutes +
+        ":" +
+        seconds
+    );
+};

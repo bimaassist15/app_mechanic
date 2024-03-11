@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SubPembayaran extends Model
+class PenjualanPembayaran extends Model
 {
     use HasFactory;
-    protected $table = 'sub_pembayaran';
+    protected $table = 'penjualan_pembayaran';
     protected $guarded = [];
 
-    public function scopeDataTable($query)
+    public function penjualan()
     {
-        return $query->where('cabang_id', session()->get('cabang_id'));
+        return $this->belongsTo(Penjualan::class);
     }
 
     public function kategoriPembayaran()
@@ -21,9 +21,14 @@ class SubPembayaran extends Model
         return $this->belongsTo(KategoriPembayaran::class);
     }
 
-    public function penjualanPembayaran()
+    public function subPembayaran()
     {
-        return $this->hasMany(PenjualanPembayaran::class);
+        return $this->belongsTo(SubPembayaran::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function cabang()

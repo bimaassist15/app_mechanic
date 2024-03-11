@@ -22,7 +22,8 @@
         <div class="col-lg-6"></div>
         <div class="col-lg-6">
             <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-primary btn-bayar" disabled>
+                <button type="button" class="btn btn-primary btn-bayar" data-bs-toggle="modal"
+                    data-bs-target="#modalConfirmBayar" disabled="disabled">
                     <i class="fa-solid fa-money-bill me-2"></i> Bayar
                 </button>
             </div>

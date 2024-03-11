@@ -20,4 +20,9 @@ class KategoriServis extends Model
     {
         return $this->hasMany(HargaServis::class);
     }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
 }

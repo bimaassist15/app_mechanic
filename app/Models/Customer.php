@@ -20,4 +20,20 @@ class Customer extends Model
     {
         return $this->hasMany(Kendaraan::class);
     }
+
+    public function penjualanProduct()
+    {
+        return $this->hasMany(PenjualanProduct::class);
+    }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
+
+    public function penjualan()
+    {
+        return $this->hasMany(Penjualan::class);
+    }
+
 }

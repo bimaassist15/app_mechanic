@@ -197,6 +197,8 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Milon\Barcode\BarcodeServiceProvider::class,
+        App\Providers\UtilsServiceProvider::class,
+
     ],
 
     /*
@@ -215,6 +217,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
+        'UtilsHelp' => App\Http\Helpers\UtilsHelper::class,
     ])->toArray(),
 
 ];

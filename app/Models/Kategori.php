@@ -20,4 +20,10 @@ class Kategori extends Model
     {
         return $this->hasMany(Barang::class);
     }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
+
 }

@@ -14,5 +14,8 @@ use Modules\Auth\Http\Controllers\AuthController;
 |
 */
 
-Route::get('/', [AuthController::class, 'index']);
-Route::post('/auth/login', [AuthController::class, 'store'])->name('auth.login');
+Route::group(['middleware' => ['guest']], function () {
+    Route::get('/', [AuthController::class, 'index']);
+    Route::get('/login', [AuthController::class, 'index'])->name('login');
+    Route::post('/auth/login', [AuthController::class, 'store'])->name('auth.login');
+});

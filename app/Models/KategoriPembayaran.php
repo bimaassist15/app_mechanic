@@ -20,4 +20,14 @@ class KategoriPembayaran extends Model
     {
         return $this->hasMany(SubPembayaran::class);
     }
+
+    public function penjualanPembayaran()
+    {
+        return $this->hasMany(PenjualanPembayaran::class);
+    }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
 }

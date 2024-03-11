@@ -11,11 +11,14 @@ var jsonSubPembayaran = $(".json_sub_pembayaran").data("json");
 var jsonArraySubPembayaran = $(".json_array_sub_pembayaran").data("json");
 var jsonDataUser = $(".json_data_user").data("json");
 var jsonDefaultUser = $(".json_default_user").data("json");
+var jsonCabangId = $(".json_cabang_id").data("json");
+var jsonNoInvoice = $(".json_no_invoice").data("json");
 
 var body = $("body");
 var orderItems = [];
 var metodePembayaran = [];
 var totalHargaItems = 0;
+var customerId = "";
 
 $(document).ready(function () {
     select2Standard({
@@ -32,6 +35,29 @@ $(document).ready(function () {
         parent: ".content-wrapper",
         selector: "select[name='kategori_pembayaran_id']",
     });
+
+    const refreshDataSet = () => {
+        $.ajax({
+            url: $(".url_purchase_kasir").data("url"),
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                jsonString = JSON.parse(data.dataCustomer);
+                jsonStringBarang = JSON.parse(data.dataBarang);
+                jsonTipeDiskon = JSON.parse(data.dataTipeDiskon);
+                jsonKategoriPembayaran = JSON.parse(data.kategoriPembayaran);
+                jsonArrayKategoriPembayaran = JSON.parse(
+                    data.array_kategori_pembayaran
+                );
+                jsonSubPembayaran = JSON.parse(data.subPembayaran);
+                jsonArraySubPembayaran = JSON.parse(data.array_sub_pembayaran);
+                jsonDataUser = JSON.parse(data.dataUser);
+                jsonDefaultUser = data.defaultUser;
+                jsonCabangId = data.cabangId;
+                jsonNoInvoice = data.noInvoice;
+            },
+        });
+    };
 
     const renderViewKasir = () => {
         var output = ``;
@@ -123,7 +149,7 @@ $(document).ready(function () {
         if (searchOrderItems !== -1) {
             orderItems[searchOrderItems].qty = qty;
             if (orderItems[searchOrderItems].stok_barang < qty) {
-                orderItems[searchOrderItems].qty = "1";
+                orderItems[searchOrderItems].qty = "0";
             }
             orderItems[searchOrderItems].totalHarga =
                 orderItems[searchOrderItems].qty *
@@ -600,7 +626,7 @@ $(document).ready(function () {
     };
 
     const handleButtonBayar = () => {
-        let buttonDisabled = false;
+        let buttonDisabled = true;
         metodePembayaran.map((value, index) => {
             if (
                 value.kategori_pembayaran_selected.nama_kpembayaran
@@ -612,7 +638,9 @@ $(document).ready(function () {
                     value.bayar === "" ||
                     value.user_selected === undefined ||
                     value.nama_pemilik_kartu === "" ||
-                    value.nomor_kartu === ""
+                    value.nomor_kartu === "" ||
+                    orderItems.length == 0 ||
+                    totalHargaItems == 0
                 ) {
                     buttonDisabled = true;
                 } else {
@@ -624,7 +652,9 @@ $(document).ready(function () {
                     value.sub_pembayaran_selected === undefined ||
                     value.bayar === "" ||
                     value.user_selected === undefined ||
-                    value.dibayarkan_oleh === ""
+                    value.dibayarkan_oleh === "" ||
+                    orderItems.length == 0 ||
+                    totalHargaItems == 0
                 ) {
                     buttonDisabled = true;
                 } else {
@@ -632,14 +662,51 @@ $(document).ready(function () {
                 }
             }
         });
-
         $(".btn-bayar").attr("disabled", buttonDisabled);
+    };
+
+    const handleSubPembayaran = (index) => {
+        const value = $(
+            `select[name="kategori_pembayaran_id_mp"][data-index="${index}"] option:selected`
+        ).val();
+        const findKategoriPembayaran = jsonKategoriPembayaran.findIndex(
+            (item) => item.id == value
+        );
+        if (findKategoriPembayaran !== -1) {
+            const getKategoriPembayaran =
+                jsonKategoriPembayaran[findKategoriPembayaran];
+            const getSubPembayaran = jsonSubPembayaran.filter(
+                (item) =>
+                    item.kategori_pembayaran_id == getKategoriPembayaran.id
+            );
+            metodePembayaran[index].sub_pembayaran = getSubPembayaran;
+        }
+    };
+
+    const resetData = () => {
+        orderItems = [];
+        metodePembayaran = [];
+        totalHargaItems = 0;
+        customerId = "";
+        $("#load_customer_id").html("");
+        $("#orderBarang").html("");
+        $("#output_metode_pembayaran").html("");
+        $("#total_harga_all").html("0");
+    };
+
+    const printOutput = (output) => {
+        var printWindow = window.open("", "_blank");
+        printWindow.document.write(output);
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.close();
     };
 
     body.on("change", 'select[name="customer_id"]', function (e) {
         const value = $(this).val();
         if (value !== "" && value !== null) {
             const searchCustomer = jsonString.find((item) => item.id == value);
+            customerId = searchCustomer.id;
             $("#load_customer_id").html(`
         <table class="w-100">
             <thead>
@@ -694,20 +761,36 @@ $(document).ready(function () {
             }, 0);
 
             renderViewKasir();
+
+            handleManageHutang();
+            handleDisplayInput();
+            handleButtonBayar();
         }
     });
 
     body.on("input", 'input[name="qty"]', function () {
         const id = $(this).data("id");
         changeHandleInput(id);
+
+        handleManageHutang();
+        handleDisplayInput();
+        handleButtonBayar();
     });
     body.on("change", 'select[name="type_discount"]', function () {
         const id = $(this).data("id");
         changeHandleInput(id);
+
+        handleManageHutang();
+        handleDisplayInput();
+        handleButtonBayar();
     });
     body.on("input", 'input[name="jumlah_diskon"]', function () {
         const id = $(this).data("id");
         changeHandleInput(id);
+
+        handleManageHutang();
+        handleDisplayInput();
+        handleButtonBayar();
     });
 
     body.on("click", ".btn-delete", function (e) {
@@ -721,6 +804,10 @@ $(document).ready(function () {
             }, 0);
             renderViewKasir();
         }
+
+        handleManageHutang();
+        handleDisplayInput();
+        handleButtonBayar();
     });
 
     body.on("click", ".btn-add-pembayaran", function (e) {
@@ -812,6 +899,7 @@ $(document).ready(function () {
             handleManageHutang();
             handleDisplayInput();
             handleButtonBayar();
+            handleSubPembayaran(index);
 
             const output = viewMetodePembayaran();
             $("#output_metode_pembayaran").html(output);
@@ -861,5 +949,130 @@ $(document).ready(function () {
         handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
+    });
+
+    const payloadKasir = () => {
+        const indexLast = metodePembayaran.length - 1;
+        const getHutang = parseFloat(metodePembayaran[indexLast].hutang);
+
+        const payloadPenjualan = {
+            invoice_penjualan: jsonNoInvoice,
+            transaksi_penjualan: formatDate(),
+            customer_id: customerId,
+            tipe_penjualan: getHutang > 0 ? "hutang" : "cash",
+            users_id: jsonDefaultUser,
+            cabang_id: jsonCabangId,
+            total_penjualan: parseFloat(totalHargaItems),
+            hutang_penjualan: metodePembayaran[indexLast].hutang,
+            kembalian_penjualan: metodePembayaran[indexLast].kembalian,
+        };
+
+        const payloadPenjualanProduct = [];
+        orderItems.map((value, index) => {
+            payloadPenjualanProduct.push({
+                transaksi_penjualanproduct: formatDate(),
+                customer_id: customerId,
+                barang_id: value.id,
+                jumlah_penjualanproduct: value.qty,
+                typediskon_penjualanproduct: value.tipeDiskon,
+                diskon_penjualanproduct: value.jumlahDiskon,
+                subtotal_penjualanproduct: value.totalHarga,
+                cabang_id: jsonCabangId,
+            });
+        });
+
+        const payloadPenjualanPembayaran = [];
+        metodePembayaran.map((value, index) => {
+            payloadPenjualanPembayaran.push({
+                kategori_pembayaran_id: value.kategori_pembayaran_selected.id,
+                sub_pembayaran_id: value.sub_pembayaran_selected.id,
+                bayar_ppembayaran: value.bayar,
+                dibayaroleh_ppembayaran:
+                    value.dibayarkan_oleh === undefined
+                        ? ""
+                        : value.dibayarkan_oleh,
+                users_id: value.user_selected.id,
+                kembalian_ppembayaran: value.kembalian,
+                hutang_ppembayaran: value.hutang,
+                nomorkartu_ppembayaran:
+                    value.nomor_kartu === undefined ? "" : value.nomor_kartu,
+                pemilikkartu_ppembayaran:
+                    value.nama_pemilik_kartu === undefined
+                        ? ""
+                        : value.nama_pemilik_kartu,
+                cabang_id: jsonCabangId,
+            });
+        });
+
+        const payload = {
+            penjualan: payloadPenjualan,
+            penjualan_product: payloadPenjualanProduct,
+            penjualan_pembayaran: payloadPenjualanPembayaran,
+        };
+
+        return payload;
+    };
+
+    const renderPrintKasir = (outputData) => {
+        var output = "";
+        $.ajax({
+            url: $(".url_print_kasir").data("url"),
+            dataType: "json",
+            type: "get",
+            data: {
+                penjualan_id: outputData,
+            },
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                output = data;
+            },
+        });
+
+        return output;
+    };
+
+    body.on("click", ".btn-confirm-bayar", function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: "post",
+            url: $(".url_simpan_kasir").data("url"),
+            data: payloadKasir(),
+            dataType: "json",
+            beforeSend: function () {
+                clearError422();
+                $(".btn-confirm-bayar").attr("disabled", true);
+                $(".btn-confirm-bayar").html(disableButton);
+            },
+            success: function (data) {
+                runToast({
+                    title: "Successfully",
+                    description: data.message,
+                    type: "bg-success",
+                });
+
+                const output = renderPrintKasir(data.result);
+                printOutput(output);
+
+                // tutup modal
+                $("#modalConfirmBayar").modal("hide");
+
+                // reset data
+                resetData();
+                refreshDataSet();
+            },
+            error: function (jqXHR, exception) {
+                $(".btn-confirm-bayar").attr("disabled", false);
+                $(".btn-confirm-bayar").html(enableButton);
+                if (jqXHR.status === 422) {
+                    showErrors422(jqXHR);
+                }
+            },
+            complete: function () {
+                $(".btn-confirm-bayar").attr("disabled", false);
+                $(".btn-confirm-bayar").html(enableButton);
+            },
+        });
     });
 });

@@ -6,6 +6,8 @@ use App\Models\Barang;
 use App\Models\Customer;
 use App\Models\KategoriPembayaran;
 use App\Models\Penjualan;
+use App\Models\PenjualanPembayaran;
+use App\Models\PenjualanProduct;
 use App\Models\SubPembayaran;
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
@@ -21,16 +23,17 @@ class KasirController extends Controller
      * @return Renderable
      */
 
-     public $datastatis;
-    public function __construct() {
+    public $datastatis;
+    public function __construct()
+    {
         $this->datastatis = Config::get('datastatis');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $customer = Customer::dataTable()
-        ->where('status_customer', true)
-        ->get();
+            ->where('status_customer', true)
+            ->get();
         $array_customer = [];
         foreach ($customer as $key => $item) {
             $array_customer[] = [
@@ -39,15 +42,15 @@ class KasirController extends Controller
             ];
         }
         $barang = Barang::dataTable()
-        ->with('satuan', 'kategori')
-        ->where('status_barang', 'dijual')
-        ->orWhere('status_barang', 'dijual & untuk servis')
-        ->get();
+            ->with('satuan', 'kategori')
+            ->where('status_barang', 'dijual')
+            ->orWhere('status_barang', 'dijual & untuk servis')
+            ->get();
         $array_barang = [];
         foreach ($barang as $key => $item) {
             $array_barang[] = [
                 'id' => $item->id,
-                'label' => $item->barcode_barang. ' '.$item->nama_barang
+                'label' => $item->barcode_barang . ' ' . $item->nama_barang
             ];
         }
 
@@ -62,8 +65,8 @@ class KasirController extends Controller
 
         $array_kategori_pembayaran = [];
         $kategoriPembayaran = KategoriPembayaran::dataTable()->where('status_kpembayaran', true)
-        ->whereNot('nama_kpembayaran', 'like', '%deposit%')
-        ->get();
+            ->whereNot('nama_kpembayaran', 'like', '%deposit%')
+            ->get();
         foreach ($kategoriPembayaran as $value => $item) {
             $array_kategori_pembayaran[] = [
                 'id' => $item->id,
@@ -76,7 +79,7 @@ class KasirController extends Controller
 
         $array_sub_pembayaran = [];
         $subPembayaran = SubPembayaran::dataTable()->where('status_spembayaran', true)
-        ->get();
+            ->get();
         foreach ($subPembayaran as $value => $item) {
             $array_sub_pembayaran[] = [
                 'id' => $item->id,
@@ -88,16 +91,35 @@ class KasirController extends Controller
         $array_sub_pembayaran = json_encode($array_sub_pembayaran);
 
         $dataUser = User::dataTable()
-        ->join('roles','roles.id','=','users.roles_id')
-        ->with('profile')
-        ->select('users.*','roles.id as roles_id', 'roles.name as roles_name', 'roles.guard_name as roles_guard')
-        ->get();
+            ->join('roles', 'roles.id', '=', 'users.roles_id')
+            ->with('profile')
+            ->select('users.*', 'roles.id as roles_id', 'roles.name as roles_name', 'roles.guard_name as roles_guard')
+            ->get();
         $dataUser = json_encode($dataUser);
         $defaultUser = Auth::id();
+        $cabangId = session()->get('cabang_id');
 
+        $data = [
+            'array_customer' => $array_customer,
+            'dataCustomer' => $dataCustomer,
+            'noInvoice' => $noInvoice,
+            'array_barang' => $array_barang,
+            'dataBarang' => $dataBarang,
+            'dataTipeDiskon' => $dataTipeDiskon,
+            'array_kategori_pembayaran' => $array_kategori_pembayaran,
+            'kategoriPembayaran' => $kategoriPembayaran,
+            'subPembayaran' => $subPembayaran,
+            'array_sub_pembayaran' => $array_sub_pembayaran,
+            'dataUser' => $dataUser,
+            'defaultUser' => $defaultUser,
+            'cabangId' => $cabangId,
+        ];
 
-        return view('purchase::kasir.index', compact(
-            'array_customer', 'dataCustomer', 'noInvoice', 'array_barang', 'dataBarang', 'dataTipeDiskon', 'array_kategori_pembayaran', 'kategoriPembayaran', 'subPembayaran', 'array_sub_pembayaran', 'dataUser', 'defaultUser'));
+        if ($request->ajax()) {
+            return response()->json($data, 200);
+        }
+
+        return view('purchase::kasir.index', $data);
     }
 
     /**
@@ -116,7 +138,37 @@ class KasirController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $penjualan = Penjualan::create($request->input('penjualan'));
+        $penjualanProduct = $request->input('penjualan_product');
+        $arrayPenjualanProduct = [];
+        foreach ($penjualanProduct as $key => $item) {
+            $arrayPenjualanProduct[] = array_merge($item, ['penjualan_id' => $penjualan->id]);
+        }
+        PenjualanProduct::insert($arrayPenjualanProduct);
+
+        $penjualanPembayaran = $request->input('penjualan_pembayaran');
+        $arrayPenjualanPembayaran = [];
+        foreach ($penjualanPembayaran as $key => $item) {
+            $arrayPenjualanPembayaran[] = array_merge(
+                $item,
+                [
+                    'penjualan_id' => $penjualan->id,
+                ]
+            );
+        }
+        PenjualanPembayaran::insert($arrayPenjualanPembayaran);
+
+        // pengurangan stock
+        foreach ($arrayPenjualanProduct as $key => $value) {
+            $barang = Barang::find($value['barang_id']);
+            $barang->stok_barang = floatval($barang->stok_barang) - floatval($value['jumlah_penjualanproduct']);
+            $barang->save();
+        }
+
+        return response()->json([
+            'message' => 'Berhasil tambah data',
+            'result' => $penjualan->id,
+        ], 201);
     }
 
     /**

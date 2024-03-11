@@ -17,8 +17,8 @@ class RolesController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->ajax()){
-            $data = Roles::query();
+        if ($request->ajax()) {
+            $data = Roles::dataTable();
             return DataTables::eloquent($data)
                 ->addColumn('action', function ($row) {
                     $buttonUpdate = '
@@ -31,7 +31,7 @@ class RolesController extends Controller
                     </a>
                     ';
                     $buttonDelete = '
-                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('setting/roles/'.$row->id).'?_method=delete">
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="' . url('setting/roles/' . $row->id) . '?_method=delete">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                     ';
@@ -71,6 +71,7 @@ class RolesController extends Controller
         $data = [
             'name' => $request->input('name'),
             'guard_name' => $request->input('guard_name'),
+            'cabang_id' => session()->get('cabang_id'),
         ];
         Roles::create($data);
         return response()->json('Berhasil tambah data', 201);
@@ -93,10 +94,9 @@ class RolesController extends Controller
      */
     public function edit($id)
     {
-        $action = url('setting/roles/'.$id.'?_method=put');
+        $action = url('setting/roles/' . $id . '?_method=put');
         $row = Roles::find($id);
         return view('setting::roles.form', compact('action', 'row'));
-
     }
 
     /**
@@ -111,6 +111,7 @@ class RolesController extends Controller
         $data = [
             'name' => $request->input('name'),
             'guard_name' => $request->input('guard_name'),
+            'cabang_id' => session()->get('cabang_id'),
         ];
         Roles::find($id)->update($data);
         return response()->json('Berhasil update data', 200);

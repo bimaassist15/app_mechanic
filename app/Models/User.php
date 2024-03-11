@@ -51,11 +51,27 @@ class User extends Authenticatable
 
     public function scopeDataTable($query)
     {
-        return $query->where('cabang_id', session()->get('cabang_id'));
+        return $query->where('users.cabang_id', session()->get('cabang_id'));
     }
-    
+
     public function profile()
     {
         return $this->hasOne(Profile::class, 'users_id', 'id');
     }
+
+    public function penjualanPembayaran()
+    {
+        return $this->hasMany(PenjualanPembayaran::class);
+    }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
+
+    public function penjualan()
+    {
+        return $this->hasMany(Penjualan::class);
+    }
+
 }
