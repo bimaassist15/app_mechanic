@@ -50,7 +50,11 @@ class KasirController extends Controller
         foreach ($barang as $key => $item) {
             $array_barang[] = [
                 'id' => $item->id,
-                'label' => $item->barcode_barang . ' ' . $item->nama_barang
+                'label' => '
+                <strong>[' . $item->barcode_barang . '] ' . $item->nama_barang . '</strong> <br />
+                <span>Stok: ' . $item->stok_barang . '</span>
+                '
+
             ];
         }
 

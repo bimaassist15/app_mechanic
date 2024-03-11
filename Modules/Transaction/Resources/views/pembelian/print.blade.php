@@ -150,7 +150,7 @@
                 <td colspan="2" style="text-align: center;">
                     <div style="margin-top: 10px;">
                     </div>
-                    <strong>Powered By: Bima Ega Farizky</strong>
+                    <strong>Powered By: {{ UtilsHelp::createdApp() }}</strong>
                 </td>
             </tr>
         </table>

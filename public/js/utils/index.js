@@ -120,11 +120,24 @@ function select2Standard({
     selector = "",
     parent = "",
     theme = "bootstrap-5",
+    data = [],
 }) {
     $(`${selector}`).select2({
         dropdownParent: $(`${parent}`),
         closeOnSelect: true,
         theme: theme,
+        data: data,
+        templateResult: function (data) {
+            var $option = $("<span></span>");
+            $option.html(data.text);
+            return $option;
+        },
+        templateSelection: function (data) {
+            const splitText = data.text.split("<br />");
+            var $result = $("<span></span>");
+            $result.html(splitText[0]);
+            return $result;
+        },
     });
 }
 
