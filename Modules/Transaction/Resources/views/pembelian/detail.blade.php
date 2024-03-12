@@ -42,7 +42,7 @@
                     </tr>
                     <tr>
                         <td>
-                            Email: bimaega15@gmail.com
+                            Email: Ijat15@gmail.com
                         </td>
                         <td>
                             Perusahaan:PT Supplier Testing

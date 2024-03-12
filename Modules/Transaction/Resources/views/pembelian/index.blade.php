@@ -27,8 +27,8 @@
                             <th>1</th>
                             <th>2389523723</th>
                             <th>24 Februari 2024</th>
-                            <th>Bima</th>
-                            <th>Bima</th>
+                            <th>Ijat</th>
+                            <th>Ijat</th>
                             <th>2.000.000</th>
                             <th>
                                 <x-button-main color="btn-primary" className="btn-detail"
