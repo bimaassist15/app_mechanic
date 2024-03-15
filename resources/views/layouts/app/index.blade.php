@@ -132,12 +132,14 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="{{ asset('library/select2-develop/dist/js/select2.min.js') }}"></script>
     <script src="{{ asset('backend/sneat-bootstrap-html-admin-template-free/assets/js/ui-toasts.js') }}"></script>
+    <script src="{{ asset('backend/sneat-bootstrap-html-admin-template-free/assets/js/ui-popover.js') }}"></script>
 
     <script src="{{ asset('js/utils/index.js') }}"></script>
     <script src="{{ asset('js/modal/index.js') }}"></script>
     <script src="{{ asset('library/sweetalert2/dist/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('library/autonumeric/dist/autoNumeric.min.js') }}"></script>
-    <script src="{{ asset('library/jQuery-Plugin-To-Print-Any-Part-Of-Your-Page-Print/dist/jQuery.print.min.js') }}"></script>
+    <script src="{{ asset('library/jQuery-Plugin-To-Print-Any-Part-Of-Your-Page-Print/dist/jQuery.print.min.js') }}">
+    </script>
 
     <script>
         $.ajaxSetup({

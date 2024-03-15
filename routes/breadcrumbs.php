@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 use Diglactic\Breadcrumbs\Breadcrumbs;
 
 
@@ -30,13 +31,13 @@ Breadcrumbs::for('barang', function (BreadcrumbTrail $trail) {
 // Home > serial barang
 Breadcrumbs::for('serialBarang', function (BreadcrumbTrail $trail) {
     $trail->parent('barang');
-    $trail->push('Serial Barang', url('master/serialBarang?barang_id='.request()->query('barang_id')));
+    $trail->push('Serial Barang', url('master/serialBarang?barang_id=' . request()->query('barang_id')));
 });
 
 // Home > generate barang
 Breadcrumbs::for('generateBarang', function (BreadcrumbTrail $trail) {
     $trail->parent('barang');
-    $trail->push('Generate Barang', url('master/generateBarang?barang_id='.request()->query('barang_id')));
+    $trail->push('Generate Barang', url('master/generateBarang?barang_id=' . request()->query('barang_id')));
 });
 
 // Home > customer
@@ -173,4 +174,10 @@ Breadcrumbs::for('kategoriPembayaran', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('subPembayaran', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Sub Pembayaran', url('master/subPembayaran'));
+});
+
+// Home > penjualanCicilan
+Breadcrumbs::for('penjualanCicilan', function (BreadcrumbTrail $trail) {
+    $trail->parent('belumLunas');
+    $trail->push('Penjualan Cicilan', url('purchase/penjualanCicilan?penjualan_id=' . request()->query('penjualan_id')));
 });

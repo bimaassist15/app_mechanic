@@ -10,6 +10,7 @@ class Cabang extends Model
     use HasFactory;
     protected $table = 'cabang';
     protected $guarded = [];
+    public $timestamps = true;
 
     public function barang()
     {
@@ -93,6 +94,11 @@ class Cabang extends Model
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public function penjualanCicilan()
+    {
+        return $this->hasMany(PenjualanCicilan::class);
     }
 
 }

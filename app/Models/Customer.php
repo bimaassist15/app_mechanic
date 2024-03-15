@@ -10,6 +10,7 @@ class Customer extends Model
     use HasFactory;
     protected $table = 'customer';
     protected $guarded = [];
+    public $timestamps = true;
 
     public function scopeDataTable($query)
     {

@@ -10,6 +10,7 @@ class KategoriServis extends Model
     use HasFactory;
     protected $table = 'kategori_servis';
     protected $guarded = [];
+    public $timestamps = true;
 
     public function scopeDataTable($query)
     {

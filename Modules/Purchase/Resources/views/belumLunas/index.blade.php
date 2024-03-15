@@ -1,5 +1,9 @@
 @extends('layouts.app.index')
 
+@section('title')
+    Halaman Piutang
+@endsection
+
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         {{ Breadcrumbs::render('belumLunas') }}
@@ -13,13 +17,13 @@
                 <table class="table" id="dataTable">
                     <thead>
                         <tr>
-                            <th>No.</th>
+                            <th width="10%;">No.</th>
                             <th>Invoice</th>
                             <th>Tanggal Transaksi</th>
                             <th>Customer</th>
-                            <th>Jatuh Tempo</th>
-                            <th>Subtotal</th>
-                            <th>Aksi</th>
+                            <th>Kasir</th>
+                            <th>Total Harga</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -31,7 +35,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('belumLunas.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('purchase/belumLunas') }}"></script>
         <script src="{{ asset('js/purchase/belumLunas/index.js') }}"></script>
     @endpush
 @endsection

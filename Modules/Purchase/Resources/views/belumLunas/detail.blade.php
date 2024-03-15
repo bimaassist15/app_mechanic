@@ -68,19 +68,14 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="{{ url('purchase/kasir?penjualan_id=' . $row->id . '&isEdit=true') }}"
-                            class="dropdown-item d-flex align-items-center btn-edit-transaksi"><i
-                                class="bx bx-chevron-right scaleX-n1-rtl"></i>Edit Transaksi</a>
-                    </li>
-                    <li>
                         <a target="_blank" href="{{ url('purchase/penjualan/print/purchase') }}"
                             class="dropdown-item d-flex align-items-center btn-print"><i
                                 class="bx bx-chevron-right scaleX-n1-rtl"></i>Print</a>
                     </li>
                     <li>
-                        <a href="{{ url('purchase/penjualan/' . $row->id . '?_method=delete') }}"
-                            class="dropdown-item d-flex align-items-center btn-delete"><i
-                                class="bx bx-chevron-right scaleX-n1-rtl"></i>Hapus</a>
+                        <a href="{{ url('purchase/penjualanCicilan?penjualan_id=' . $row->id) }}"
+                            class="dropdown-item d-flex align-items-center"><i
+                                class="bx bx-chevron-right scaleX-n1-rtl"></i>Bayar Tagihan</a>
                     </li>
                 </ul>
             </div>
@@ -155,5 +150,4 @@
 </div>
 
 <script class="penjualan_id" data-value="{{ $row->id }}"></script>
-<script class="json_row" data-value="{{ $jsonRow }}"></script>
-<script src="{{ asset('js/purchase/penjualan/detail.js') }}"></script>
+<script src="{{ asset('js/purchase/belumLunas/detail.js') }}"></script>

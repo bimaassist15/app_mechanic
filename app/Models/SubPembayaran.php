@@ -10,6 +10,7 @@ class SubPembayaran extends Model
     use HasFactory;
     protected $table = 'sub_pembayaran';
     protected $guarded = [];
+    public $timestamps = true;
 
     public function scopeDataTable($query)
     {
@@ -29,5 +30,10 @@ class SubPembayaran extends Model
     public function cabang()
     {
         return $this->belongsTo(Cabang::class);
+    }
+
+    public function penjualanCicilan()
+    {
+        return $this->hasMany(PenjualanCicilan::class);
     }
 }

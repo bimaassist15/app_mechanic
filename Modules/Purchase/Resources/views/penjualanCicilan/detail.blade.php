@@ -68,17 +68,22 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="{{ url('purchase/kasir?penjualan_id=' . $row->id . '&isEdit=true') }}"
-                            class="dropdown-item d-flex align-items-center btn-edit-transaksi"><i
-                                class="bx bx-chevron-right scaleX-n1-rtl"></i>Edit Transaksi</a>
+                        @php
+                            $setUrl = url('purchase/penjualanCicilan/create');
+                        @endphp
+                        <x-list-main-component title="Edit Transaksi Cicilan" className="btn-edit-transaksi"
+                            typeModal="extraLargeModal" :urlCreate="$setUrl"
+                            style="{
+                                cursor: pointer;
+                            }" />
                     </li>
                     <li>
-                        <a target="_blank" href="{{ url('purchase/penjualan/print/purchase') }}"
+                        <a target="_blank" href="{{ route('penjualanCicilan.print') }}"
                             class="dropdown-item d-flex align-items-center btn-print"><i
                                 class="bx bx-chevron-right scaleX-n1-rtl"></i>Print</a>
                     </li>
                     <li>
-                        <a href="{{ url('purchase/penjualan/' . $row->id . '?_method=delete') }}"
+                        <a href="{{ url('purchase/penjualanCicilan/' . $penjualanCicilan->id . '?_method=delete') }}"
                             class="dropdown-item d-flex align-items-center btn-delete"><i
                                 class="bx bx-chevron-right scaleX-n1-rtl"></i>Hapus</a>
                     </li>
@@ -87,57 +92,54 @@
 
             <div class="col-lg-12 mt-3">
                 <div class="table-responsive text-nowrap px-3">
-                    <table class="table" id="dataTable">
+                    <table class="table">
                         <thead>
                             <tr>
-                                <th>Nama Barang</th>
-                                <th>Harga</th>
-                                <th>Qty</th>
-                                <th>Sub total</th>
+                                <th>Pembayaran</th>
+                                <th>Bayar</th>
+                                <th>Kembalian</th>
+                                <th>Hutang</th>
                             </tr>
                         </thead>
-                        <tbody class="table-border-bottom-0">
-                            @foreach ($row->penjualanProduct as $item)
+                        <tbody>
+                            @foreach ($row->penjualanCicilan as $item)
                                 <tr>
-                                    <td>{{ $item->barang->nama_barang }}</td>
-                                    <td>{{ UtilsHelp::formatUang($item->barang->hargajual_barang) }}</td>
-                                    <td>{{ $item->jumlah_penjualanproduct }}</td>
-                                    <td>{{ UtilsHelp::formatUang($item->subtotal_penjualanproduct) }}</td>
+                                    <td>
+                                        {{ $item->subPembayaran->nama_spembayaran }}
+                                    </td>
+                                    <td>{{ UtilsHelp::formatUang($item->bayar_pcicilan) }}</td>
+                                    <td>{{ UtilsHelp::formatUang($item->kembalian_pcicilan) }}</td>
+                                    <td>{{ UtilsHelp::formatUang($item->hutang_pcicilan) }}</td>
                                 </tr>
                             @endforeach
+
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="2"></td>
-                                <td><strong>Total:</strong></td>
-                                <td colspan="1" class="text-end">
-                                    <strong>{{ UtilsHelp::formatUang($row->total_penjualan) }}</strong>
-                                </td>
+                                <td></td>
+                                <td>Total Transaksi</td>
+                                <td style="padding: 0 80px;">Rp. &emsp;: </td>
+                                <td>{{ UtilsHelp::formatUang($row->total_penjualan) }}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>Total Pembayaran</td>
+                                <td style="padding: 0 80px;">Rp. &emsp;: </td>
+                                <td>{{ UtilsHelp::formatUang($row->bayar_penjualan) }}</td>
                             </tr>
                             @if ($row->hutang_penjualan)
                                 <tr>
-                                    <td colspan="2"></td>
-                                    <td><strong>Hutang:</strong></td>
-                                    <td colspan="1" class="text-end">
-                                        {{ UtilsHelp::formatUang($row->hutang_penjualan) }}
-                                    </td>
+                                    <td></td>
+                                    <td>Hutang</td>
+                                    <td style="padding: 0 80px;">Rp. &emsp;: </td>
+                                    <td>{{ UtilsHelp::formatUang($row->hutang_penjualan) }}</td>
                                 </tr>
                             @endif
-                            @foreach ($row->penjualanPembayaran as $item)
-                                <tr>
-                                    <td colspan="2"></td>
-                                    <td><strong>{{ $item->kategoriPembayaran->nama_kpembayaran }}</strong></td>
-                                    <td colspan="1" class="text-end">
-                                        {{ UtilsHelp::formatUang($item->bayar_ppembayaran) }}
-                                    </td>
-                                </tr>
-                            @endforeach
                             <tr>
-                                <td colspan="2"></td>
-                                <td><strong>Kembalian:</strong></td>
-                                <td colspan="1" class="text-end">
-                                    <strong>{{ UtilsHelp::formatUang($row->kembalian_penjualan) }}</strong>
-                                </td>
+                                <td></td>
+                                <td>Kembalian</td>
+                                <td style="padding: 0 80px;">Rp. &emsp;:</td>
+                                <td>{{ UtilsHelp::formatUang($row->kembalian_penjualan) }} </td>
                             </tr>
                         </tfoot>
                     </table>
@@ -156,4 +158,6 @@
 
 <script class="penjualan_id" data-value="{{ $row->id }}"></script>
 <script class="json_row" data-value="{{ $jsonRow }}"></script>
-<script src="{{ asset('js/purchase/penjualan/detail.js') }}"></script>
+<script class="url_purchase_kasir" data-url="{{ url('purchase/penjualanCicilan/create?penjualan_id=' . $row->id) }}">
+</script>
+<script src="{{ asset('js/purchase/penjualanCicilan/detail.js') }}"></script>

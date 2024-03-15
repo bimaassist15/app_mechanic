@@ -74,7 +74,12 @@ function basicDatatable({
  * @param {*} urlDelete
  * @param {*} data
  */
-function basicDeleteConfirmDatatable({ urlDelete = "", data = {}, text = "" }) {
+function basicDeleteConfirmDatatable({
+    urlDelete = "",
+    data = {},
+    text = "",
+    dataFunction = () => {},
+}) {
     var text = text ? text : "Benar ingin menghapus data ini?";
 
     Swal.fire({
@@ -99,6 +104,7 @@ function basicDeleteConfirmDatatable({ urlDelete = "", data = {}, text = "" }) {
                         description: data,
                     });
                     datatable.ajax.reload();
+                    dataFunction();
                 },
             });
         }

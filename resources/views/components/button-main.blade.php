@@ -6,6 +6,7 @@
     'icon' => '<i class="bx bx-plus me-sm-1"></i>',
     'color' => 'btn-primary',
     'style' => '',
+    'disabled' => false,
 ])
 
 <button
@@ -13,11 +14,12 @@
         'class' => 'btn ' . $color . ' ' . $className,
         'data-typemodal' => $typeModal,
         'data-urlcreate' => $urlCreate,
-        'style' => $style
+        'style' => $style,
+        'disabled' => $disabled,
     ]) }}
     type="button">
     <span>
-        {!! $icon !!}
+        {!! $title == 'Lunas' ? '' : $icon !!}
         {{ $title ?? '' }}
     </span>
 </button>

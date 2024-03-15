@@ -10,6 +10,7 @@ class Barang extends Model
     use HasFactory;
     protected $table = 'barang';
     protected $guarded = [];
+    public $timestamps = true;
 
     public function scopeDataTable($query)
     {

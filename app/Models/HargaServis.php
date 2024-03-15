@@ -10,6 +10,7 @@ class HargaServis extends Model
     use HasFactory;
     protected $table = 'harga_servis';
     protected $guarded = [];
+    public $timestamps = true;
 
     public function scopeDataTable($query)
     {

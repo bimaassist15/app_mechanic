@@ -10,6 +10,7 @@ class Kendaraan extends Model
     use HasFactory;
     protected $table = 'kendaraan';
     protected $guarded = [];
+    public $timestamps = true;
 
     public function scopeDataTable($query)
     {

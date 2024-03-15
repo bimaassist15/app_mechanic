@@ -11,11 +11,15 @@
 |
 */
 
-Route::prefix('purchase')->middleware('auth')->group(function() {
+Route::prefix('purchase')->middleware('auth')->group(function () {
     Route::get('/', 'PurchaseController@index');
     Route::resource('kasir', 'KasirController');
     Route::resource('penjualan', 'PenjualanController');
     Route::get('penjualan/print/purchase', 'PenjualanController@print')->name('penjualan.print');
     Route::get('belumLunas', 'BelumLunasController@index')->name('belumLunas.index');
+    Route::get('belumLunas/{id}/show', 'BelumLunasController@show')->name('belumLunas.show');
     Route::get('lunas', 'LunasController@index')->name('lunas.index');
+    Route::get('lunas/{id}/show', 'LunasController@show')->name('lunas.show');
+    Route::resource('penjualanCicilan', 'PenjualanCicilanController');
+    Route::get('penjualanCicilan/print/purchase', 'PenjualanCicilanController@print')->name('penjualanCicilan.print');
 });

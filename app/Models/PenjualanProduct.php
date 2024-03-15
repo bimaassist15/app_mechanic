@@ -10,6 +10,7 @@ class PenjualanProduct extends Model
     use HasFactory;
     protected $table = 'penjualan_product';
     protected $guarded = [];
+    public $timestamps = true;
 
     public function penjualan()
     {

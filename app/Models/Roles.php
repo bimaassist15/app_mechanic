@@ -10,6 +10,7 @@ class Roles extends Model
     use HasFactory;
     protected $table = 'roles';
     protected $guarded = [];
+    public $timestamps = true;
 
     public function scopeDataTable($query)
     {

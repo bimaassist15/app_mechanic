@@ -31,6 +31,7 @@ class KasirController extends Controller
 
     public function index(Request $request)
     {
+
         $customer = Customer::dataTable()
             ->where('status_customer', true)
             ->get();
@@ -151,7 +152,7 @@ class KasirController extends Controller
     {
         // jika payload is edit
         $payloadIsEdit = $request->input('payload_is_edit');
-        if ($payloadIsEdit['isEdit'] == 'true') {
+        if ($payloadIsEdit['isEdit'] == true) {
             $penjualanId = $payloadIsEdit['penjualan_id'];
 
             $penjualan = new Penjualan();
@@ -195,8 +196,13 @@ class KasirController extends Controller
             $barang->save();
         }
 
+        $message = 'Berhasil tambah data';
+        if ($payloadIsEdit['isEdit'] == true) {
+            $message = 'Berhasil edit transaksi';
+        }
+
         return response()->json([
-            'message' => 'Berhasil tambah data',
+            'message' => $message,
             'result' => $penjualan->id,
         ], 201);
     }

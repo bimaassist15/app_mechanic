@@ -85,7 +85,8 @@ class PenjualanController extends Controller
     {
         $penjualan = new Penjualan();
         $row = $penjualan->invoicePenjualan($id);
-        return view('purchase::penjualan.detail', compact('row'));
+        $jsonRow = json_encode($row);
+        return view('purchase::penjualan.detail', compact('row', 'jsonRow'));
     }
 
     public function print()

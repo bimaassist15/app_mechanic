@@ -10,6 +10,7 @@ class SerialBarang extends Model
     use HasFactory;
     protected $table = 'serial_barang';
     protected $guarded = [];
+    public $timestamps = true;
 
     public function scopeDataTable($query)
     {
