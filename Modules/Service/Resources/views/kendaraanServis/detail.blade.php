@@ -159,7 +159,7 @@
                     <div class="col-lg-8">
                         <x-data-customer label="Tanggal Masuk" value="22 Februari 2024 10:00 Wib" />
                         <x-data-customer label="Status Servis (22 Februari 2024)" value="Sudah diambil" />
-                        <x-data-customer label="Penerima / Pembuat Nota Penerimaan Servis" value="Bima" />
+                        <x-data-customer label="Penerima / Pembuat Nota Penerimaan Servis" value="Ijat" />
                     </div>
                 </div>
                 <hr>

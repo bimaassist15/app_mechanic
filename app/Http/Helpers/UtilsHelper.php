@@ -285,6 +285,6 @@ class UtilsHelper
 
     public static function createdApp()
     {
-        return 'Bima Ega Farizky';
+        return 'Jasmine Motor';
     }
 }
