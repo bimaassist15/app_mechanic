@@ -1,8 +1,4 @@
 // "use strict";
-var datatable;
-var jsonString = $(".json_supplier").data("json");
-var jsonStringBarang = $(".json_barang").data("json");
-var jsonTipeDiskon = $(".json_tipe_diskon").data("json");
 var jsonKategoriPembayaran = $(".json_kategori_pembayaran").data("json");
 var jsonArrayKategoriPembayaran = $(".json_array_kategori_pembayaran").data(
     "json"
@@ -12,39 +8,27 @@ var jsonArraySubPembayaran = $(".json_array_sub_pembayaran").data("json");
 var jsonDataUser = $(".json_data_user").data("json");
 var jsonDefaultUser = $(".json_default_user").data("json");
 var jsonCabangId = $(".json_cabang_id").data("json");
-var jsonNoInvoice = $(".json_no_invoice").data("json");
+var jsonPembelianId = $(".pembelian_id").data("value");
 
 var body = $("body");
-var orderItems = [];
 var metodePembayaran = [];
-var totalHargaItems = 0;
-var supplierId = "";
+var totalHargaItems = $(".totalHutang").data("value");
 
 $(document).ready(function () {
     select2Standard({
-        parent: ".content-wrapper",
-        selector: "select[name='barang_id']",
-    });
-
-    select2Standard({
-        parent: ".content-wrapper",
-        selector: "select[name='supplier_id']",
-    });
-
-    select2Standard({
-        parent: ".content-wrapper",
+        parent: "#extraLargeModal",
         selector: "select[name='kategori_pembayaran_id']",
     });
 
     const refreshDataSet = () => {
         $.ajax({
-            url: $(".url_purchase_kasir").data("url"),
+            url: $(".url_transaction_kasir").data("url"),
             type: "get",
+            data: {
+                refresh_dataset: true,
+            },
             dataType: "json",
             success: function (data) {
-                jsonString = JSON.parse(data.dataSupplier);
-                jsonStringBarang = JSON.parse(data.dataBarang);
-                jsonTipeDiskon = JSON.parse(data.dataTipeDiskon);
                 jsonKategoriPembayaran = JSON.parse(data.kategoriPembayaran);
                 jsonArrayKategoriPembayaran = JSON.parse(
                     data.array_kategori_pembayaran
@@ -54,23 +38,6 @@ $(document).ready(function () {
                 jsonDataUser = JSON.parse(data.dataUser);
                 jsonDefaultUser = data.defaultUser;
                 jsonCabangId = data.cabangId;
-                jsonNoInvoice = data.noInvoice;
-
-                // refresh select 2 barang & supplier
-                let select2Barang = [];
-                data.array_barang.map((value, index) => {
-                    select2Barang.push({
-                        id: value.id,
-                        text: value.label,
-                    });
-                });
-                let select2Supplier = [];
-                data.array_supplier.map((value, index) => {
-                    select2Supplier.push({
-                        id: value.id,
-                        text: value.label,
-                    });
-                });
                 let select2KategoriPembayaran = [];
                 JSON.parse(data.array_kategori_pembayaran).map(
                     (value, index) => {
@@ -80,36 +47,6 @@ $(document).ready(function () {
                         });
                     }
                 );
-
-                var selectElementBarang = $("select[name='barang_id']");
-                selectElementBarang.empty();
-                $.each(select2Barang, function (index, option) {
-                    selectElementBarang.append(
-                        new Option(option.text, option.id, false, false)
-                    );
-                });
-                selectElementBarang.select2("destroy");
-
-                select2Standard({
-                    parent: ".content-wrapper",
-                    selector: "select[name='barang_id']",
-                    data: select2Barang,
-                });
-
-                var selectElementSupplier = $("select[name='supplier_id']");
-                selectElementSupplier.empty();
-                $.each(select2Supplier, function (index, option) {
-                    selectElementSupplier.append(
-                        new Option(option.text, option.id, false, false)
-                    );
-                });
-                selectElementSupplier.select2("destroy");
-                select2Standard({
-                    parent: ".content-wrapper",
-                    selector: "select[name='supplier_id']",
-                    data: select2Supplier,
-                });
-
                 var selectElementKategoriPembayaran = $(
                     "select[name='kategori_pembayaran_id']"
                 );
@@ -125,143 +62,35 @@ $(document).ready(function () {
                     selector: "select[name='kategori_pembayaran_id']",
                     data: select2KategoriPembayaran,
                 });
+
+                $(".header_bayar_pembelian").html(
+                    number_format(data.pembelian.bayar_pembelian, 0, ".", ",")
+                );
+                $(".header_hutang_pembelian").html(
+                    number_format(data.pembelian.hutang_pembelian, 0, ".", ",")
+                );
+                $(".header_kembalian_pembelian").html(
+                    number_format(
+                        data.pembelian.kembalian_pembelian,
+                        0,
+                        ".",
+                        ","
+                    )
+                );
+                if (parseFloat(data.pembelian.hutang_pembelian) === 0) {
+                    $(".btn-add").attr("disabled", true);
+                    $(".btn-add").html("Lunas");
+                } else {
+                    $(".btn-add").attr("disabled", false);
+                    $(".btn-add").html(`
+                    <span>
+                        <i class="bx bx-plus me-sm-1"></i>
+                        Tambah
+                    </span>
+                `);
+                }
             },
         });
-    };
-
-    const renderViewKasir = () => {
-        var output = ``;
-        orderItems.map((value, index) => {
-            output += `
-            <tr>
-                <td>${value.nama_barang} (${value.satuan.nama_satuan})</td>
-                <td>
-                    <input name="qty" type="text" class="form-control"  
-                    title="Stock: ${value.stok_barang} barang" 
-                    value="${value.qty}" data-id="${value.id}" />
-                </td>
-                <td>
-                    <span class="hargajual_barang" data-id="${value.id}">
-                        ${number_format(value.hargajual_barang, 0, ".", ",")}
-                    </span>
-                </td>
-                <td>
-                    <select name="type_discount" class="form-select" data-id="${
-                        value.id
-                    }">
-                        <option value="" selected>Tipe Diskon</option>`;
-
-            Object.keys(jsonTipeDiskon).map((v, i) => {
-                output += `
-                <option value="${v}" ${
-                    value.tipeDiskon == v ? "selected" : ""
-                }>${jsonTipeDiskon[v]}</option>
-                `;
-            });
-
-            output += `
-                    </select>
-                </td>
-                <td>
-                    <input
-                    name="jumlah_diskon"
-                    class="jumlahDiskon form-control" 
-                    data-id="${value.id}" 
-                    value="${value.jumlahDiskon}"
-                    disabled />
-                </td>
-                <td>
-                    <span class="totalHarga" data-id="${value.id}">
-                        ${number_format(value.totalHarga, 0, ".", ",")}
-                    </span>
-                </td>
-                <td>
-                    <button class="btn btn-delete" title="Hapus item" data-id="${
-                        value.id
-                    }">
-                        <i class="fa-solid fa-circle-xmark fa-2x text-danger"></i
-                    </button>
-                </td>
-            </tr>
-            `;
-        });
-        $("#orderBarang").html(output);
-        $("#total_harga_all").html(number_format(totalHargaItems, 0, ".", ","));
-    };
-
-    const domViewKasir = (orderItemsValue) => {
-        $(`input[name="qty"][data-id="${orderItemsValue.id}"]`).val(
-            formatNumber(orderItemsValue.qty)
-        );
-        $(`select[name="type_discount"][data-id="${orderItemsValue.id}"]`).val(
-            orderItemsValue.tipeDiskon
-        );
-        $(`.jumlahDiskon[data-id="${orderItemsValue.id}"]`).val(
-            formatNumber(orderItemsValue.jumlahDiskon)
-        );
-        $(`.totalHarga[data-id="${orderItemsValue.id}"]`).html(
-            number_format(orderItemsValue.totalHarga, 0, ".", ",")
-        );
-
-        totalHargaItems = orderItems.reduce(function (sum, current) {
-            return sum + current.totalHarga;
-        }, 0);
-        $("#total_harga_all").html(number_format(totalHargaItems, 0, ".", ","));
-    };
-
-    const changeHandleInput = (id) => {
-        const qty = removeCommas($(`input[name="qty"][data-id="${id}"]`).val());
-        const searchOrderItems = orderItems.findIndex((item) => item.id == id);
-        const getTypeDiscount = $(
-            `select[name="type_discount"][data-id="${id}"] option:selected`
-        ).val();
-        const getJumlahDiskon = $(`.jumlahDiskon[data-id="${id}"]`).val();
-        if (searchOrderItems !== -1) {
-            orderItems[searchOrderItems].qty = qty;
-            if (orderItems[searchOrderItems].stok_barang < qty) {
-                orderItems[searchOrderItems].qty = "0";
-            }
-            orderItems[searchOrderItems].totalHarga =
-                orderItems[searchOrderItems].qty *
-                orderItems[searchOrderItems].hargajual_barang;
-            orderItems[searchOrderItems].tipeDiskon = getTypeDiscount;
-            orderItems[searchOrderItems].jumlahDiskon =
-                removeCommas(getJumlahDiskon);
-
-            if (
-                orderItems[searchOrderItems].tipeDiskon !== "" &&
-                orderItems[searchOrderItems].tipeDiskon !== null
-            ) {
-                $(`.jumlahDiskon[data-id="${id}"]`).attr("disabled", false);
-                if (orderItems[searchOrderItems].tipeDiskon == "fix") {
-                    orderItems[searchOrderItems].totalHarga =
-                        orderItems[searchOrderItems].totalHarga -
-                        removeCommas(orderItems[searchOrderItems].jumlahDiskon);
-                }
-                if (orderItems[searchOrderItems].tipeDiskon == "%") {
-                    const priceDiskon =
-                        (orderItems[searchOrderItems].totalHarga *
-                            removeCommas(
-                                orderItems[searchOrderItems].jumlahDiskon
-                            )) /
-                        100;
-                    orderItems[searchOrderItems].totalHarga =
-                        orderItems[searchOrderItems].totalHarga - priceDiskon;
-                }
-
-                if (orderItems[searchOrderItems].totalHarga < 0) {
-                    orderItems[searchOrderItems].totalHarga =
-                        orderItems[searchOrderItems].qty *
-                        orderItems[searchOrderItems].hargajual_barang;
-                    orderItems[searchOrderItems].jumlahDiskon = "";
-                }
-            } else {
-                orderItems[searchOrderItems].jumlahDiskon = "";
-                $(`.jumlahDiskon[data-id="${id}"]`).attr("disabled", true);
-            }
-
-            domViewKasir(orderItems[searchOrderItems]);
-        }
     };
 
     const viewMetodePembayaran = () => {
@@ -277,7 +106,6 @@ $(document).ready(function () {
                         <div class="form-group">
                             <select data-index="${index}" name="kategori_pembayaran_id_mp" class="form-control">
                                 <option value="">-- Kategori Pembayaran --</option>`;
-
                 value.kategori_pembayaran.map((v, i) => {
                     output += `
                         <option value="${v.id}" ${
@@ -287,7 +115,6 @@ $(document).ready(function () {
                     }>${v.nama_kpembayaran}</option>
                     `;
                 });
-
                 output += `
                             </select>
                         </div>
@@ -303,7 +130,6 @@ $(document).ready(function () {
                         <div class="form-group">
                             <select data-index="${index}" name="sub_pembayaran_id_mp" class="form-control">
                                 <option value="">-- Sub Pembayaran --</option>`;
-
                 value.sub_pembayaran.map((v, i) => {
                     output += `
                     <option value="${v.id}" ${
@@ -315,7 +141,6 @@ $(document).ready(function () {
                     }>${v.nama_spembayaran}</option>
                     `;
                 });
-
                 output += `
                             </select>
                         </div>
@@ -324,7 +149,7 @@ $(document).ready(function () {
                         <div class="form-group">
                             <label for="">Bayar</label>
                             <input class="form-control" type="text" name="bayar" data-index="${index}"
-                                placeholder="Masukan nominal pembayaran..." 
+                                placeholder="Masukan nominal pembayaran..."
                                 value="${number_format(
                                     value.bayar,
                                     0,
@@ -349,10 +174,9 @@ $(document).ready(function () {
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Akun</label>
-                            <select name="akun" class="form-control" 
+                            <select name="akun" class="form-control"
                             data-index="${index}">
                                 <option value="">Akun Kasir</option>`;
-
                 value.user.map((v, i) => {
                     output += `
                     <option value="${v.id}" ${
@@ -362,7 +186,6 @@ $(document).ready(function () {
                     }>${v.name}</option>
                     `;
                 });
-
                 output += `
                             </select>
                         </div>
@@ -397,7 +220,7 @@ $(document).ready(function () {
                 <div class="row mt-3">
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <select 
+                            <select
                             data-index="${index}"
                             name="kategori_pembayaran_id_mp" id="" class="form-control">
                                 <option value="">-- Kategori Pembayaran --</option>`;
@@ -410,7 +233,6 @@ $(document).ready(function () {
                     }>${v.nama_kpembayaran}</option>
                                     `;
                 });
-
                 output += `
                             </select>
                         </div>
@@ -427,7 +249,6 @@ $(document).ready(function () {
                             <select name="sub_pembayaran_id_mp" data-index="${index}"
                             class="form-control">
                                 <option value="">-- Sub Pembayaran --</option>`;
-
                 value.sub_pembayaran.map((v, i) => {
                     output += `
                                     <option value="${v.id}" ${
@@ -439,7 +260,6 @@ $(document).ready(function () {
                     }>${v.nama_spembayaran}</option>
                                     `;
                 });
-
                 output += `
                             </select>
                         </div>
@@ -458,7 +278,7 @@ $(document).ready(function () {
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Nama Pemilik Kartu</label>
-                            <input class="form-control" type="text" name="nama_pemilik_kartu" 
+                            <input class="form-control" type="text" name="nama_pemilik_kartu"
                             data-index="${index}"
                                 placeholder="Pemilik Kartu..." value="${
                                     value.nama_pemilik_kartu !== undefined
@@ -472,12 +292,11 @@ $(document).ready(function () {
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Akun</label>
-                            <select 
-                            name="akun" 
-                            class="form-control" 
+                            <select
+                            name="akun"
+                            class="form-control"
                             data-index="${index}">
                                 <option value="">Akun Kasir</option>`;
-
                 value.user.map((v, i) => {
                     output += `
                                     <option value="${v.id}" ${
@@ -487,7 +306,6 @@ $(document).ready(function () {
                     }>${v.name}</option>
                                     `;
                 });
-
                 output += `
                             </select>
                         </div>
@@ -495,19 +313,19 @@ $(document).ready(function () {
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Bayar</label>
-                            <input 
-                            class="form-control" 
-                            type="text" 
-                            name="bayar" 
+                            <input
+                            class="form-control"
+                            type="text"
+                            name="bayar"
                             data-index="${index}"
-                            placeholder="Masukan nominal pembayaran..." 
+                            placeholder="Masukan nominal pembayaran..."
                             value="${number_format(value.bayar, 0, ".", ",")}">
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Hutang</label>
-                            <input class="form-control" type="text" name="hutang" data-index="${index}" placeholder="Hutang..." 
+                            <input class="form-control" type="text" name="hutang" data-index="${index}" placeholder="Hutang..."
                             value="${number_format(
                                 value.hutang,
                                 0,
@@ -523,7 +341,6 @@ $(document).ready(function () {
         });
         return output;
     };
-
     const handleAnotherMethodLangsung = (index) => {
         const getMetodePembayaran = metodePembayaran[index];
         if (
@@ -546,7 +363,6 @@ $(document).ready(function () {
             }
         }
     };
-
     const handleDisplayInput = () => {
         metodePembayaran.map((value, index) => {
             $(
@@ -579,7 +395,6 @@ $(document).ready(function () {
             );
         });
     };
-
     const handeMetodePembayaran = (index) => {
         const kategori_pembayaran_id = $(
             `select[name="kategori_pembayaran_id_mp"][data-index="${index}"]`
@@ -613,7 +428,6 @@ $(document).ready(function () {
         const nama_pemilik_kartu = $(
             `input[name="nama_pemilik_kartu"][data-index="${index}"]`
         ).val();
-
         const transaction = bayar - hutang;
         if (transaction < 0) {
             hutang = Math.abs(transaction);
@@ -632,7 +446,6 @@ $(document).ready(function () {
         );
         let getUsers = metodePembayaran[index].user;
         getUsers = getUsers.find((item) => item.id == users_id);
-
         metodePembayaran[index].kategori_pembayaran_selected =
             getKategoriPembayaran;
         metodePembayaran[index].sub_pembayaran_selected = getSubPembayaran;
@@ -644,14 +457,12 @@ $(document).ready(function () {
         metodePembayaran[index].nomor_kartu = nomor_kartu;
         metodePembayaran[index].nama_pemilik_kartu = nama_pemilik_kartu;
     };
-
     const handleManageHutang = () => {
         metodePembayaran.map((value, index) => {
             if (index === 0) {
                 const getData = metodePembayaran[index];
                 const bayar = getData.bayar;
                 let hutang = totalHargaItems;
-
                 const transaction = bayar - hutang;
                 if (transaction < 0) {
                     hutang = Math.abs(transaction);
@@ -660,21 +471,17 @@ $(document).ready(function () {
                     hutang = 0;
                     kembalian = transaction;
                 }
-
                 metodePembayaran[index].bayar = bayar;
                 metodePembayaran[index].hutang = hutang;
                 metodePembayaran[index].kembalian = kembalian;
             }
-
             if (index > 0) {
                 const calcHutang = () => {
                     const dataNow = metodePembayaran[index];
                     const dataBefore = metodePembayaran[index - 1];
-
                     if (dataNow !== undefined) {
                         const bayar = dataNow.bayar;
                         let hutang = dataBefore.hutang;
-
                         const transaction = bayar - hutang;
                         if (transaction < 0) {
                             hutang = Math.abs(transaction);
@@ -683,23 +490,19 @@ $(document).ready(function () {
                             hutang = 0;
                             kembalian = transaction;
                         }
-
                         metodePembayaran[index].bayar = bayar;
                         metodePembayaran[index].hutang = hutang;
                         metodePembayaran[index].kembalian = kembalian;
                     }
                 };
-
                 calcHutang();
             }
         });
     };
-
     const handleButtonBayar = () => {
         let buttonDisabledTidakLangsung = false;
         let buttonDisabledLangsung = false;
         let buttonDisabled;
-
         metodePembayaran.map((value, index) => {
             if (
                 value.kategori_pembayaran_selected.nama_kpembayaran.toLowerCase() !==
@@ -712,7 +515,6 @@ $(document).ready(function () {
                     value.user_selected === undefined ||
                     value.nama_pemilik_kartu === "" ||
                     value.nomor_kartu === "" ||
-                    orderItems.length == 0 ||
                     totalHargaItems == 0
                 ) {
                     buttonDisabledTidakLangsung = true;
@@ -726,7 +528,6 @@ $(document).ready(function () {
                     value.bayar === "" ||
                     value.user_selected === undefined ||
                     value.dibayarkan_oleh === "" ||
-                    orderItems.length == 0 ||
                     totalHargaItems == 0
                 ) {
                     buttonDisabledLangsung = true;
@@ -738,7 +539,6 @@ $(document).ready(function () {
         buttonDisabled = buttonDisabledTidakLangsung || buttonDisabledLangsung;
         $(".btn-bayar").attr("disabled", buttonDisabled);
     };
-
     const handleSubPembayaran = (index) => {
         const value = $(
             `select[name="kategori_pembayaran_id_mp"][data-index="${index}"] option:selected`
@@ -756,32 +556,22 @@ $(document).ready(function () {
             metodePembayaran[index].sub_pembayaran = getSubPembayaran;
         }
     };
-
     const resetData = () => {
-        orderItems = [];
         metodePembayaran = [];
-        totalHargaItems = 0;
-        supplierId = "";
-        $("#load_supplier_id").html("");
-        $("#orderBarang").html("");
-        $("#output_metode_pembayaran").html("");
-        $("#total_harga_all").html("0");
         handleButtonBayar();
+        $("#output_metode_pembayaran").html("");
     };
-
     const printOutput = (output) => {
         var printWindow = window.open("", "_blank");
         printWindow.document.write(output);
         printWindow.document.close();
         printWindow.print();
-
         printWindow.addEventListener("afterprint", function () {
             const isEdit = $(".isEdit").data("value");
             if (isEdit) {
                 window.location.href = $(".url_simpan_kasir").data("url");
             }
         });
-
         // Menambahkan event listener untuk menangkap saat jendela print ditutup
         printWindow.onunload = function () {
             const isEdit = $(".isEdit").data("value");
@@ -796,84 +586,36 @@ $(document).ready(function () {
         const isEdit = $(".isEdit").data("value");
         if (isEdit == true) {
             $.ajax({
-                url: $(".url_purchase_kasir").data("url"),
+                url: $(".url_transaction_kasir").data("url"),
                 type: "get",
+                data: {
+                    refresh_dataset: true,
+                },
                 dataType: "json",
                 success: function (data) {
-                    const pembelian = data.dataPembelian;
-
-                    // render supplier
-                    renderSupplier(pembelian.supplier_id);
-
-                    // render pembelian product
-                    pembelian.pembelian_product.map((value, index) => {
-                        renderBarang(value.barang_id);
-
-                        orderItems[index].qty = value.jumlah_pembelianproduct;
-
-                        orderItems[index].tipeDiskon =
-                            value.typediskon_pembelianproduct;
-
-                        orderItems[index].jumlahDiskon =
-                            value.diskon_pembelianproduct;
-
-                        orderItems[index].totalHarga =
-                            value.subtotal_pembelianproduct;
-                    });
-
-                    totalHargaItems = orderItems.reduce(function (
-                        sum,
-                        current
-                    ) {
-                        return sum + current.totalHarga;
-                    },
-                    0);
-
-                    renderViewKasir();
-
+                    const pembelian = data.pembelian;
                     handleManageHutang();
                     handleDisplayInput();
                     handleButtonBayar();
-
-                    pembelian.pembelian_product.map((value, index) => {
-                        const barang_id = value.barang_id;
-                        changeHandleInput(barang_id);
-
-                        handleManageHutang();
-                        handleDisplayInput();
-                        handleButtonBayar();
-                    });
-
                     // render pembelian pembayaran
-                    pembelian.pembelian_pembayaran.map((value, index) => {
+                    pembelian.pembelian_cicilan.map((value, index) => {
                         renderMetodePembayaran(value.kategori_pembayaran_id);
-
                         metodePembayaran[index].kategori_pembayaran_selected =
                             value.kategori_pembayaran;
-
                         metodePembayaran[index].sub_pembayaran_selected =
                             value.sub_pembayaran;
-
                         metodePembayaran[index].user_selected = value.users;
-
-                        metodePembayaran[index].supplier = pembelian.supplier;
-
-                        metodePembayaran[index].bayar = value.bayar_pbpembayaran;
-
+                        metodePembayaran[index].customer = pembelian.customer;
+                        metodePembayaran[index].bayar = value.bayar_pbcicilan;
                         metodePembayaran[index].dibayarkan_oleh =
-                            value.dibayaroleh_pbpembayaran;
-
+                            value.dibayaroleh_pbcicilan;
                         metodePembayaran[index].kembalian =
-                            value.kembalian_pbpembayaran;
-
-                        metodePembayaran[index].hutang =
-                            value.hutang_pbpembayaran;
-
+                            value.kembalian_pbcicilan;
+                        metodePembayaran[index].hutang = value.hutang_pbcicilan;
                         metodePembayaran[index].nomor_kartu =
-                            value.nomorkartu_pbpembayaran;
-
+                            value.nomorkartu_pbcicilan;
                         metodePembayaran[index].nama_pemilik_kartu =
-                            value.pemilikkartu_pbpembayaran;
+                            value.pemilikkartu_pbcicilan;
                     });
 
                     handleManageHutang();
@@ -885,122 +627,6 @@ $(document).ready(function () {
         }
     };
     renderEditData();
-
-    const renderSupplier = (value) => {
-        if (value !== "" && value !== null) {
-            const searchSupplier = jsonString.find((item) => item.id == value);
-            supplierId = searchSupplier.id;
-            $("#load_supplier_id").html(`
-        <table class="w-100">
-            <thead>
-                <tr>
-                    <th class="text-primary fw-bold">Nama Supplier</th>
-                    <th class="text-primary fw-bold">No. HP</th>
-                    <th class="text-primary fw-bold">Deskripsi</th>
-                    <th class="text-primary fw-bold">Perusahaan</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>${searchSupplier.nama_supplier}</td>
-                    <td>${searchSupplier.nowa_supplier}</td>
-                    <td>${searchSupplier.deskripsi_supplier}</td>
-                    <td>${searchSupplier.perusahaan_supplier}</td>
-                </tr>
-            </tbody>
-        </table>
-        `);
-        } else {
-            $("#load_supplier_id").html("");
-        }
-    };
-
-    body.on("change", 'select[name="supplier_id"]', function (e) {
-        const value = $(this).val();
-        renderSupplier(value);
-    });
-
-    const renderBarang = (value) => {
-        if (value !== "" && value !== null) {
-            const getItems = jsonStringBarang.find((item) => item.id == value);
-
-            const searchOrderItems = orderItems.findIndex(
-                (item) => item.id == value
-            );
-            if (searchOrderItems === -1) {
-                const mergePayload = {
-                    ...getItems,
-                    qty: 0,
-                    tipeDiskon: "",
-                    jumlahDiskon: 0,
-                    totalHarga: 0,
-                };
-                orderItems.push(mergePayload);
-            } else {
-                orderItems[searchOrderItems].qty++;
-                orderItems[searchOrderItems].totalHarga =
-                    orderItems[searchOrderItems].qty *
-                    orderItems[searchOrderItems].hargajual_barang;
-            }
-
-            totalHargaItems = orderItems.reduce(function (sum, current) {
-                return sum + current.totalHarga;
-            }, 0);
-
-            renderViewKasir();
-
-            handleManageHutang();
-            handleDisplayInput();
-            handleButtonBayar();
-        }
-    };
-    body.on("change", 'select[name="barang_id"]', function (e) {
-        const value = $(this).val();
-        renderBarang(value);
-    });
-
-    body.on("input", 'input[name="qty"]', function () {
-        const id = $(this).data("id");
-        changeHandleInput(id);
-
-        handleManageHutang();
-        handleDisplayInput();
-        handleButtonBayar();
-    });
-    body.on("change", 'select[name="type_discount"]', function () {
-        const id = $(this).data("id");
-        changeHandleInput(id);
-
-        handleManageHutang();
-        handleDisplayInput();
-        handleButtonBayar();
-    });
-    body.on("input", 'input[name="jumlah_diskon"]', function () {
-        const id = $(this).data("id");
-        changeHandleInput(id);
-
-        handleManageHutang();
-        handleDisplayInput();
-        handleButtonBayar();
-    });
-
-    body.on("click", ".btn-delete", function (e) {
-        e.preventDefault();
-        const id = $(this).data("id");
-        const searchOrderItems = orderItems.findIndex((item) => item.id == id);
-        if (searchOrderItems !== -1) {
-            orderItems.splice(searchOrderItems, 1);
-            totalHargaItems = orderItems.reduce(function (sum, current) {
-                return sum + current.totalHarga;
-            }, 0);
-            renderViewKasir();
-        }
-
-        handleManageHutang();
-        handleDisplayInput();
-        handleButtonBayar();
-    });
-
     const renderMetodePembayaran = (value) => {
         const findKategoriPembayaran = jsonKategoriPembayaran.findIndex(
             (item) => item.id == value
@@ -1021,15 +647,6 @@ $(document).ready(function () {
             if (getDefaultUser !== -1) {
                 defaultUser = jsonDataUser[getDefaultUser];
             }
-
-            // supplier
-            const valueSupplier = $(
-                'select[name="supplier_id"] option:selected'
-            ).val();
-            const getSupplier = jsonString.find(
-                (item) => item.id == valueSupplier
-            );
-
             dataMetodePembayaran.kategori_pembayaran = jsonKategoriPembayaran;
             dataMetodePembayaran.kategori_pembayaran_selected =
                 getKategoriPembayaran;
@@ -1037,10 +654,8 @@ $(document).ready(function () {
             dataMetodePembayaran.sub_pembayaran_selected = {};
             dataMetodePembayaran.user = jsonDataUser;
             dataMetodePembayaran.user_selected = defaultUser;
-            dataMetodePembayaran.supplier = getSupplier;
             dataMetodePembayaran.bayar = 0;
-            dataMetodePembayaran.dibayarkan_oleh =
-                getSupplier && getSupplier.nama_supplier;
+            dataMetodePembayaran.dibayarkan_oleh = "";
             dataMetodePembayaran.kembalian = 0;
             dataMetodePembayaran.hutang =
                 metodePembayaran.length == 0 ? totalHargaItems : 0;
@@ -1048,13 +663,13 @@ $(document).ready(function () {
             dataMetodePembayaran.nama_pemilik_kartu = "";
             metodePembayaran.push(dataMetodePembayaran);
         }
-
         handleManageHutang();
         handleButtonBayar();
         const output = viewMetodePembayaran();
         $("#output_metode_pembayaran").html(output);
     };
 
+    body.off("click", ".btn-add-pembayaran");
     body.on("click", ".btn-add-pembayaran", function (e) {
         e.preventDefault();
         const value = $(
@@ -1063,11 +678,11 @@ $(document).ready(function () {
         renderMetodePembayaran(value);
     });
 
+    body.off("click", ".btn-delete-pembayaran");
     body.on("click", ".btn-delete-pembayaran", function (e) {
         e.preventDefault();
         const index = $(this).data("index");
         metodePembayaran.splice(index, 1);
-
         handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
@@ -1075,6 +690,7 @@ $(document).ready(function () {
         $("#output_metode_pembayaran").html(output);
     });
 
+    body.off("input", 'input[name="bayar"]');
     body.on("input", 'input[name="bayar"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
@@ -1084,6 +700,7 @@ $(document).ready(function () {
         handleButtonBayar();
     });
 
+    body.off("change", 'select[name="kategori_pembayaran_id_mp"]');
     body.on("change", 'select[name="kategori_pembayaran_id_mp"]', function () {
         const index = $(this).data("index");
         const value = $(this).val();
@@ -1094,12 +711,12 @@ $(document).ready(function () {
             handleDisplayInput();
             handleButtonBayar();
             handleSubPembayaran(index);
-
             const output = viewMetodePembayaran();
             $("#output_metode_pembayaran").html(output);
         }
     });
 
+    body.off("change", 'select[name="sub_pembayaran_id_mp"]');
     body.on("change", 'select[name="sub_pembayaran_id_mp"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
@@ -1109,6 +726,7 @@ $(document).ready(function () {
         handleButtonBayar();
     });
 
+    body.off("input", 'input[name="nomor_kartu"]');
     body.on("input", 'input[name="nomor_kartu"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
@@ -1118,6 +736,7 @@ $(document).ready(function () {
         handleButtonBayar();
     });
 
+    body.off("input", 'input[name="nama_pemilik_kartu"]');
     body.on("input", 'input[name="nama_pemilik_kartu"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
@@ -1127,6 +746,7 @@ $(document).ready(function () {
         handleButtonBayar();
     });
 
+    body.off("change", 'select[name="akun"]');
     body.on("change", 'select[name="akun"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
@@ -1136,6 +756,7 @@ $(document).ready(function () {
         handleButtonBayar();
     });
 
+    body.off("input", 'input[name="dibayar_oleh"]');
     body.on("input", 'input[name="dibayar_oleh"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
@@ -1153,70 +774,47 @@ $(document).ready(function () {
         }, 0);
 
         const payloadPembelian = {
-            invoice_pembelian: jsonNoInvoice,
-            transaksi_pembelian: formatDate(),
-            supplier_id: supplierId,
             tipe_pembelian: getHutang > 0 ? "hutang" : "cash",
-            users_id: jsonDefaultUser,
-            cabang_id: jsonCabangId,
-            total_pembelian: parseFloat(totalHargaItems),
             hutang_pembelian: metodePembayaran[indexLast].hutang,
             kembalian_pembelian: metodePembayaran[indexLast].kembalian,
             bayar_pembelian: getBayar,
+            pembelian_id: jsonPembelianId,
         };
 
-        const payloadPembelianProduct = [];
-        orderItems.map((value, index) => {
-            payloadPembelianProduct.push({
-                transaksi_pembelianproduct: formatDate(),
-                supplier_id: supplierId,
-                barang_id: value.id,
-                jumlah_pembelianproduct: value.qty,
-                typediskon_pembelianproduct: value.tipeDiskon,
-                diskon_pembelianproduct: value.jumlahDiskon,
-                subtotal_pembelianproduct: value.totalHarga,
-                cabang_id: jsonCabangId,
-            });
-        });
-
-        const payloadPembelianPembayaran = [];
+        const payloadPembelianCicilan = [];
         metodePembayaran.map((value, index) => {
-            payloadPembelianPembayaran.push({
+            payloadPembelianCicilan.push({
                 kategori_pembayaran_id: value.kategori_pembayaran_selected.id,
                 sub_pembayaran_id: value.sub_pembayaran_selected.id,
-                bayar_pbpembayaran: value.bayar,
-                dibayaroleh_pbpembayaran:
+                bayar_pbcicilan: value.bayar,
+                dibayaroleh_pbcicilan:
                     value.dibayarkan_oleh === undefined
                         ? ""
                         : value.dibayarkan_oleh,
                 users_id: value.user_selected.id,
-                kembalian_pbpembayaran: value.kembalian,
-                hutang_pbpembayaran: value.hutang,
-                nomorkartu_pbpembayaran:
+                kembalian_pbcicilan: value.kembalian,
+                hutang_pbcicilan: value.hutang,
+                nomorkartu_pbcicilan:
                     value.nomor_kartu === undefined ? "" : value.nomor_kartu,
-                pemilikkartu_pbpembayaran:
+                pemilikkartu_pbcicilan:
                     value.nama_pemilik_kartu === undefined
                         ? ""
                         : value.nama_pemilik_kartu,
+                pembelian_id: jsonPembelianId,
                 cabang_id: jsonCabangId,
             });
         });
-
         const payloadIsEdit = {
             isEdit: $(".isEdit").data("value"),
-            pembelian_id: $(".pembelian_id").data("value"),
+            pembelian_id: jsonPembelianId,
         };
-
         const payload = {
             pembelian: payloadPembelian,
-            pembelian_product: payloadPembelianProduct,
-            pembelian_pembayaran: payloadPembelianPembayaran,
+            pembelian_cicilan: payloadPembelianCicilan,
             payload_is_edit: payloadIsEdit,
         };
-
         return payload;
     };
-
     const renderPrintKasir = (outputData) => {
         var output = "";
         $.ajax({
@@ -1232,10 +830,16 @@ $(document).ready(function () {
                 output = data;
             },
         });
-
         return output;
     };
 
+    body.off("click", ".popover.close");
+    body.on("click", ".popover.close", function (e) {
+        e.preventDefault();
+        $("#btn-pop-over").popover("hide");
+    });
+
+    body.off("click", ".btn-confirm-bayar");
     body.on("click", ".btn-confirm-bayar", function (e) {
         e.preventDefault();
 
@@ -1258,13 +862,14 @@ $(document).ready(function () {
 
                 const output = renderPrintKasir(data.result);
                 printOutput(output);
-
                 // tutup modal
-                $("#modalConfirmBayar").modal("hide");
+                $("#btn-pop-over").popover("hide");
 
                 // reset data
                 resetData();
                 refreshDataSet();
+                datatable.ajax.reload();
+                myModal.hide();
             },
             error: function (jqXHR, exception) {
                 $(".btn-confirm-bayar").attr("disabled", false);

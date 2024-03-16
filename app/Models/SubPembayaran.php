@@ -36,4 +36,14 @@ class SubPembayaran extends Model
     {
         return $this->hasMany(PenjualanCicilan::class);
     }
+
+    public function pembelianCicilan()
+    {
+        return $this->hasMany(PembelianCicilan::class);
+    }
+
+    public function pembelianPembayaran()
+    {
+        return $this->hasMany(PembelianPembayaran::class);
+    }
 }

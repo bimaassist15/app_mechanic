@@ -1,12 +1,13 @@
 // "use strict";
 var datatable;
+var myModal;
 
 $(document).ready(function () {
     function initDatatable() {
-        datatable = basicDatatable(
-            $("#dataTable"),
-            $(".url_datatable").data("url"),
-            [
+        datatable = basicDatatable({
+            tableId: $("#dataTable"),
+            ajaxUrl: $(".url_datatable").data("url"),
+            columns: [
                 {
                     data: null,
                     orderable: false,
@@ -14,13 +15,28 @@ $(document).ready(function () {
                     className: "text-center",
                 },
                 {
-                    data: "nama_kategori",
-                    name: "nama_kategori",
+                    data: "invoice_pembelian",
+                    name: "invoice_pembelian",
                     searchable: true,
                 },
                 {
-                    data: "status_kategori",
-                    name: "status_kategori",
+                    data: "transaksi_pembelian",
+                    name: "transaksi_pembelian",
+                    searchable: true,
+                },
+                {
+                    data: "supplier",
+                    name: "supplier",
+                    searchable: true,
+                },
+                {
+                    data: "users.profile.nama_profile",
+                    name: "users.profile.nama_profile",
+                    searchable: true,
+                },
+                {
+                    data: "total_pembelian",
+                    name: "total_pembelian",
                     searchable: true,
                 },
                 {
@@ -29,18 +45,19 @@ $(document).ready(function () {
                     searchable: false,
                     orderable: false,
                 },
-            ]
-        );
+            ],
+            dataAjaxUrl: {},
+        });
     }
-    // initDatatable();
+    initDatatable();
 
     var body = $("body");
     // handle btn add data
-    body.on("click", ".btn-add", function () {
+    body.on("click", ".btn-detail", function () {
         showModal({
             url: $(this).data("urlcreate"),
             modalId: $(this).data("typemodal"),
-            title: "Form Belum Lunas",
+            title: "Detail Transaksi",
             type: "get",
         });
     });

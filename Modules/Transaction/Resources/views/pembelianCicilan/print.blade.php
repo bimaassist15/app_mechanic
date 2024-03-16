@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" type="image/x-icon"
         href="{{ asset('backend/sneat-bootstrap-html-admin-template-free') }}/assets/img/favicon/favicon.ico" />
-    <title>Nota Cetak Pos</title>
+    <title>Nota Cetak Piutang</title>
 
     <style>
         * {
@@ -62,7 +62,7 @@
                         <tr>
                             <td>Tanggal</td>
                             <td style="padding: 0 15px">:</td>
-                            <td>{{ UtilsHelp::tanggalBulanTahunKonversi($pembelian->transaksi_pembelian) }}</td>
+                            <td>{{ UtilsHelp::tanggalBulanTahunKonversi($pembelian->updated_at) }}</td>
                         </tr>
                         <tr>
                             <td>Kepada</td>
@@ -76,8 +76,7 @@
                         <tr>
                             <td>Transaksi</td>
                             <td style="padding: 0 15px">:</td>
-                            <td>{{ count($pembelian->pembelianCicilan) > 0 ? 'Hutang' : ucwords($pembelian->tipe_pembelian) }}
-                            </td>
+                            <td>{{ ucwords($pembelian->tipe_pembelian) }}</td>
                         </tr>
                         <tr>
                             <td>Kasir</td>
@@ -92,19 +91,21 @@
         <table id="table_invoice">
             <thead>
                 <tr>
-                    <th>Deskripsi Barang</th>
-                    <th>Qty</th>
-                    <th>Harga</th>
-                    <th>Total Harga</th>
+                    <th>Pembayaran</th>
+                    <th>Bayar</th>
+                    <th>Kembalian</th>
+                    <th>Hutang</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($pembelian->pembelianProduct as $item)
+                @foreach ($pembelian->pembelianCicilan as $item)
                     <tr>
-                        <td>{{ $item->barang->nama_barang }}</td>
-                        <td>{{ $item->jumlah_pembelianproduct }}</td>
-                        <td>{{ UtilsHelp::formatUang($item->barang->hargajual_barang) }}</td>
-                        <td>{{ UtilsHelp::formatUang($item->subtotal_pembelianproduct) }}</td>
+                        <td>
+                            {{ $item->subPembayaran->nama_spembayaran }}
+                        </td>
+                        <td>{{ UtilsHelp::formatUang($item->bayar_pbcicilan) }}</td>
+                        <td>{{ UtilsHelp::formatUang($item->kembalian_pbcicilan) }}</td>
+                        <td>{{ UtilsHelp::formatUang($item->hutang_pbcicilan) }}</td>
                     </tr>
                 @endforeach
 
@@ -126,19 +127,17 @@
                 <td style="vertical-align: top; text-align: right;">
                     <table style="margin-left: auto;">
                         <tr>
-                            <td>Total</td>
+                            <td>Total Transaksi</td>
                             <td>:</td>
                             <td style="padding: 0 80px;">Rp.</td>
                             <td>{{ UtilsHelp::formatUang($pembelian->total_pembelian) }}</td>
                         </tr>
-                        @foreach ($pembelian->pembelianPembayaran as $item)
-                            <tr>
-                                <td>{{ $item->kategoriPembayaran->nama_kpembayaran }}</td>
-                                <td>:</td>
-                                <td style="padding: 0 80px;">Rp.</td>
-                                <td>{{ UtilsHelp::formatUang($item->bayar_pbpembayaran) }}</td>
-                            </tr>
-                        @endforeach
+                        <tr>
+                            <td>Total Pembayaran</td>
+                            <td>:</td>
+                            <td style="padding: 0 80px;">Rp.</td>
+                            <td>{{ UtilsHelp::formatUang($pembelian->bayar_pembelian) }}</td>
+                        </tr>
                         @if ($pembelian->hutang_pembelian)
                             <tr>
                                 <td>Hutang</td>
@@ -147,24 +146,12 @@
                                 <td>{{ UtilsHelp::formatUang($pembelian->hutang_pembelian) }}</td>
                             </tr>
                         @endif
-                        @if (count($pembelian->pembelianCicilan) > 0)
-                            <tr>
-                                <td>Hutang</td>
-                                <td>:</td>
-                                <td style="padding: 0 80px;">Rp.</td>
-                                <td>
-                                    {{ UtilsHelp::formatUang($pembelian->pembelianCicilan[0]->bayar_pbcicilan + $pembelian->pembelianCicilan[0]->hutang_pbcicilan) }}
-                                </td>
-                            </tr>
-                        @endif
-                        @if (count($pembelian->pembelianCicilan) == 0)
-                            <tr>
-                                <td>Kembalian</td>
-                                <td>:</td>
-                                <td style="padding: 0 80px;">Rp.</td>
-                                <td>{{ UtilsHelp::formatUang($pembelian->kembalian_pembelian) }} </td>
-                            </tr>
-                        @endif
+                        <tr>
+                            <td>Kembalian</td>
+                            <td>:</td>
+                            <td style="padding: 0 80px;">Rp.</td>
+                            <td>{{ UtilsHelp::formatUang($pembelian->kembalian_pembelian) }} </td>
+                        </tr>
                     </table>
                 </td>
             </tr>

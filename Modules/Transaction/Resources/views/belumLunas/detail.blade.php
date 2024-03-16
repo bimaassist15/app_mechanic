@@ -14,7 +14,7 @@
                             Dari
                         </td>
                         <td>
-                            Supplier
+                            Customer
                         </td>
                     </tr>
                     <tr>
@@ -69,19 +69,14 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="{{ url('transaction/kasir?pembelian_id=' . $row->id . '&isEdit=true') }}"
-                            class="dropdown-item d-flex align-items-center btn-edit-transaksi"><i
-                                class="bx bx-chevron-right scaleX-n1-rtl"></i>Edit Transaksi</a>
-                    </li>
-                    <li>
                         <a target="_blank" href="{{ url('transaction/pembelian/print/transaction') }}"
                             class="dropdown-item d-flex align-items-center btn-print"><i
                                 class="bx bx-chevron-right scaleX-n1-rtl"></i>Print</a>
                     </li>
                     <li>
-                        <a href="{{ url('transaction/pembelian/' . $row->id . '?_method=delete') }}"
-                            class="dropdown-item d-flex align-items-center btn-delete"><i
-                                class="bx bx-chevron-right scaleX-n1-rtl"></i>Hapus</a>
+                        <a href="{{ url('transaction/pembelianCicilan?pembelian_id=' . $row->id) }}"
+                            class="dropdown-item d-flex align-items-center"><i
+                                class="bx bx-chevron-right scaleX-n1-rtl"></i>Bayar Tagihan</a>
                     </li>
                 </ul>
             </div>
@@ -115,6 +110,7 @@
                                     <strong>{{ UtilsHelp::formatUang($row->total_pembelian) }}</strong>
                                 </td>
                             </tr>
+
                             @foreach ($row->pembelianPembayaran as $item)
                                 <tr>
                                     <td colspan="2"></td>
@@ -172,5 +168,4 @@
 </div>
 
 <script class="pembelian_id" data-value="{{ $row->id }}"></script>
-<script class="json_row" data-value="{{ $jsonRow }}"></script>
-<script src="{{ asset('js/transaction/pembelian/detail.js') }}"></script>
+<script src="{{ asset('js/transaction/belumLunas/detail.js') }}"></script>

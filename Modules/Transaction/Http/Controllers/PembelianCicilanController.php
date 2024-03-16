@@ -1,13 +1,11 @@
 <?php
 
-namespace Modules\Purchase\Http\Controllers;
+namespace Modules\Transaction\Http\Controllers;
 
 use App\Http\Helpers\UtilsHelper;
-use App\Models\Barang;
-use App\Models\Customer;
 use App\Models\KategoriPembayaran;
-use App\Models\Penjualan;
-use App\Models\PenjualanCicilan;
+use App\Models\Pembelian;
+use App\Models\PembelianCicilan;
 use App\Models\SubPembayaran;
 use App\Models\Supplier;
 use App\Models\User;
@@ -18,7 +16,7 @@ use DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
-class PenjualanCicilanController extends Controller
+class PembelianCicilanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -33,28 +31,28 @@ class PenjualanCicilanController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $penjualanCiciclan = new PenjualanCicilan();
-            $penjualan_id = $request->query('penjualan_id');
-            $data = $penjualanCiciclan->dataTable($penjualan_id);
+            $pembelianCiciclan = new PembelianCicilan();
+            $pembelian_id = $request->query('pembelian_id');
+            $data = $pembelianCiciclan->dataTable($pembelian_id);
 
             return DataTables::eloquent($data)
-                ->addColumn('bayar_pcicilan', function ($row) {
-                    $output = UtilsHelper::formatUang($row->bayar_pcicilan);
+                ->addColumn('bayar_pbcicilan', function ($row) {
+                    $output = UtilsHelper::formatUang($row->bayar_pbcicilan);
                     return $output;
                 })
-                ->addColumn('hutang_pcicilan', function ($row) {
-                    $output = UtilsHelper::formatUang($row->hutang_pcicilan);
+                ->addColumn('hutang_pbcicilan', function ($row) {
+                    $output = UtilsHelper::formatUang($row->hutang_pbcicilan);
                     return $output;
                 })
-                ->addColumn('kembalian_pcicilan', function ($row) {
-                    $output = UtilsHelper::formatUang($row->kembalian_pcicilan);
+                ->addColumn('kembalian_pbcicilan', function ($row) {
+                    $output = UtilsHelper::formatUang($row->kembalian_pbcicilan);
                     return $output;
                 })
                 ->addColumn('action', function ($row) {
                     $buttonDetail = '
                     <a class="btn btn-info btn-detail btn-sm" 
                     data-typemodal="extraLargeModal"
-                    data-urlcreate="' . route('penjualanCicilan.show', $row->id) . '"
+                    data-urlcreate="' . route('pembelianCicilan.show', $row->id) . '"
                     data-modalId="extraLargeModal"
                     >
                         <i class="fa-solid fa-eye"></i>
@@ -71,10 +69,10 @@ class PenjualanCicilanController extends Controller
                 ->rawColumns(['action'])
                 ->toJson();
         }
-        $penjualan_id = $request->query('penjualan_id');
-        $penjualan = Penjualan::find($penjualan_id);
+        $pembelian_id = $request->query('pembelian_id');
+        $pembelian = Pembelian::find($pembelian_id);
 
-        return view('purchase::penjualanCicilan.index', compact('penjualan'));
+        return view('transaction::pembelianCicilan.index', compact('pembelian'));
     }
 
     /**
@@ -118,9 +116,9 @@ class PenjualanCicilanController extends Controller
         $dataUser = json_encode($dataUser);
         $defaultUser = Auth::id();
         $cabangId = session()->get('cabang_id');
-        $penjualanId = $request->query('penjualan_id');
+        $pembelianId = $request->query('pembelian_id');
         $isEdit = $request->query('isEdit');
-        $penjualan = new Penjualan();
+        $pembelian = new Pembelian();
         $dataSupplier = Supplier::dataTable()->get();
 
         $array_supplier = [];
@@ -133,22 +131,22 @@ class PenjualanCicilanController extends Controller
             ];
         }
 
-        $penjualan = new Penjualan();
-        $penjualan = $penjualan->invoicePenjualan($penjualanId);
-        $dataHutang = $penjualan->penjualanCicilan;
+        $pembelian = new Pembelian();
+        $pembelian = $pembelian->invoicePembelian($pembelianId);
+        $dataHutang = $pembelian->pembelianCicilan;
+
         $totalHutang = 0;
         $totalBayar = 0;
         $totalKembalian = 0;
-        $totalHutang = 0;
         if (count($dataHutang) > 0) {
             foreach ($dataHutang as $key => $item) {
-                $totalBayar += $item->bayar_pcicilan;
-                $totalKembalian += $item->kembalian_pcicilan;
+                $totalBayar += $item->bayar_pbcicilan;
+                $totalKembalian += $item->kembalian_pbcicilan;
             }
-            $totalHutang = $totalKembalian > 0 ?  $totalBayar - $totalKembalian : $dataHutang[0]->bayar_pcicilan + $dataHutang[0]->hutang_pcicilan;
+            $totalHutang = $totalKembalian > 0 ?  $totalBayar - $totalKembalian : $dataHutang[0]->bayar_pbcicilan + $dataHutang[0]->hutang_pbcicilan;
         }
 
-        $totalHutang = $isEdit == true ? $totalHutang : $penjualan->hutang_penjualan;
+        $totalHutang = $isEdit == true ? $totalHutang : $pembelian->hutang_pembelian;
         $data = [
             'array_kategori_pembayaran' => $array_kategori_pembayaran,
             'kategoriPembayaran' => $kategoriPembayaran,
@@ -157,16 +155,16 @@ class PenjualanCicilanController extends Controller
             'dataUser' => $dataUser,
             'defaultUser' => $defaultUser,
             'cabangId' => $cabangId,
-            'penjualan_id' => $penjualanId,
+            'pembelian_id' => $pembelianId,
             'isEdit' => $isEdit,
-            'penjualan' => $penjualan,
+            'pembelian' => $pembelian,
             'totalHutang' => $totalHutang
         ];
         if ($request->input('refresh_dataset')) {
             return response()->json($data);
         }
 
-        return view('purchase::penjualanCicilan.form', $data);
+        return view('transaction::pembelianCicilan.form', $data);
     }
 
     /**
@@ -179,47 +177,47 @@ class PenjualanCicilanController extends Controller
         // payload is edit
         $payloadIsEdit = $request->input('payload_is_edit');
         if ($payloadIsEdit['isEdit'] == true) {
-            $penjualan_id = $payloadIsEdit['penjualan_id'];
-            $penjualanCicilan = PenjualanCicilan::where('penjualan_id', $penjualan_id)
+            $pembelian_id = $payloadIsEdit['pembelian_id'];
+            $pembelianCicilan = PembelianCicilan::where('pembelian_id', $pembelian_id)
                 ->orderBy('id', 'desc')->get();
-            foreach ($penjualanCicilan as $key => $item) {
+            foreach ($pembelianCicilan as $key => $item) {
                 $id = $item->id;
-                $getData = PenjualanCicilan::find($id);
-                $penjualan_id = $getData->penjualan_id;
+                $getData = PembelianCicilan::find($id);
+                $pembelian_id = $getData->pembelian_id;
 
-                $dataBayar = $getData->bayar_pcicilan;
-                $dataKembalian = $getData->kembalian_pcicilan;
+                $dataBayar = $getData->bayar_pbcicilan;
+                $dataKembalian = $getData->kembalian_pbcicilan;
 
-                $penjualan = Penjualan::find($penjualan_id);
-                $totalPenjualan = $penjualan->total_penjualan;
+                $pembelian = Pembelian::find($pembelian_id);
+                $totalPembelian = $pembelian->total_pembelian;
 
-                $getBayar = floatval($penjualan->bayar_penjualan) - floatval($dataBayar);
-                $getHutang = floatval($totalPenjualan) - floatval($getBayar);
-                $getKembalian = floatval($penjualan->kembalian_penjualan) - floatval($dataKembalian);
+                $getBayar = floatval($pembelian->bayar_pembelian) - floatval($dataBayar);
+                $getHutang = floatval($totalPembelian) - floatval($getBayar);
+                $getKembalian = floatval($pembelian->kembalian_pembelian) - floatval($dataKembalian);
 
-                $penjualan->bayar_penjualan = $getBayar;
-                $penjualan->hutang_penjualan = $getHutang < 0 ? 0 : $getHutang;
-                $penjualan->kembalian_penjualan = $getKembalian;
-                $penjualan->save();
+                $pembelian->bayar_pembelian = $getBayar;
+                $pembelian->hutang_pembelian = $getHutang < 0 ? 0 : $getHutang;
+                $pembelian->kembalian_pembelian = $getKembalian;
+                $pembelian->save();
 
-                PenjualanCicilan::destroy($id);
+                PembelianCicilan::destroy($id);
             }
         }
 
-        // penjualan
-        $penjualan = $request->input('penjualan');
-        $getPenjualan = Penjualan::find($penjualan['penjualan_id']);
-        $getPenjualan->hutang_penjualan = floatval($penjualan['hutang_penjualan']);
-        $getPenjualan->kembalian_penjualan = floatval($penjualan['kembalian_penjualan']);
-        $getPenjualan->tipe_penjualan = $penjualan['tipe_penjualan'];
-        $getPenjualan->bayar_penjualan = floatval($getPenjualan->bayar_penjualan) + floatval($penjualan['bayar_penjualan']);
-        $getPenjualan->tipe_penjualan = $penjualan['tipe_penjualan'];
-        $getPenjualan->updated_at = date('Y-m-d H:i:s');
-        $getPenjualan->save();
+        // pembelian
+        $pembelian = $request->input('pembelian');
+        $getPembelian = Pembelian::find($pembelian['pembelian_id']);
+        $getPembelian->hutang_pembelian = floatval($pembelian['hutang_pembelian']);
+        $getPembelian->kembalian_pembelian = floatval($pembelian['kembalian_pembelian']);
+        $getPembelian->tipe_pembelian = $pembelian['tipe_pembelian'];
+        $getPembelian->bayar_pembelian = floatval($getPembelian->bayar_pembelian) + floatval($pembelian['bayar_pembelian']);
+        $getPembelian->tipe_pembelian = $pembelian['tipe_pembelian'];
+        $getPembelian->updated_at = date('Y-m-d H:i:s');
+        $getPembelian->save();
 
-        // penjualan cicilan
-        $penjualanCicilan = $request->input('penjualan_cicilan');
-        PenjualanCicilan::insert($penjualanCicilan);
+        // pembelian cicilan
+        $pembelianCicilan = $request->input('pembelian_cicilan');
+        PembelianCicilan::insert($pembelianCicilan);
 
         $message = 'Berhasil tambah data';
         if ($payloadIsEdit['isEdit'] == true) {
@@ -228,7 +226,7 @@ class PenjualanCicilanController extends Controller
 
         return response()->json([
             'message' => $message,
-            'result' => $getPenjualan->id,
+            'result' => $getPembelian->id,
         ], 201);
     }
 
@@ -239,21 +237,21 @@ class PenjualanCicilanController extends Controller
      */
     public function show($id)
     {
-        $penjualanCicilan = PenjualanCicilan::find($id);
-        $penjualan_id = $penjualanCicilan->penjualan_id;
-        $penjualan = new Penjualan();
-        $row = $penjualan->invoicePenjualan($penjualan_id);
+        $pembelianCicilan = PembelianCicilan::find($id);
+        $pembelian_id = $pembelianCicilan->pembelian_id;
+        $pembelian = new Pembelian();
+        $row = $pembelian->invoicePembelian($pembelian_id);
         $jsonRow = json_encode($row);
-        return view('purchase::penjualanCicilan.detail', compact('row', 'jsonRow', 'penjualanCicilan'));
+        return view('transaction::pembelianCicilan.detail', compact('row', 'jsonRow', 'pembelianCicilan'));
     }
 
     public function print()
     {
-        $penjualan = new Penjualan();
-        $penjualan_id = request()->query('penjualan_id');
-        $penjualan = $penjualan->invoicePenjualan($penjualan_id);
+        $pembelian = new Pembelian();
+        $pembelian_id = request()->query('pembelian_id');
+        $pembelian = $pembelian->invoicePembelian($pembelian_id);
         $myCabang = UtilsHelper::myCabang();
-        return view('purchase::penjualanCicilan.print', compact('penjualan', 'myCabang'));
+        return view('transaction::pembelianCicilan.print', compact('pembelian', 'myCabang'));
     }
 
     /**
@@ -263,7 +261,7 @@ class PenjualanCicilanController extends Controller
      */
     public function edit($id)
     {
-        return view('purchase::edit');
+        return view('transaction::edit');
     }
 
     /**
@@ -284,25 +282,25 @@ class PenjualanCicilanController extends Controller
      */
     public function destroy($id)
     {
-        $getData = PenjualanCicilan::find($id);
-        $penjualan_id = $getData->penjualan_id;
+        $getData = PembelianCicilan::find($id);
+        $pembelian_id = $getData->pembelian_id;
 
-        $dataBayar = $getData->bayar_pcicilan;
-        $dataKembalian = $getData->kembalian_pcicilan;
+        $dataBayar = $getData->bayar_pbcicilan;
+        $dataKembalian = $getData->kembalian_pbcicilan;
 
-        $penjualan = Penjualan::find($penjualan_id);
-        $totalPenjualan = $penjualan->total_penjualan;
+        $pembelian = Pembelian::find($pembelian_id);
+        $totalPembelian = $pembelian->total_pembelian;
 
-        $getBayar = floatval($penjualan->bayar_penjualan) - floatval($dataBayar);
-        $getHutang = floatval($totalPenjualan) - floatval($getBayar);
-        $getKembalian = floatval($penjualan->kembalian_penjualan) - floatval($dataKembalian);
+        $getBayar = floatval($pembelian->bayar_pembelian) - floatval($dataBayar);
+        $getHutang = floatval($totalPembelian) - floatval($getBayar);
+        $getKembalian = floatval($pembelian->kembalian_pembelian) - floatval($dataKembalian);
 
-        $penjualan->bayar_penjualan = $getBayar;
-        $penjualan->hutang_penjualan = $getHutang < 0 ? 0 : $getHutang;
-        $penjualan->kembalian_penjualan = $getKembalian;
-        $penjualan->save();
+        $pembelian->bayar_pembelian = $getBayar;
+        $pembelian->hutang_pembelian = $getHutang < 0 ? 0 : $getHutang;
+        $pembelian->kembalian_pembelian = $getKembalian;
+        $pembelian->save();
 
-        PenjualanCicilan::destroy($id);
+        PembelianCicilan::destroy($id);
         return response()->json('Berhasil menghapus transaksi', 200);
     }
 }

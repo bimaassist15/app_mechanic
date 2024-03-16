@@ -41,4 +41,9 @@ class Barang extends Model
     {
         return $this->hasMany(PenjualanProduct::class);
     }
+
+    public function pembelianProduct()
+    {
+        return $this->hasMany(PembelianProduct::class);
+    }
 }

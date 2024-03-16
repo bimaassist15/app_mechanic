@@ -88,6 +88,48 @@
         </li>
 
         @php
+            $activeRouteTransaction = [
+                'transaction/kasir',
+                'transaction/pembelian',
+                'transaction/belumLunas',
+                'transaction/lunas',
+            ];
+        @endphp
+        <li
+            class="menu-item {{ collect($activeRouteTransaction)->contains(function ($route) {
+                return request()->is($route) || str_starts_with(request()->url(), url($route));
+            })
+                ? 'active'
+                : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-cart-alt"></i>
+                <div data-i18n="Pembelian">Pembelian</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->is('transaction/kasir') ? 'active' : '' }}">
+                    <a href="{{ url('transaction/kasir') }}" class="menu-link">
+                        <div data-i18n="Pembelian">Pembelian</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('transaction/pembelian') ? 'active' : '' }}">
+                    <a href="{{ url('transaction/pembelian') }}" class="menu-link">
+                        <div data-i18n="Invoice Pembelian">Invoice Pembelian</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('transaction/belumLunas') ? 'active' : '' }}">
+                    <a href="{{ url('transaction/belumLunas') }}" class="menu-link">
+                        <div data-i18n="Belum Lunas">Invoice Hutang</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('transaction/lunas') ? 'active' : '' }}">
+                    <a href="{{ url('transaction/lunas') }}" class="menu-link">
+                        <div data-i18n="Invoice Lunas">Invoice Lunas</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        @php
             $activeRoutesMaster = [
                 'master/kategori',
                 'master/satuan',

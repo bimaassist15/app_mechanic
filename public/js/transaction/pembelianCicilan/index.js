@@ -1,5 +1,7 @@
 // "use strict";
 var datatable;
+var myModal;
+var pembelianId = $(".pembelian_id").data("value");
 
 $(document).ready(function () {
     function initDatatable() {
@@ -14,18 +16,20 @@ $(document).ready(function () {
                     className: "text-center",
                 },
                 {
-                    data: "invoice_pembelian",
-                    name: "invoice_pembelian",
-                    searchable: true,
+                    data: "kategori_pembayaran.nama_kpembayaran",
+                    name: "kategori_pembayaran.nama_kpembayaran",
+                    orderable: false,
+                    searchable: false,
                 },
                 {
-                    data: "transaksi_pembelian",
-                    name: "transaksi_pembelian",
-                    searchable: true,
+                    data: "sub_pembayaran.nama_spembayaran",
+                    name: "sub_pembayaran.nama_spembayaran",
+                    orderable: false,
+                    searchable: false,
                 },
                 {
-                    data: "supplier",
-                    name: "supplier",
+                    data: "bayar_pbcicilan",
+                    name: "bayar_pbcicilan",
                     searchable: true,
                 },
                 {
@@ -34,8 +38,13 @@ $(document).ready(function () {
                     searchable: true,
                 },
                 {
-                    data: "total_pembelian",
-                    name: "total_pembelian",
+                    data: "hutang_pbcicilan",
+                    name: "hutang_pbcicilan",
+                    searchable: true,
+                },
+                {
+                    data: "kembalian_pbcicilan",
+                    name: "kembalian_pbcicilan",
                     searchable: true,
                 },
                 {
@@ -51,6 +60,18 @@ $(document).ready(function () {
     initDatatable();
 
     var body = $("body");
+    body.on("click", ".btn-add", function () {
+        showModal({
+            url: $(this).data("urlcreate"),
+            modalId: $(this).data("typemodal"),
+            title: "Form Pembelian Cicilan",
+            type: "get",
+            data: {
+                pembelian_id: pembelianId,
+            },
+        });
+    });
+
     body.on("click", ".btn-detail", function () {
         showModal({
             url: $(this).data("urlcreate"),

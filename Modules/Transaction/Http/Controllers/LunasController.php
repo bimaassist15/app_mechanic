@@ -2,9 +2,12 @@
 
 namespace Modules\Transaction\Http\Controllers;
 
+use App\Http\Helpers\UtilsHelper;
+use App\Models\Pembelian;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use DataTables;
 
 class LunasController extends Controller
 {
@@ -12,8 +15,46 @@ class LunasController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $pembelian = new Pembelian();
+            $data = $pembelian->invoiceLunas();
+
+            return DataTables::eloquent($data)
+                ->addColumn('transaksi_pembelian', function ($row) {
+                    $output = UtilsHelper::tanggalBulanTahunKonversi($row->transaksi_pembelian);
+                    return $output;
+                })
+                ->addColumn('total_pembelian', function ($row) {
+                    $output = UtilsHelper::formatUang($row->total_pembelian);
+                    return $output;
+                })
+                ->addColumn('supplier', function ($row) {
+                    $output = $row->supplier->nama_supplier ?? 'Umum';
+                    return $output;
+                })
+                ->addColumn('action', function ($row) {
+                    $buttonDetail = '
+                <a class="btn btn-info btn-detail btn-sm" 
+                data-typemodal="extraLargeModal"
+                data-urlcreate="' . url('transaction/lunas/' . $row->id . '/show') . '"
+                data-modalId="extraLargeModal"
+                >
+                    <i class="fa-solid fa-eye"></i>
+                </a>
+                ';
+
+                    $button = '
+            <div class="text-center">
+                ' . $buttonDetail . '
+            </div>
+            ';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->toJson();
+        }
         return view('transaction::lunas.index');
     }
 
@@ -23,7 +64,7 @@ class LunasController extends Controller
      */
     public function create()
     {
-        return view('transaction::penjualan.form');
+        return view('transaction::pembelian.form');
     }
 
     /**
@@ -43,12 +84,16 @@ class LunasController extends Controller
      */
     public function show($id)
     {
-        return view('transaction::penjualan.detail');
+        $Pembelian_id = $id;
+        $Pembelian = new Pembelian();
+        $row = $Pembelian->invoicePembelian($Pembelian_id);
+        $jsonRow = json_encode($row);
+        return view('transaction::lunas.detail',  compact('row', 'jsonRow'));
     }
 
     public function print()
     {
-        return view('transaction::penjualan.print');
+        return view('transaction::pembelian.print');
     }
 
     /**

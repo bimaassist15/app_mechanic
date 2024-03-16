@@ -3,6 +3,8 @@
 namespace App\Http\Helpers;
 
 use App\Models\Cabang;
+use App\Models\Pembelian;
+use App\Models\Penjualan;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -281,6 +283,70 @@ class UtilsHelper
     public static function formatUang($nominal)
     {
         return number_format($nominal, 0, '.', ',');
+    }
+
+    public static function paymentStatisPenjualan($id)
+    {
+        $penjualan = new Penjualan();
+        $getPenjualan = $penjualan->invoicePenjualan($id);
+
+        $hutang = 0;
+        $kembalian = 0;
+        $bayar = 0;
+
+        if (count($getPenjualan->penjualanCicilan) > 0) {
+            $getPenjualanCicilan = $getPenjualan->penjualanCicilan;
+            $getPenjualanCicilan = $getPenjualanCicilan[0];
+
+            $getBayarCicilan = $getPenjualan->penjualanCicilan->pluck('bayar_pcicilan')->toArray();
+            $totalBayar = array_sum($getBayarCicilan);
+
+            $hutang = $getPenjualanCicilan->bayar_pcicilan + $getPenjualanCicilan->hutang_pcicilan;
+            $kembalian = $getPenjualan->kembalian_penjualan;
+            $bayar = $totalBayar;
+        } else {
+            $hutang = $getPenjualan->hutang_penjualan;
+            $kembalian = $getPenjualan->kembalian_penjualan;
+            $bayar = $getPenjualan->bayar_penjualan;
+        }
+
+        return [
+            'hutang' => $hutang,
+            'kembalian' => $kembalian,
+            'bayar' => $bayar,
+        ];
+    }
+
+    public static function paymentStatisPembelian($id)
+    {
+        $pembelian = new Pembelian();
+        $getPembelian = $pembelian->invoicePembelian($id);
+
+        $hutang = 0;
+        $kembalian = 0;
+        $bayar = 0;
+
+        if (count($getPembelian->pembelianCicilan) > 0) {
+            $getPembelianCicilan = $getPembelian->pembelianCicilan;
+            $getPembelianCicilan = $getPembelianCicilan[0];
+
+            $getBayarCicilan = $getPembelian->pembelianCicilan->pluck('bayar_pbcicilan')->toArray();
+            $totalBayar = array_sum($getBayarCicilan);
+
+            $hutang = $getPembelianCicilan->bayar_pbcicilan + $getPembelianCicilan->hutang_pbcicilan;
+            $kembalian = $getPembelian->kembalian_pembelian;
+            $bayar = $totalBayar;
+        } else {
+            $hutang = $getPembelian->hutang_pembelian;
+            $kembalian = $getPembelian->kembalian_pembelian;
+            $bayar = $getPembelian->bayar_pembelian;
+        }
+
+        return [
+            'hutang' => $hutang,
+            'kembalian' => $kembalian,
+            'bayar' => $bayar,
+        ];
     }
 
     public static function createdApp()

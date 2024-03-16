@@ -90,6 +90,13 @@ Breadcrumbs::for('kasir', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Kasir', url('purchase/kasir'));
 });
+
+// Home > kasirPembelian
+Breadcrumbs::for('kasirPembelian', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('kasirPembelian', url('transaction/kasir'));
+});
+
 // Home > penjualan
 Breadcrumbs::for('penjualan', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
@@ -180,4 +187,10 @@ Breadcrumbs::for('subPembayaran', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('penjualanCicilan', function (BreadcrumbTrail $trail) {
     $trail->parent('belumLunas');
     $trail->push('Penjualan Cicilan', url('purchase/penjualanCicilan?penjualan_id=' . request()->query('penjualan_id')));
+});
+
+// Home > pembelianCicilan
+Breadcrumbs::for('pembelianCicilan', function (BreadcrumbTrail $trail) {
+    $trail->parent('belumLunasTransaction');
+    $trail->push('Pembelian Cicilan', url('transaction/pembelianCicilan?pembelian_id=' . request()->query('pembelian_id')));
 });

@@ -21,4 +21,14 @@ class Supplier extends Model
     {
         return $this->belongsTo(Cabang::class);
     }
+
+    public function pembelian()
+    {
+        return $this->hasMany(Pembelian::class);
+    }
+
+    public function pembelianProduct()
+    {
+        return $this->hasMany(PembelianProduct::class);
+    }
 }
