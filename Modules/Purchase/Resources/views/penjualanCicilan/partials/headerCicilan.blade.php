@@ -18,12 +18,13 @@
             <td>
                 <table class="w-100">
                     <tr>
-                        <td>Total Transaksi</td>
+                        <td>Hutang</td>
                         <td>:</td>
                         <td>
-                            <span>
-                                {{ UtilsHelp::formatUang($penjualan->total_penjualan) }}
+                            <span class="header_hutang_penjualan">
+                                {{ UtilsHelp::formatUang($getPenjualan['hutang']) }}
                             </span>
+
                         </td>
                     </tr>
                     <tr>
@@ -31,18 +32,8 @@
                         <td>:</td>
                         <td>
                             <span class="header_bayar_penjualan">
-                                {{ UtilsHelp::formatUang($penjualan->bayar_penjualan) }}
+                                {{ UtilsHelp::formatUang($getPenjualan['bayar']) }}
                             </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Hutang</td>
-                        <td>:</td>
-                        <td>
-                            <span class="header_hutang_penjualan">
-                                {{ UtilsHelp::formatUang($penjualan->hutang_penjualan) }}
-                            </span>
-
                         </td>
                     </tr>
                     <tr>
@@ -50,7 +41,7 @@
                         <td>:</td>
                         <td>
                             <span class="header_kembalian_penjualan">
-                                {{ UtilsHelp::formatUang($penjualan->kembalian_penjualan) }}
+                                {{ UtilsHelp::formatUang($getPenjualan['kembalian']) }}
                             </span>
 
                         </td>

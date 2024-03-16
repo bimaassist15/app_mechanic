@@ -18,11 +18,11 @@
             <td>
                 <table class="w-100">
                     <tr>
-                        <td>Total Transaksi</td>
+                        <td>Hutang</td>
                         <td>:</td>
                         <td>
-                            <span>
-                                {{ UtilsHelp::formatUang($pembelian->total_pembelian) }}
+                            <span class="header_hutang_pembelian">
+                                {{ UtilsHelp::formatUang($getPembelian['hutang']) }}
                             </span>
                         </td>
                     </tr>
@@ -31,16 +31,7 @@
                         <td>:</td>
                         <td>
                             <span class="header_bayar_pembelian">
-                                {{ UtilsHelp::formatUang($pembelian->bayar_pembelian) }}
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Hutang</td>
-                        <td>:</td>
-                        <td>
-                            <span class="header_hutang_pembelian">
-                                {{ UtilsHelp::formatUang($pembelian->hutang_pembelian) }}
+                                {{ UtilsHelp::formatUang($getPembelian['bayar']) }}
                             </span>
 
                         </td>
@@ -50,7 +41,7 @@
                         <td>:</td>
                         <td>
                             <span class="header_kembalian_pembelian">
-                                {{ UtilsHelp::formatUang($pembelian->kembalian_pembelian) }}
+                                {{ UtilsHelp::formatUang($getPembelian['kembalian']) }}
                             </span>
 
                         </td>

@@ -1,3 +1,6 @@
+@php
+    $getPembelian = UtilsHelp::paymentStatisPembelian($row->id);
+@endphp
 <div>
     <div class="modal-body">
         <div class="row">
@@ -56,7 +59,7 @@
                         </td>
                         <td>
                             Tipe Transaksi:
-                            {{ count($row->pembelianCicilan) > 0 ? 'Hutang' : ucwords($row->tipe_pembelian) }}
+                            {{ ucwords($getPembelian['tipe_transaksi']) }}
                         </td>
                     </tr>
                 </table>
@@ -121,34 +124,39 @@
                                 </tr>
                             @endforeach
 
-                            @if (count($row->pembelianCicilan) == 0)
-                                @if ($row->hutang_pembelian)
-                                    <tr>
-                                        <td colspan="2"></td>
-                                        <td><strong>Hutang:</strong></td>
-                                        <td colspan="1" class="text-end">
-                                            {{ UtilsHelp::formatUang($row->hutang_pembelian) }}
-                                        </td>
-                                    </tr>
-                                @endif
-                            @endif
-
-                            @if (count($row->pembelianCicilan) > 0)
+                            @if ($getPembelian['hutang'])
                                 <tr>
                                     <td colspan="2"></td>
                                     <td><strong>Hutang:</strong></td>
                                     <td colspan="1" class="text-end">
-                                        {{ UtilsHelp::formatUang($row->pembelianCicilan[0]->bayar_pbcicilan + $row->pembelianCicilan[0]->hutang_pbcicilan) }}
+                                        {{ UtilsHelp::formatUang($getPembelian['hutang']) }}
                                     </td>
                                 </tr>
                             @endif
-
-                            @if (count($row->pembelianCicilan) == 0)
+                            @if ($getPembelian['bayar'])
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td><strong>Pembayaran Hutang:</strong></td>
+                                    <td colspan="1" class="text-end">
+                                        {{ UtilsHelp::formatUang($getPembelian['bayar']) }}
+                                    </td>
+                                </tr>
+                            @endif
+                            @if ($getPembelian['cicilan'])
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td><strong>Sisa Tagihan:</strong></td>
+                                    <td colspan="1" class="text-end">
+                                        {{ UtilsHelp::formatUang($getPembelian['cicilan']) }}
+                                    </td>
+                                </tr>
+                            @endif
+                            @if ($getPembelian['kembalian'])
                                 <tr>
                                     <td colspan="2"></td>
                                     <td><strong>Kembalian:</strong></td>
                                     <td colspan="1" class="text-end">
-                                        <strong>{{ UtilsHelp::formatUang($row->kembalian_pembelian) }}</strong>
+                                        {{ UtilsHelp::formatUang($getPembelian['kembalian']) }}
                                     </td>
                                 </tr>
                             @endif

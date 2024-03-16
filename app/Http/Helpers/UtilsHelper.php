@@ -293,6 +293,9 @@ class UtilsHelper
         $hutang = 0;
         $kembalian = 0;
         $bayar = 0;
+        $tipeTransaksi = '';
+        $statusTransaksi = false;
+        $cicilan = 0;
 
         if (count($getPenjualan->penjualanCicilan) > 0) {
             $getPenjualanCicilan = $getPenjualan->penjualanCicilan;
@@ -304,16 +307,30 @@ class UtilsHelper
             $hutang = $getPenjualanCicilan->bayar_pcicilan + $getPenjualanCicilan->hutang_pcicilan;
             $kembalian = $getPenjualan->kembalian_penjualan;
             $bayar = $totalBayar;
+            $tipeTransaksi = 'hutang';
         } else {
             $hutang = $getPenjualan->hutang_penjualan;
-            $kembalian = $getPenjualan->kembalian_penjualan;
-            $bayar = $getPenjualan->bayar_penjualan;
+            $kembalian = 0;
+            $bayar = 0;
+            $tipeTransaksi = $getPenjualan->tipe_penjualan;
+        }
+
+        $calc = $bayar - $hutang;
+        if ($calc < 0) {
+            $statusTransaksi = false;
+            $cicilan = abs($calc);
+        } else {
+            $statusTransaksi = true;
+            $cicilan = ($calc);
         }
 
         return [
             'hutang' => $hutang,
             'kembalian' => $kembalian,
             'bayar' => $bayar,
+            'tipe_transaksi' => $tipeTransaksi,
+            'status_transaksi' => $statusTransaksi,
+            'cicilan' => $cicilan,
         ];
     }
 
@@ -325,6 +342,10 @@ class UtilsHelper
         $hutang = 0;
         $kembalian = 0;
         $bayar = 0;
+        $tipeTransaksi = '';
+        $statusTransaksi = false;
+        $cicilan = 0;
+
 
         if (count($getPembelian->pembelianCicilan) > 0) {
             $getPembelianCicilan = $getPembelian->pembelianCicilan;
@@ -336,16 +357,30 @@ class UtilsHelper
             $hutang = $getPembelianCicilan->bayar_pbcicilan + $getPembelianCicilan->hutang_pbcicilan;
             $kembalian = $getPembelian->kembalian_pembelian;
             $bayar = $totalBayar;
+            $tipeTransaksi = 'hutang';
         } else {
             $hutang = $getPembelian->hutang_pembelian;
-            $kembalian = $getPembelian->kembalian_pembelian;
-            $bayar = $getPembelian->bayar_pembelian;
+            $kembalian = 0;
+            $bayar = 0;
+            $tipeTransaksi = $getPembelian->tipe_pembelian;
+        }
+
+        $calc = $bayar - $hutang;
+        if ($calc < 0) {
+            $statusTransaksi = false;
+            $cicilan = abs($calc);
+        } else {
+            $statusTransaksi = true;
+            $cicilan = ($calc);
         }
 
         return [
             'hutang' => $hutang,
             'kembalian' => $kembalian,
             'bayar' => $bayar,
+            'tipe_transaksi' => $tipeTransaksi,
+            'status_transaksi' => $statusTransaksi,
+            'cicilan' => $cicilan,
         ];
     }
 

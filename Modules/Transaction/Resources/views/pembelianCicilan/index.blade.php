@@ -5,6 +5,9 @@
 @endsection
 
 @section('content')
+    @php
+        $getPembelian = UtilsHelp::paymentStatisPembelian($pembelian->id);
+    @endphp
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="d-flex justify-content-between mb-3 align-items-center">
             {{ Breadcrumbs::render('pembelianCicilan') }}
@@ -24,6 +27,7 @@
             <h5 class="card-header">
                 @include('transaction::pembelianCicilan.partials.headerCicilan', [
                     'pembelian' => $pembelian,
+                    'getPembelian' => $getPembelian
                 ])
             </h5>
 
@@ -50,7 +54,8 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ url('transaction/pembelianCicilan?pembelian_id=' . $pembelian->id) }}"></script>
+        <script class="url_datatable" data-url="{{ url('transaction/pembelianCicilan?pembelian_id=' . $pembelian->id) }}">
+        </script>
         <script class="pembelian_id" data-value="{{ $pembelian->id }}"></script>
         <script src="{{ asset('js/transaction/pembelianCicilan/index.js') }}"></script>
     @endpush

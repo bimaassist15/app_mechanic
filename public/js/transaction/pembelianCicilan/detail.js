@@ -13,21 +13,16 @@ $(document).ready(function () {
             dataType: "json",
             success: function (data) {
                 $(".header_bayar_pembelian").html(
-                    number_format(data.pembelian.bayar_pembelian, 0, ".", ",")
+                    number_format(data.getPembelian.bayar, 0, ".", ",")
                 );
                 $(".header_hutang_pembelian").html(
-                    number_format(data.pembelian.hutang_pembelian, 0, ".", ",")
+                    number_format(data.getPembelian.hutang, 0, ".", ",")
                 );
                 $(".header_kembalian_pembelian").html(
-                    number_format(
-                        data.pembelian.kembalian_pembelian,
-                        0,
-                        ".",
-                        ","
-                    )
+                    number_format(data.getPembelian.kembalian, 0, ".", ",")
                 );
 
-                if (parseFloat(data.pembelian.hutang_pembelian) === 0) {
+                if (data.getPembelian.status_transaksi) {
                     $(".btn-add").attr("disabled", true);
                     $(".btn-add").html("Lunas");
                 } else {

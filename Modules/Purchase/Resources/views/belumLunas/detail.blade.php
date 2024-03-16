@@ -1,3 +1,6 @@
+@php
+    $getPenjualan = UtilsHelp::paymentStatisPenjualan($row->id);
+@endphp
 <div>
     <div class="modal-body">
         <div class="row">
@@ -55,7 +58,7 @@
                             Kasir: {{ $row->users->profile->nama_profile }}
                         </td>
                         <td>
-                            Tipe Transaksi: {{ ucwords($row->tipe_penjualan) }}
+                            Tipe Transaksi: {{ ucwords($getPenjualan['tipe_transaksi']) }}
                         </td>
                     </tr>
                 </table>
@@ -109,15 +112,7 @@
                                     <strong>{{ UtilsHelp::formatUang($row->total_penjualan) }}</strong>
                                 </td>
                             </tr>
-                            @if ($row->hutang_penjualan)
-                                <tr>
-                                    <td colspan="2"></td>
-                                    <td><strong>Hutang:</strong></td>
-                                    <td colspan="1" class="text-end">
-                                        {{ UtilsHelp::formatUang($row->hutang_penjualan) }}
-                                    </td>
-                                </tr>
-                            @endif
+
                             @foreach ($row->penjualanPembayaran as $item)
                                 <tr>
                                     <td colspan="2"></td>
@@ -127,13 +122,42 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            <tr>
-                                <td colspan="2"></td>
-                                <td><strong>Kembalian:</strong></td>
-                                <td colspan="1" class="text-end">
-                                    <strong>{{ UtilsHelp::formatUang($row->kembalian_penjualan) }}</strong>
-                                </td>
-                            </tr>
+                            @if ($getPenjualan['hutang'])
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td><strong>Hutang:</strong></td>
+                                    <td colspan="1" class="text-end">
+                                        {{ UtilsHelp::formatUang($getPenjualan['hutang']) }}
+                                    </td>
+                                </tr>
+                            @endif
+                            @if ($getPenjualan['bayar'])
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td><strong>Pembayaran Hutang:</strong></td>
+                                    <td colspan="1" class="text-end">
+                                        {{ UtilsHelp::formatUang($getPenjualan['bayar']) }}
+                                    </td>
+                                </tr>
+                            @endif
+                            @if ($getPenjualan['cicilan'])
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td><strong>Sisa Tagihan:</strong></td>
+                                    <td colspan="1" class="text-end">
+                                        {{ UtilsHelp::formatUang($getPenjualan['cicilan']) }}
+                                    </td>
+                                </tr>
+                            @endif
+                            @if ($getPenjualan['kembalian'])
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td><strong>Kembalian:</strong></td>
+                                    <td colspan="1" class="text-end">
+                                        <strong>{{ UtilsHelp::formatUang($getPenjualan['kembalian']) }}</strong>
+                                    </td>
+                                </tr>
+                            @endif
                         </tfoot>
                     </table>
                 </div>

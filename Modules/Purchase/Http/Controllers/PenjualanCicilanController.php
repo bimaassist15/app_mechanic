@@ -160,7 +160,8 @@ class PenjualanCicilanController extends Controller
             'penjualan_id' => $penjualanId,
             'isEdit' => $isEdit,
             'penjualan' => $penjualan,
-            'totalHutang' => $totalHutang
+            'totalHutang' => $totalHutang,
+            'getPenjualan' => UtilsHelper::paymentStatisPenjualan($penjualanId),
         ];
         if ($request->input('refresh_dataset')) {
             return response()->json($data);

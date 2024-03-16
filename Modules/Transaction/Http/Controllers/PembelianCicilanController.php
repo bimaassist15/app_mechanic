@@ -158,7 +158,8 @@ class PembelianCicilanController extends Controller
             'pembelian_id' => $pembelianId,
             'isEdit' => $isEdit,
             'pembelian' => $pembelian,
-            'totalHutang' => $totalHutang
+            'totalHutang' => $totalHutang,
+            'getPembelian' => UtilsHelper::paymentStatisPembelian($pembelianId),
         ];
         if ($request->input('refresh_dataset')) {
             return response()->json($data);

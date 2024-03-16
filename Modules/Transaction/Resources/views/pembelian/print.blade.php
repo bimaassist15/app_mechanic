@@ -1,3 +1,6 @@
+@php
+    $getPembelian = UtilsHelp::paymentStatisPembelian($pembelian->id);
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 
@@ -76,7 +79,7 @@
                         <tr>
                             <td>Transaksi</td>
                             <td style="padding: 0 15px">:</td>
-                            <td>{{ count($pembelian->pembelianCicilan) > 0 ? 'Hutang' : ucwords($pembelian->tipe_pembelian) }}
+                            <td>{{ $getPembelian['tipe_transaksi'] }}
                             </td>
                         </tr>
                         <tr>
@@ -139,30 +142,22 @@
                                 <td>{{ UtilsHelp::formatUang($item->bayar_pbpembayaran) }}</td>
                             </tr>
                         @endforeach
-                        @if ($pembelian->hutang_pembelian)
+                        @if ($getPembelian['hutang'])
                             <tr>
                                 <td>Hutang</td>
                                 <td>:</td>
                                 <td style="padding: 0 80px;">Rp.</td>
-                                <td>{{ UtilsHelp::formatUang($pembelian->hutang_pembelian) }}</td>
+                                <td>{{ UtilsHelp::formatUang($getPembelian['hutang']) }}</td>
                             </tr>
                         @endif
-                        @if (count($pembelian->pembelianCicilan) > 0)
-                            <tr>
-                                <td>Hutang</td>
-                                <td>:</td>
-                                <td style="padding: 0 80px;">Rp.</td>
-                                <td>
-                                    {{ UtilsHelp::formatUang($pembelian->pembelianCicilan[0]->bayar_pbcicilan + $pembelian->pembelianCicilan[0]->hutang_pbcicilan) }}
-                                </td>
-                            </tr>
-                        @endif
-                        @if (count($pembelian->pembelianCicilan) == 0)
+                        @if (!$getPembelian['hutang'])
                             <tr>
                                 <td>Kembalian</td>
                                 <td>:</td>
                                 <td style="padding: 0 80px;">Rp.</td>
-                                <td>{{ UtilsHelp::formatUang($pembelian->kembalian_pembelian) }} </td>
+                                <td>
+                                    {{ UtilsHelp::formatUang($getPembelian['kembalian']) }}
+                                </td>
                             </tr>
                         @endif
                     </table>

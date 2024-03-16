@@ -1,3 +1,6 @@
+@php
+    $getPenjualan = UtilsHelp::paymentStatisPenjualan($penjualan->id);
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 
@@ -76,7 +79,7 @@
                         <tr>
                             <td>Transaksi</td>
                             <td style="padding: 0 15px">:</td>
-                            <td>{{ ucwords($penjualan->tipe_penjualan) }}</td>
+                            <td>{{ ucwords($getPenjualan['tipe_transaksi']) }}</td>
                         </tr>
                         <tr>
                             <td>Kasir</td>
@@ -127,30 +130,30 @@
                 <td style="vertical-align: top; text-align: right;">
                     <table style="margin-left: auto;">
                         <tr>
-                            <td>Total Transaksi</td>
+                            <td>Total Hutang</td>
                             <td>:</td>
                             <td style="padding: 0 80px;">Rp.</td>
-                            <td>{{ UtilsHelp::formatUang($penjualan->total_penjualan) }}</td>
+                            <td>{{ UtilsHelp::formatUang($getPenjualan['hutang']) }}</td>
                         </tr>
                         <tr>
                             <td>Total Pembayaran</td>
                             <td>:</td>
                             <td style="padding: 0 80px;">Rp.</td>
-                            <td>{{ UtilsHelp::formatUang($penjualan->bayar_penjualan) }}</td>
+                            <td>{{ UtilsHelp::formatUang($getPenjualan['bayar']) }}</td>
                         </tr>
-                        @if ($penjualan->hutang_penjualan)
+                        @if (!$getPenjualan['status_transaksi'])
                             <tr>
                                 <td>Hutang</td>
                                 <td>:</td>
                                 <td style="padding: 0 80px;">Rp.</td>
-                                <td>{{ UtilsHelp::formatUang($penjualan->hutang_penjualan) }}</td>
+                                <td>{{ UtilsHelp::formatUang($getPenjualan['cicilan']) }}</td>
                             </tr>
                         @endif
                         <tr>
                             <td>Kembalian</td>
                             <td>:</td>
                             <td style="padding: 0 80px;">Rp.</td>
-                            <td>{{ UtilsHelp::formatUang($penjualan->kembalian_penjualan) }} </td>
+                            <td>{{ UtilsHelp::formatUang($getPenjualan['kembalian']) }} </td>
                         </tr>
                     </table>
                 </td>

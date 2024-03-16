@@ -13,21 +13,16 @@ $(document).ready(function () {
             dataType: "json",
             success: function (data) {
                 $(".header_bayar_penjualan").html(
-                    number_format(data.penjualan.bayar_penjualan, 0, ".", ",")
+                    number_format(data.getPenjualan.bayar, 0, ".", ",")
                 );
                 $(".header_hutang_penjualan").html(
-                    number_format(data.penjualan.hutang_penjualan, 0, ".", ",")
+                    number_format(data.getPenjualan.hutang, 0, ".", ",")
                 );
                 $(".header_kembalian_penjualan").html(
-                    number_format(
-                        data.penjualan.kembalian_penjualan,
-                        0,
-                        ".",
-                        ","
-                    )
+                    number_format(data.getPenjualan.kembalian, 0, ".", ",")
                 );
 
-                if (parseFloat(data.penjualan.hutang_penjualan) === 0) {
+                if (data.penjualan.status_transaksi) {
                     $(".btn-add").attr("disabled", true);
                     $(".btn-add").html("Lunas");
                 } else {

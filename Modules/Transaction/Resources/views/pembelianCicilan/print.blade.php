@@ -1,3 +1,7 @@
+@php
+    $getPembelian = UtilsHelp::paymentStatisPembelian($pembelian->id);
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -76,7 +80,7 @@
                         <tr>
                             <td>Transaksi</td>
                             <td style="padding: 0 15px">:</td>
-                            <td>{{ ucwords($pembelian->tipe_pembelian) }}</td>
+                            <td>{{ ucwords($getPembelian['tipe_transaksi']) }}</td>
                         </tr>
                         <tr>
                             <td>Kasir</td>
@@ -127,30 +131,30 @@
                 <td style="vertical-align: top; text-align: right;">
                     <table style="margin-left: auto;">
                         <tr>
-                            <td>Total Transaksi</td>
+                            <td>Total Hutang</td>
                             <td>:</td>
                             <td style="padding: 0 80px;">Rp.</td>
-                            <td>{{ UtilsHelp::formatUang($pembelian->total_pembelian) }}</td>
+                            <td>{{ UtilsHelp::formatUang($getPembelian['hutang']) }}</td>
                         </tr>
                         <tr>
                             <td>Total Pembayaran</td>
                             <td>:</td>
                             <td style="padding: 0 80px;">Rp.</td>
-                            <td>{{ UtilsHelp::formatUang($pembelian->bayar_pembelian) }}</td>
+                            <td>{{ UtilsHelp::formatUang($getPembelian['bayar']) }}</td>
                         </tr>
-                        @if ($pembelian->hutang_pembelian)
+                        @if (!$getPembelian['status_transaksi'])
                             <tr>
                                 <td>Hutang</td>
                                 <td>:</td>
                                 <td style="padding: 0 80px;">Rp.</td>
-                                <td>{{ UtilsHelp::formatUang($pembelian->hutang_pembelian) }}</td>
+                                <td>{{ UtilsHelp::formatUang($getPembelian['cicilan']) }}</td>
                             </tr>
                         @endif
                         <tr>
                             <td>Kembalian</td>
                             <td>:</td>
                             <td style="padding: 0 80px;">Rp.</td>
-                            <td>{{ UtilsHelp::formatUang($pembelian->kembalian_pembelian) }} </td>
+                            <td>{{ UtilsHelp::formatUang($getPembelian['kembalian']) }} </td>
                         </tr>
                     </table>
                 </td>
