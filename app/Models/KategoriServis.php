@@ -26,4 +26,9 @@ class KategoriServis extends Model
     {
         return $this->belongsTo(Cabang::class);
     }
+
+    public function penerimaanServis()
+    {
+        return $this->hasMany(PenerimaanServis::class);
+    }
 }

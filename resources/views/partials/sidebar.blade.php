@@ -129,6 +129,95 @@
             </ul>
         </li>
 
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Servis</span>
+        </li>
+        @php
+            $activeRouteService = ['service/penerimaanServis', 'service/pengembalianServis'];
+        @endphp
+        <li
+            class="menu-item {{ collect($activeRouteService)->contains(function ($route) {
+                return request()->is($route) || str_starts_with(request()->url(), url($route));
+            })
+                ? 'active'
+                : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-wrench"></i>
+                <div data-i18n="Transaksi Servis">Transaksi Servis</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->is('service/penerimaanServis') ? 'active' : '' }}">
+                    <a href="{{ url('service/penerimaanServis') }}" class="menu-link">
+                        <div data-i18n="Penerimaan">Penerimaan</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('service/pengembalianServis') ? 'active' : '' }}">
+                    <a href="{{ url('service/pengembalianServis') }}" class="menu-link">
+                        <div data-i18n="Pengembalian">Pengembalian</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        @php
+            $activeRouteService = ['service/kendaraanServis'];
+        @endphp
+        <li
+            class="menu-item {{ collect($activeRouteService)->contains(function ($route) {
+                return request()->is($route) || str_starts_with(request()->url(), url($route));
+            })
+                ? 'active'
+                : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-list-ul"></i>
+                <div data-i18n="Data Kendaraan Servis">Data Kendaraan Servis</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->is('service/kendaraanServis') ? 'active' : '' }}">
+                    <a href="{{ url('service/kendaraanServis') }}" class="menu-link">
+                        <div data-i18n="Kendaraan Servis">Kendaraan Servis</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('service/kendaraanServis') ? 'active' : '' }}">
+                    <a href="{{ url('service/kendaraanServis') }}" class="menu-link">
+                        <div data-i18n="Servis Berkala">Servis Berkala</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('service/kendaraanServis') ? 'active' : '' }}">
+                    <a href="{{ url('service/kendaraanServis') }}" class="menu-link">
+                        <div data-i18n="Servis Garansi">Servis Garansi</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        @php
+            $activeRouteService = ['service/mekanik'];
+        @endphp
+        <li
+            class="menu-item {{ collect($activeRouteService)->contains(function ($route) {
+                return request()->is($route) || str_starts_with(request()->url(), url($route));
+            })
+                ? 'active'
+                : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-cog"></i>
+                <div data-i18n="Mekanik">Mekanik</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->is('service/mekanik') ? 'active' : '' }}">
+                    <a href="{{ url('service/mekanik') }}" class="menu-link">
+                        <div data-i18n="Servis Dikerjakan">Servis Dikerjakan</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('service/mekanik') ? 'active' : '' }}">
+                    <a href="{{ url('service/mekanik') }}" class="menu-link">
+                        <div data-i18n="Servis Garansi Komplain">Servis Garansi Komplain</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
         @php
             $activeRoutesMaster = [
                 'master/kategori',
@@ -211,6 +300,7 @@
                 </li>
             </ul>
         </li>
+
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Laporan</span>
         </li>

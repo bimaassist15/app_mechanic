@@ -25,22 +25,26 @@ return [
         'non sn' => 'Non Serial Number',
     ],
     'status_serial_barang' => [
-        'ready' => 'Ready', 
-        'return' => 'Return', 
-        'cancel transaction' => 'Cancel Transaction', 
+        'ready' => 'Ready',
+        'return' => 'Return',
+        'cancel transaction' => 'Cancel Transaction',
         'not sold' => 'Not Sold'
     ],
     'tipe_print' => [
-        'thermal' => 'Thermal', 
-        'biasa' => 'Biasa', 
+        'thermal' => 'Thermal',
+        'biasa' => 'Biasa',
     ],
     'tipe_diskon' => [
-        'fix' => 'Fix', 
-        '%' => '%', 
+        'fix' => 'Fix',
+        '%' => '%',
     ],
     'tipe_pembayaran' => [
-        'cash' => 'Cash', 
-        'transfer' => 'Transfer', 
+        'cash' => 'Cash',
+        'transfer' => 'Transfer',
         'deposit' => 'Deposit',
+    ],
+    'tipe_servis' => [
+        'data langsung ke bengkel' => 'Datang Langsung Ke Bengkel',
+        'booking online' => 'Booking Online',
     ],
 ];

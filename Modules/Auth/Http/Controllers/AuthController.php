@@ -42,12 +42,16 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email_or_username', 'password');
 
-        if (Auth::attempt(['email' => $credentials['email_or_username'], 'password' => $credentials['password']]) || 
-            Auth::attempt(['username' => $credentials['email_or_username'], 'password' => $credentials['password']])) {
-                $user = Auth::user();
-                $request->session()->put('user', $user);
-                $request->session()->put('cabang_id', $user->cabang_id);
-                return redirect()->intended('/dashboard');
+        if (
+            Auth::attempt(['email' => $credentials['email_or_username'], 'password' => $credentials['password']]) ||
+            Auth::attempt(['username' => $credentials['email_or_username'], 'password' => $credentials['password']])
+        ) {
+            $user = Auth::user();
+            $request->session()->put('user', $user);
+            $request->session()->put('cabang_id', $user->cabang_id);
+            return redirect()->intended('/dashboard');
+        } else {
+            return redirect()->back()->withInput()->withErrors(['email_or_username' => 'Email atau password anda salah']);
         }
     }
 
