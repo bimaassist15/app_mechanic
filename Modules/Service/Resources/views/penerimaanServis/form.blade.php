@@ -1,44 +1,24 @@
-<div>
-    <div class="modal-body">
-        <form>
-            <div class="row">
-                <div class="col-lg-6">
-                    @php
-                        $data = [['id' => '', 'label' => 'Belum Ada']];
-                    @endphp
-                    <x-form-select-horizontal label="No. Polisi" name="no_polisi_id" :data="$data" />
-                    <x-form-textarea-horizontal label="Keterangan" name="keterangan" placeholder="Keterangan..." />
-                    @php
-                        $data = [['id' => '', 'label' => 'Belum Ada']];
-                    @endphp
-                    <x-form-select-horizontal label="Tipe Servis" name="tipe_service_id" :data="$data" />
-                    <x-form-input-horizontal label="Kerusakan" name="kerusakan" placeholder="Kerusakan..." />
-                </div>
-                <div class="col-lg-6">
-                    @php
-                        $data = [['id' => '', 'label' => 'Belum Ada']];
-                    @endphp
-                    <x-form-select-horizontal label="Kategori Servis" name="kategori_service_id" :data="$data" />
-                    <x-form-input-horizontal label="Kondisi kendaraan masuk" name="kondisi_kendaraan_masuk"
-                        placeholder="Kondisi kendaraan masuk..." />
-                    <x-form-input-horizontal label="Uang Muka" name="dp" placeholder="Uang Muka..." />
-                    <x-form-input-horizontal label="KM Sekarang" name="km_sekarang" placeholder="KM Sekarang..." />
+<div style="height: 500px; overflow-y: scroll;">
+    <form action="{{ $action }}" method="post">
+        @include('service::penerimaanServis.partials.pengisianAwal')
 
-
-                </div>
-            </div>
-
-        </form>
-    </div>
-    <div class="modal-footer">
-        <div class="row justify-content-end">
-            <div class="col-sm-12">
-                <x-button-cancel-modal />
-                <x-button-submit-modal />
-            </div>
-        </div>
-    </div>
+        @include('service::penerimaanServis.partials.metodePembayaran')
+    </form>
 </div>
 
 
-<script src="{{ asset('js/master/barang/form.js') }}"></script>
+<script class="json_kategori_pembayaran" data-json="{{ $kategoriPembayaran }}"></script>
+<script class="json_array_kategori_pembayaran" data-json="{{ $array_kategori_pembayaran }}"></script>
+<script class="json_sub_pembayaran" data-json="{{ $subPembayaran }}"></script>
+<script class="json_array_sub_pembayaran" data-json="{{ $array_sub_pembayaran }}"></script>
+<script class="json_data_user" data-json="{{ $dataUser }}"></script>
+<script class="json_default_user" data-json="{{ $defaultUser }}"></script>
+<script class="json_cabang_id" data-json="{{ $cabangId }}"></script>
+<script class="url_print_kasir" data-url="{{ route('pembelianCicilan.print') }}"></script>
+<script class="url_simpan_kasir" data-url="{{ url('service/penerimaanServis') }}"></script>
+<script class="isEdit" data-value="{{ $isEdit }}"></script>
+<script class="url_transaction_kasir" data-url="{{ url('service/penerimaanServis/create') }}"></script>
+<script class="totalHutang" data-value="{{ $totalHutang }}"></script>
+
+<script src="{{ asset('js/service/penerimaanServis/form.js') }}"></script>
+<script src="{{ asset('backend/sneat-bootstrap-html-admin-template-free/assets/js/ui-popover.js') }}"></script>

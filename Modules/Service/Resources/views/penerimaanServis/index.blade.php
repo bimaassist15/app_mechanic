@@ -1,5 +1,9 @@
 @extends('layouts.app.index')
 
+@section('title')
+    Halaman Penerimaan Servis
+@endsection
+
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         {{ Breadcrumbs::render('penerimaanServis') }}

@@ -20,6 +20,7 @@ Route::prefix('transaction')->middleware('auth')->group(function () {
     Route::get('belumLunas/{id}/show', 'BelumLunasController@show')->name('belumLunas.show');
     Route::get('lunas', 'LunasController@index')->name('lunas.index');
     Route::get('lunas/{id}/show', 'LunasController@show')->name('lunas.show');
+    
     Route::resource('pembelianCicilan', 'PembelianCicilanController');
     Route::get('pembelianCicilan/print/transaction', 'PembelianCicilanController@print')->name('pembelianCicilan.print');
 });

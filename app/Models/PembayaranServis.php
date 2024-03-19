@@ -11,4 +11,9 @@ class PembayaranServis extends Model
     protected $table = 'pembayaran_servis';
     protected $guarded = [];
     public $timestamps = true;
+
+    public function penerimaanServis()
+    {
+        return $this->belongsTo(PenerimaanServis::class);
+    }
 }

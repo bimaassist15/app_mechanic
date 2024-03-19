@@ -40,6 +40,7 @@ class UserSeeder extends Seeder
         $roles = Roles::create([
             'name' => 'Free Admin',
             'guard_name' => 'web',
+            'cabang_id' => $cabang->id,
         ]);
 
         $user = User::create([

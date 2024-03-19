@@ -2,12 +2,22 @@
 
 namespace Modules\Service\Http\Controllers;
 
+use App\Http\Helpers\UtilsHelper;
+use App\Models\Barang;
+use App\Models\Customer;
 use App\Models\Kategori;
+use App\Models\KategoriPembayaran;
 use App\Models\KategoriServis;
+use App\Models\Kendaraan;
+use App\Models\PenerimaanServis;
+use App\Models\Penjualan;
+use App\Models\SubPembayaran;
+use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use DataTables;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 class PenerimaanServisController extends Controller
@@ -61,12 +71,112 @@ class PenerimaanServisController extends Controller
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create()
+    public function create(Request $request)
     {
         $action = route('penerimaanServis.store');
         $kategoriServis = KategoriServis::dataTable()->get();
         $tipeServis = $this->datastatis['tipe_servis'];
-        return view('service::penerimaanServis.form', compact('kategoriServis', 'tipeServis'));
+        $kendaraanServis = Kendaraan::with('customer', 'cabang')->get();
+        $array_kendaraan_servis = [];
+        foreach ($kendaraanServis as $key => $item) {
+            $array_kendaraan_servis[] = [
+                'label' => '<strong>No. Polisi: ' . $item->nopol_kendaraan . '</strong><br />
+                <span>Customer: ' . $item->customer->nama_customer . '</span>
+                ',
+                'id' => $item->id,
+            ];
+        }
+
+        $array_tipe_servis = [];
+        foreach ($tipeServis as $key => $item) {
+            $array_tipe_servis[] = [
+                'label' => $item,
+                'id' => $key,
+            ];
+        }
+
+        $array_kategori_servis = [];
+        foreach ($kategoriServis as $key => $item) {
+            $array_kategori_servis[] = [
+                'label' => $item->nama_kservis,
+                'id' => $item->id,
+            ];
+        }
+
+        $array_kategori_pembayaran = [];
+        $kategoriPembayaran = KategoriPembayaran::dataTable()->where('status_kpembayaran', true)
+            ->whereNot('nama_kpembayaran', 'like', '%deposit%')
+            ->get();
+        foreach ($kategoriPembayaran as $value => $item) {
+            $array_kategori_pembayaran[] = [
+                'id' => $item->id,
+                'label' => $item->nama_kpembayaran
+            ];
+        }
+        $kategoriPembayaran = json_encode($kategoriPembayaran);
+        $array_kategori_pembayaran = json_encode($array_kategori_pembayaran);
+
+
+        $array_sub_pembayaran = [];
+        $subPembayaran = SubPembayaran::dataTable()->where('status_spembayaran', true)
+            ->get();
+        foreach ($subPembayaran as $value => $item) {
+            $array_sub_pembayaran[] = [
+                'id' => $item->id,
+                'label' => $item->nama_spembayaran,
+                'kategori_pembayaran_id' => $item->kategori_pembayaran_id
+            ];
+        }
+        $subPembayaran = json_encode($subPembayaran);
+        $array_sub_pembayaran = json_encode($array_sub_pembayaran);
+
+        $dataUser = User::dataTable()
+            ->join('roles', 'roles.id', '=', 'users.roles_id')
+            ->with('profile')
+            ->select('users.*', 'roles.id as roles_id', 'roles.name as roles_name', 'roles.guard_name as roles_guard')
+            ->get();
+        $dataUser = json_encode($dataUser);
+        $defaultUser = Auth::id();
+        $cabangId = session()->get('cabang_id');
+        $isEdit = $request->query('isEdit');
+        $penerimaanServis = new PenerimaanServis();
+
+        // $dataHutang = $penerimaanServis->pembayaranServis;
+
+        // $totalHutang = 0;
+        // $totalBayar = 0;
+        // $totalKembalian = 0;
+        // if (count($dataHutang) > 0) {
+        //     foreach ($dataHutang as $key => $item) {
+        //         $totalBayar += $item->bayar_pbcicilan;
+        //         $totalKembalian += $item->kembalian_pbcicilan;
+        //     }
+        //     $totalHutang = $totalKembalian > 0 ?  $totalBayar - $totalKembalian : $dataHutang[0]->bayar_pbcicilan + $dataHutang[0]->hutang_pbcicilan;
+        // }
+
+        // $totalHutang = $isEdit == true ? $totalHutang : $penerimaanServis->hutang_penerimaanServis;
+        $totalHutang = 0;
+        $data = [
+            'array_kategori_pembayaran' => $array_kategori_pembayaran,
+            'kategoriPembayaran' => $kategoriPembayaran,
+            'subPembayaran' => $subPembayaran,
+            'array_sub_pembayaran' => $array_sub_pembayaran,
+            'dataUser' => $dataUser,
+            'defaultUser' => $defaultUser,
+            'cabangId' => $cabangId,
+            'isEdit' => $isEdit,
+            'penerimaanServis' => $penerimaanServis,
+            'totalHutang' => $totalHutang,
+            'array_kategori_servis' => $array_kategori_servis,
+            'array_kendaraan_servis' => $array_kendaraan_servis,
+            'array_tipe_servis' => $array_tipe_servis,
+            'action' => $action,
+        ];
+        if ($request->input('refresh_dataset')) {
+            return response()->json($data);
+        }
+
+        return view('service::penerimaanServis.form', $data);
     }
 
     /**
@@ -138,5 +248,9 @@ class PenerimaanServisController extends Controller
         //
         Kategori::destroy($id);
         return response()->json('Berhasil hapus data', 200);
+    }
+
+    public function print()
+    {
     }
 }

@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('saldo_customer', function (Blueprint $table) {
+        Schema::create('saldo_detail', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('customer_id')->unsigned();
-            $table->double('jumlah_saldocustomer');
+            $table->bigInteger('saldo_customer_id')->unsigned();
+            $table->bigInteger('pembayaran_servis_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('customer_id')->references('id')->on('customer')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('saldo_customer_id')->references('id')->on('saldo_customer')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('saldo_customer');
+        Schema::dropIfExists('saldo_detail');
     }
 };
