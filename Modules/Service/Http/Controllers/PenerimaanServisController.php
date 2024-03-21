@@ -38,28 +38,36 @@ class PenerimaanServisController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Kategori::dataTable();
+            $data = PenerimaanServis::dataTable();
             return DataTables::eloquent($data)
                 ->addColumn('action', function ($row) {
-                    $buttonUpdate = '
-                    <a class="btn btn-warning btn-edit btn-sm" 
-                    data-typemodal="mediumModal"
-                    data-urlcreate="' . route('penerimaanServis.edit', $row->id) . '"
-                    data-modalId="mediumModal"
-                    >
-                        <i class="fa-solid fa-pencil"></i>
-                    </a>
-                    ';
-                    $buttonDelete = '
-                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="' . url('master/penerimaanServis/' . $row->id) . '?_method=delete">
-                        <i class="fa-solid fa-trash"></i>
+                    $buttonAksi = '
+                    <button type="button" 
+                    class="btn btn-primary dropdown-toggle" 
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="bx bx-menu me-1"></i> 
+                    Aksi
                     </button>
-                    ';
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a target="_blank" href="' . url('service/penerimaanServis/create?penerimaan_servis_id=' . $row->id) . '"
+                                class="dropdown-item d-flex align-items-center btn-edit">
+                                <i class="fa-solid fa-pencil"></i> &nbsp; Update Servis
+                            </a>
+                        </li>
+                        <li>
+                            <a href="' . url('service/penerimaanServis/' . $row->id . '?_method=delete') . '"
+                                class="dropdown-item d-flex align-items-center btn-delete">
+                                <i class="fa-solid fa-trash"></i> &nbsp; Delete</a>
+                        </li>
+                    </ul>';
+
+
 
                     $button = '
                 <div class="text-center">
-                    ' . $buttonUpdate . '
-                    ' . $buttonDelete . '
+                    ' . $buttonAksi . '
                 </div>
                 ';
                     return $button;
@@ -196,7 +204,14 @@ class PenerimaanServisController extends Controller
         $payloadSaldoCustomer = $request->input('payloadSaldoCustomer');
 
         // penerimaan servis
-        $penerimaanServis = PenerimaanServis::create($payloadPenerimaanServis);
+        $dateNow = date('Y-m-d');
+        $noAntrianStatis = PenerimaanServis::whereDate('created_at', $dateNow)
+            ->orderBy('id', 'asc')
+            ->pluck('noantrian_pservis')
+            ->max();
+        $noAntrianStatis++;
+        $mergePenerimaanServis = array_merge($payloadPenerimaanServis, ['noantrian_pservis', $noAntrianStatis, 'status_pservis' => 'antrian servis masuk']);
+        $penerimaanServis = PenerimaanServis::create($mergePenerimaanServis);
         $penerimaan_servis_id = $penerimaanServis->id;
 
         // saldo customer
@@ -241,48 +256,6 @@ class PenerimaanServisController extends Controller
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('service::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        $action = url('master/penerimaanServis/' . $id . '?_method=put');
-        $row = Kategori::find($id);
-        $kategoriServis = KategoriServis::dataTable()->get();
-        $tipeServis = $this->datastatis['tipe_servis'];
-        return view('master::penerimaanServis.form', compact('action', 'row', 'kategoriServis', 'tipeServis'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-        $data = [
-            'nama_penerimaanServis' => $request->input('nama_penerimaanServis'),
-            'status_penerimaanServis' => $request->input('status_penerimaanServis') !== null ? true : false,
-            'cabang_id' => session()->get('cabang_id'),
-        ];
-        Kategori::find($id)->update($data);
-        return response()->json('Berhasil update data', 200);
-    }
-
-    /**
      * Remove the specified resource from storage.
      * @param int $id
      * @return Renderable
@@ -290,7 +263,25 @@ class PenerimaanServisController extends Controller
     public function destroy($id)
     {
         //
-        Kategori::destroy($id);
+        $penerimaanServis = new PenerimaanServis();
+
+        $getPenerimaanServis = $penerimaanServis->transaksiServis($id);
+        $saldoDetail = SaldoDetail::where("penerimaan_servis_id", $id)->first();
+
+        if ($saldoDetail) {
+            $totalDpDetail = $saldoDetail->totalsaldo_detail;
+
+            // update saldo customer
+            $customer_id = $getPenerimaanServis->kendaraan->customer_id;
+            $saldoCustomer = SaldoCustomer::where('customer_id', $customer_id)->first();
+            $saldoCustomer->jumlah_saldocustomer = $saldoCustomer->jumlah_saldocustomer - $totalDpDetail;
+            $saldoCustomer->save();
+
+            // delete saldo detail
+            $saldoDetail->delete();
+        }
+
+        PenerimaanServis::destroy($id);
         return response()->json('Berhasil hapus data', 200);
     }
 

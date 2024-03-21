@@ -4,10 +4,10 @@ var myModal;
 
 $(document).ready(function () {
     function initDatatable() {
-        datatable = basicDatatable(
-            $("#dataTable"),
-            $(".url_datatable").data("url"),
-            [
+        datatable = basicDatatable({
+            tableId: $("#dataTable"),
+            ajaxUrl: $(".url_datatable").data("url"),
+            columns: [
                 {
                     data: null,
                     orderable: false,
@@ -15,13 +15,33 @@ $(document).ready(function () {
                     className: "text-center",
                 },
                 {
-                    data: "nama_kategori",
-                    name: "nama_kategori",
+                    data: "noantrian_pservis",
+                    name: "noantrian_pservis",
                     searchable: true,
                 },
                 {
-                    data: "status_kategori",
-                    name: "status_kategori",
+                    data: "kendaraan.customer.nama_customer",
+                    name: "kendaraan.customer.nama_customer",
+                    searchable: true,
+                },
+                {
+                    data: "kendaraan.nopol_kendaraan",
+                    name: "kendaraan.nopol_kendaraan",
+                    searchable: true,
+                },
+                {
+                    data: "kendaraan.jenis_kendaraan",
+                    name: "kendaraan.jenis_kendaraan",
+                    searchable: true,
+                },
+                {
+                    data: "kendaraan.tipe_kendaraan",
+                    name: "kendaraan.tipe_kendaraan",
+                    searchable: true,
+                },
+                {
+                    data: "status_pservis",
+                    name: "status_pservis",
                     searchable: true,
                 },
                 {
@@ -30,10 +50,11 @@ $(document).ready(function () {
                     searchable: false,
                     orderable: false,
                 },
-            ]
-        );
+            ],
+            dataAjaxUrl: {},
+        });
     }
-    // initDatatable();
+    initDatatable();
 
     var body = $("body");
     // handle btn add data
@@ -43,6 +64,15 @@ $(document).ready(function () {
             modalId: $(this).data("typemodal"),
             title: "Form Penerimaan Service",
             type: "get",
+        });
+    });
+
+    body.on("click", ".btn-delete", function (e) {
+        e.preventDefault();
+        basicDeleteConfirmDatatable({
+            urlDelete: $(this).attr("href"),
+            data: {},
+            text: "Apakah anda yakin ingin menghapus item ini?",
         });
     });
 });

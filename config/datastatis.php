@@ -47,4 +47,12 @@ return [
         'data langsung ke bengkel' => 'Datang Langsung Ke Bengkel',
         'booking online' => 'Booking Online',
     ],
+    'status_kendaraan_servis' => [
+        'antrian servis masuk' => 'Antrian Servis Masuk',
+        'menunggu sparepart' => 'Menunggu Sparepart',
+        'proses servis' => 'Proses Servis',
+        'bisa diambil' => 'Bisa Diambil',
+        'tidak bisa' => 'Tidak Bisa',
+        'cancel' => 'Cancel',
+    ]
 ];

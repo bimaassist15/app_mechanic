@@ -27,9 +27,16 @@ class PenerimaanServis extends Model
         return $this->hasMany(PembayaranServis::class);
     }
 
+    public function scopeDataTable()
+    {
+        $data = PenerimaanServis::with('kendaraan', 'kendaraan.customer', 'kategoriServis', 'pembayaranServis')
+            ->where('cabang_id', session()->get('cabang_id'));
+        return $data;
+    }
+
     public function transaksiServis($penerimaan_servis_id)
     {
-        $data = PenerimaanServis::with('kendaraan', 'kategoriServis', 'pembayaranServis')
+        $data = PenerimaanServis::with('kendaraan', 'kendaraan.customer', 'kategoriServis', 'pembayaranServis')
             ->where('cabang_id', session()->get('cabang_id'))
             ->find($penerimaan_servis_id);
         return $data;
