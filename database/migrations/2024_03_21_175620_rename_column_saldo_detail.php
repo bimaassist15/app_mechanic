@@ -28,6 +28,7 @@ return new class extends Migration
     {
         Schema::table('saldo_detail', function (Blueprint $table) {
             //
+            $table->renameColumn('penerimaan_servis_id', 'pembayaran_servis_id');
         });
     }
 };

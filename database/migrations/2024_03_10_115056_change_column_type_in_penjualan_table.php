@@ -26,6 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('penjualan', function (Blueprint $table) {
+            $table->foreign('customer_id')->references('id')->on('customer')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 };

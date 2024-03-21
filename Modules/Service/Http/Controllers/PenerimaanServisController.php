@@ -3,15 +3,11 @@
 namespace Modules\Service\Http\Controllers;
 
 use App\Http\Helpers\UtilsHelper;
-use App\Models\Barang;
-use App\Models\Customer;
-use App\Models\Kategori;
 use App\Models\KategoriPembayaran;
 use App\Models\KategoriServis;
 use App\Models\Kendaraan;
 use App\Models\PembayaranServis;
 use App\Models\PenerimaanServis;
-use App\Models\Penjualan;
 use App\Models\SaldoCustomer;
 use App\Models\SaldoDetail;
 use App\Models\SubPembayaran;
@@ -51,8 +47,8 @@ class PenerimaanServisController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a target="_blank" href="' . url('service/penerimaanServis/create?penerimaan_servis_id=' . $row->id) . '"
-                                class="dropdown-item d-flex align-items-center btn-edit">
+                            <a target="_blank" href="' . url('service/penerimaanServis/' . $row->id) . '"
+                                class="dropdown-item d-flex align-items-center" target="_blank">
                                 <i class="fa-solid fa-pencil"></i> &nbsp; Update Servis
                             </a>
                         </li>
@@ -60,6 +56,11 @@ class PenerimaanServisController extends Controller
                             <a href="' . url('service/penerimaanServis/' . $row->id . '?_method=delete') . '"
                                 class="dropdown-item d-flex align-items-center btn-delete">
                                 <i class="fa-solid fa-trash"></i> &nbsp; Delete</a>
+                        </li>
+                        <li>
+                            <a href="' . url('service/penerimaanServis/print/' . $row->id . '/penerimaanServis') . '"
+                                class="dropdown-item d-flex align-items-center btn-print">
+                                <i class="fa-solid fa-print"></i> &nbsp; Print Nota</a>
                         </li>
                     </ul>';
 
@@ -76,6 +77,13 @@ class PenerimaanServisController extends Controller
                 ->toJson();
         }
         return view('service::penerimaanServis.index');
+    }
+
+    public function show($id)
+    {
+        $penerimaanServis = new PenerimaanServis();
+        $row = $penerimaanServis->transaksiServis($id);
+        return view('service::penerimaanServis.detail', compact('row'));
     }
 
     /**
@@ -198,7 +206,6 @@ class PenerimaanServisController extends Controller
      */
     public function store(Request $request)
     {
-
         $payloadPenerimaanServis = $request->input('payloadPenerimaanServis');
         $payloadPembayaranServis = $request->input('payloadPembayaranServis');
         $payloadSaldoCustomer = $request->input('payloadSaldoCustomer');
@@ -209,14 +216,28 @@ class PenerimaanServisController extends Controller
             ->orderBy('id', 'asc')
             ->pluck('noantrian_pservis')
             ->max();
+        $noNotaStatis = PenerimaanServis::orderBy('id', 'asc')
+            ->pluck('nonota_pservis')
+            ->max();
+
+        $customer_id = $payloadSaldoCustomer['customer_id'];
         $noAntrianStatis++;
-        $mergePenerimaanServis = array_merge($payloadPenerimaanServis, ['noantrian_pservis', $noAntrianStatis, 'status_pservis' => 'antrian servis masuk']);
+        $noNotaStatis++;
+        $mergePenerimaanServis = array_merge(
+            $payloadPenerimaanServis,
+            [
+                'noantrian_pservis' => $noAntrianStatis,
+                'nonota_pservis' => $noNotaStatis,
+                'status_pservis' => 'antrian servis masuk',
+                'users_id' => Auth::id(),
+                'customer_id' => $customer_id,
+            ],
+        );
         $penerimaanServis = PenerimaanServis::create($mergePenerimaanServis);
         $penerimaan_servis_id = $penerimaanServis->id;
 
         // saldo customer
-        $customer_id = $payloadSaldoCustomer['customer_id'];
-        $checkSaldo = SaldoCustomer::where('customer_id')->get()->count();
+        $checkSaldo = SaldoCustomer::where('customer_id', $customer_id)->get()->count();
         $saldo_customer_id = 0;
         if ($checkSaldo == 0) {
             $saldoCustomer = SaldoCustomer::create([
@@ -226,14 +247,16 @@ class PenerimaanServisController extends Controller
             ]);
             $saldo_customer_id = $saldoCustomer->id;
         } else {
-            $saldoCustomer = SaldoCustomer::where('customer_id')->first();
+            $saldoCustomer = SaldoCustomer::where('customer_id', $customer_id)->first();
+            $saldoCustomer->jumlah_saldocustomer = $saldoCustomer->jumlah_saldocustomer + $payloadSaldoCustomer['totalsaldo_detail'];
+            $saldoCustomer->save();
             $saldo_customer_id = $saldoCustomer->id;
         }
 
         // saldo detail
         $dataSaldoDetail = [
             'saldo_customer_id' => $saldo_customer_id,
-            'pembayaran_servis_id' => $penerimaan_servis_id,
+            'penerimaan_servis_id' => $penerimaan_servis_id,
             'totalsaldo_detail' => $payloadSaldoCustomer['totalsaldo_detail'],
             'kembaliansaldo_detail' => $payloadSaldoCustomer['kembaliansaldo_detail'],
             'hutangsaldo_detail' => $payloadSaldoCustomer['hutangsaldo_detail'],
@@ -285,7 +308,11 @@ class PenerimaanServisController extends Controller
         return response()->json('Berhasil hapus data', 200);
     }
 
-    public function print()
+    public function print($id)
     {
+        $penerimaanServis = new PenerimaanServis();
+        $penerimaanServis = $penerimaanServis->transaksiServis($id);
+        $myCabang = UtilsHelper::myCabang();
+        return view('service::penerimaanServis.print', compact('penerimaanServis', 'myCabang'));
     }
 }

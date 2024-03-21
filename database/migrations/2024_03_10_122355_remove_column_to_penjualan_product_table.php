@@ -39,6 +39,20 @@ return new class extends Migration
     {
         Schema::table('penjualan_product', function (Blueprint $table) {
             //
+            $table->bigInteger('kategori_pembayaran_id')->unsigned();
+            $table->bigInteger('sub_pembayaran_id')->unsigned();
+            $table->double('bayar_pproduct');
+            $table->string('dibayaroleh_pproduct')->nullable();
+            $table->bigInteger('users_id')->unsigned();
+            $table->double('kembalian_pproduct')->nullable();
+            $table->double('hutang_pproduct')->nullable();
+            $table->string('nomorkartu_pproduct')->nullable();
+            $table->string('pemilikkartu_pproduct')->nullable();
+
+
+            $table->foreign('kategori_pembayaran_id')->references('id')->on('kategori_pembayaran')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('sub_pembayaran_id')->references('id')->on('sub_pembayaran')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('users_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 };

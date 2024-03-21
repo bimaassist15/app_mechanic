@@ -34,11 +34,21 @@ class PenerimaanServis extends Model
         return $data;
     }
 
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function transaksiServis($penerimaan_servis_id)
     {
-        $data = PenerimaanServis::with('kendaraan', 'kendaraan.customer', 'kategoriServis', 'pembayaranServis')
+        $data = PenerimaanServis::with('kendaraan', 'kendaraan.customer', 'kategoriServis', 'pembayaranServis', 'users')
             ->where('cabang_id', session()->get('cabang_id'))
             ->find($penerimaan_servis_id);
         return $data;
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 }

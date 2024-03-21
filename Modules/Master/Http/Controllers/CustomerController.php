@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Master\Http\Requests\FormCustomerRequest;
 use DataTables;
+
 class CustomerController extends Controller
 {
     /**
@@ -16,41 +17,56 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->ajax()){
-            $data = Customer::dataTable();
+        if ($request->ajax()) {
+            $data = Customer::dataTable()
+                ->with('kendaraan', 'penjualan', 'penerimaanServis')
+                ->withCount(['penjualan', 'penerimaanServis']);
+
             return DataTables::eloquent($data)
-            ->addColumn('pembelian_customer', function ($row) {
-                $output = '';
-            })
-            ->addColumn('servis_customer', function ($row) {
-                $output = '';
-            })
-            ->addColumn('status_customer', function ($row) {
-                $output = $row->status_customer ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
-                return '<div class="text-center">
-                '.$output.'
+                ->addColumn('pembelian_customer', function ($row) {
+                    $output = '';
+                })
+                ->addColumn('servis_customer', function ($row) {
+                    $output = '';
+                })
+                ->addColumn('status_customer', function ($row) {
+                    $output = $row->status_customer ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+                    return '<div class="text-center">
+                ' . $output . '
                 </div>';
-            })
+                })
                 ->addColumn('action', function ($row) {
-                    $buttonUpdate = '
-                    <a class="btn btn-warning btn-edit btn-sm" 
-                    data-typemodal="extraLargeModal"
-                    data-urlcreate="' . route('customer.edit', $row->id) . '"
-                    data-modalId="extraLargeModal"
-                    >
-                        <i class="fa-solid fa-pencil"></i>
-                    </a>
-                    ';
-                    $buttonDelete = '
-                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('master/customer/'.$row->id).'?_method=delete">
-                        <i class="fa-solid fa-trash"></i>
+
+                    $buttonAksi = '
+                    <button type="button" 
+                    class="btn btn-primary dropdown-toggle" 
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="bx bx-menu me-1"></i> 
+                    Aksi
                     </button>
-                    ';
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a data-typemodal="extraLargeModal" href="' . route('customer.show', $row->id) . '"
+                                class="dropdown-item d-flex align-items-center btn-detail">
+                                <i class="fa-solid fa-eye"></i> &nbsp; Update Servis
+                            </a>
+                        </li>
+                        <li>
+                            <a data-typemodal="extraLargeModal" href="' . route('customer.edit', $row->id) . '"
+                                class="dropdown-item d-flex align-items-center btn-edit">
+                                <i class="fa-solid fa-pencil"></i> &nbsp; Edit Data</a>
+                        </li>
+                        <li>
+                            <a data-typemodal="extraLargeModal" href="' . url('master/customer/' . $row->id . '?_method=delete') . '"
+                                class="dropdown-item d-flex align-items-center btn-delete">
+                                <i class="fa-solid fa-trash"></i> &nbsp; Delete Data</a>
+                        </li>
+                    </ul>';
 
                     $button = '
                 <div class="text-center">
-                    ' . $buttonUpdate . '
-                    ' . $buttonDelete . '
+                    ' . $buttonAksi . '
                 </div>
                 ';
                     return $button;
@@ -108,7 +124,7 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-        $action = url('master/customer/'.$id.'?_method=put');
+        $action = url('master/customer/' . $id . '?_method=put');
         $row = Customer::find($id);
         return view('master::customer.form', compact('action', 'row'));
     }

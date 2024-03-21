@@ -93,4 +93,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(PembelianPembayaran::class);
     }
+
+    public function penerimaanServis()
+    {
+        return $this->hasMany(PenerimaanServis::class);
+    }
 }

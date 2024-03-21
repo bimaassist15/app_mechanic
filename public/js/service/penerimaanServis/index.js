@@ -75,4 +75,35 @@ $(document).ready(function () {
             text: "Apakah anda yakin ingin menghapus item ini?",
         });
     });
+
+    const renderPrintKasir = (setUrl) => {
+        var output = "";
+        $.ajax({
+            url: setUrl,
+            dataType: "json",
+            type: "get",
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                output = data;
+            },
+        });
+
+        return output;
+    };
+
+    const printOutput = (output) => {
+        var printWindow = window.open("", "_blank");
+        printWindow.document.write(output);
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.close();
+    };
+
+    body.on("click", ".btn-print", function (e) {
+        e.preventDefault();
+        const url = $(this).attr("href");
+        const output = renderPrintKasir(url);
+        printOutput(output);
+    });
 });

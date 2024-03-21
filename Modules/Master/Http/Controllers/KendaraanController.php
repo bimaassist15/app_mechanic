@@ -18,7 +18,7 @@ class KendaraanController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             $data = Kendaraan::dataTable()->with('customer');
             return DataTables::eloquent($data)
                 ->addColumn('action', function ($row) {
@@ -32,7 +32,7 @@ class KendaraanController extends Controller
                     </a>
                     ';
                     $buttonDelete = '
-                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('master/kendaraan/'.$row->id).'?_method=delete">
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="' . url('master/kendaraan/' . $row->id) . '?_method=delete">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                     ';
@@ -61,10 +61,10 @@ class KendaraanController extends Controller
         $customer = Customer::dataTable()->get();
         $array_customer = [];
         foreach ($customer as $key => $value) {
-           $array_customer[] = [
-            'id' => $value->id,
-            'label' => $value->nama_customer. ' '.'('.$value->nowa_customer.')'
-           ];
+            $array_customer[] = [
+                'id' => $value->id,
+                'label' => $value->nama_customer . ' ' . '(' . $value->nowa_customer . ')'
+            ];
         }
         return view('master::kendaraan.form', compact('action', 'array_customer'));
     }
@@ -113,15 +113,30 @@ class KendaraanController extends Controller
      */
     public function edit($id)
     {
-        $action = url('master/kendaraan/'.$id.'?_method=put');
+        $action = url('master/kendaraan/' . $id . '?_method=put');
         $row = Kendaraan::find($id);
         $customer = Customer::dataTable()->get();
         $array_customer = [];
         foreach ($customer as $key => $value) {
-           $array_customer[] = [
-            'id' => $value->id,
-            'label' => $value->nama_customer. ' '.'('.$value->nowa_customer.')'
-           ];
+            $array_customer[] = [
+                'id' => $value->id,
+                'label' => $value->nama_customer . ' ' . '(' . $value->nowa_customer . ')'
+            ];
+        }
+        return view('master::kendaraan.form', compact('action', 'row', 'array_customer'));
+    }
+
+    public function detail($id)
+    {
+        $action = url('master/kendaraan/' . $id . '?_method=put');
+        $row = Kendaraan::with('customer')->find($id);
+        $customer = Customer::dataTable()->get();
+        $array_customer = [];
+        foreach ($customer as $key => $value) {
+            $array_customer[] = [
+                'id' => $value->id,
+                'label' => $value->nama_customer . ' ' . '(' . $value->nowa_customer . ')'
+            ];
         }
         return view('master::kendaraan.form', compact('action', 'row', 'array_customer'));
     }

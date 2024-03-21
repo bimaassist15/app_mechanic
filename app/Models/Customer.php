@@ -37,4 +37,15 @@ class Customer extends Model
         return $this->hasMany(Penjualan::class);
     }
 
+    public function dataCustomer()
+    {
+        return Customer::with('kendaraan', 'penjualan', 'penerimaanServis')
+            ->withCount(['penjualan', 'penerimaanServis'])
+            ->where('cabang_id', session()->get('cabang_id'));
+    }
+
+    public function penerimaanServis()
+    {
+        return $this->hasMany(PenerimaanServis::class);
+    }
 }

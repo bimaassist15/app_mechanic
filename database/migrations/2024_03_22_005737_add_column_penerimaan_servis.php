@@ -13,8 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('penjualan_product', function (Blueprint $table) {
-            $table->dropForeign(['customer_id']);
+        Schema::table('penerimaan_servis', function (Blueprint $table) {
+            //
+            $table->string('nonota_pservis')->default(1);
         });
     }
 
@@ -25,9 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('penjualan_product', function (Blueprint $table) {
-            $table->foreign('customer_id')->references('id')->on('customer')->onDelete('cascade')->onUpdate('cascade');
-            
+        Schema::table('penerimaan_servis', function (Blueprint $table) {
+            //
+            $table->dropColumn('nonota_pservis');
         });
     }
 };

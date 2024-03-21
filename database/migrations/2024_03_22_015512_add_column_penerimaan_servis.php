@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('pembayaran_servis', function (Blueprint $table) {
+        Schema::table('penerimaan_servis', function (Blueprint $table) {
             //
-            $table->string('dibayaroleh_pservis')->nullable()->change();
+            $table->bigInteger('customer_id')->unsigned();
+            $table->foreign('customer_id')->references('id')->on('customer')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -26,9 +27,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('pembayaran_servis', function (Blueprint $table) {
+        Schema::table('penerimaan_servis', function (Blueprint $table) {
             //
-            $table->string('dibayaroleh_pservis')->nullable(false)->change();
+            $table->dropForeign(['customer_id']);
+            $table->dropColumn('customer_id');
         });
     }
 };

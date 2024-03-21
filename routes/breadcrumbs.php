@@ -155,6 +155,13 @@ Breadcrumbs::for('penerimaanServis', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Penerimaan Servis', url('service/penerimaanServis'));
 });
+
+// Home > detailPenerimaanServis
+Breadcrumbs::for('detailPenerimaanServis', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('penerimaanServis');
+    $trail->push('Detail Penerimaan Servis', url('service/penerimaanServis/' . $id));
+});
+
 // Home > pengembalianServis
 Breadcrumbs::for('pengembalianServis', function (BreadcrumbTrail $trail) {
     $trail->parent('home');

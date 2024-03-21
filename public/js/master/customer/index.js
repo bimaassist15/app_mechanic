@@ -25,13 +25,13 @@ $(document).ready(function () {
                     searchable: true,
                 },
                 {
-                    data: "pembelian_customer",
-                    name: "pembelian_customer",
+                    data: "penjualan_count",
+                    name: "penjualan_count",
                     searchable: true,
                 },
                 {
-                    data: "servis_customer",
-                    name: "servis_customer",
+                    data: "penerimaan_servis_count",
+                    name: "penerimaan_servis_count",
                     searchable: true,
                 },
                 {
@@ -55,7 +55,7 @@ $(document).ready(function () {
     // handle btn add data
     body.on("click", ".btn-add", function () {
         showModal({
-            url: $(this).data("urlcreate"),
+            url: $(this).attr("href"),
             modalId: $(this).data("typemodal"),
             title: "Form Customer",
             type: "get",
@@ -74,7 +74,7 @@ $(document).ready(function () {
     body.on("click", ".btn-edit", function (e) {
         e.preventDefault();
         showModal({
-            url: $(this).data("urlcreate"),
+            url: $(this).attr("href"),
             modalId: $(this).data("typemodal"),
             title: "Form Customer",
             type: "get",

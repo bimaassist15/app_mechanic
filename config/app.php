@@ -198,7 +198,7 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         Milon\Barcode\BarcodeServiceProvider::class,
         App\Providers\UtilsServiceProvider::class,
-
+        Milon\Barcode\BarcodeServiceProvider::class,
     ],
 
     /*
