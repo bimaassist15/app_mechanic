@@ -254,7 +254,7 @@ const runToast = ({ type = "bg-primary", title = "", description = "" }) => {
     );
     toastPlacement = new bootstrap.Toast(toastPlacementExample);
     titleToast.textContent = title;
-    descriptionToast.textContent = description;
+    descriptionToast.innerHTML = description;
     toastPlacement.show();
 };
 

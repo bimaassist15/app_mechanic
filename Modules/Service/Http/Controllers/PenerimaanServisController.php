@@ -9,8 +9,11 @@ use App\Models\Kategori;
 use App\Models\KategoriPembayaran;
 use App\Models\KategoriServis;
 use App\Models\Kendaraan;
+use App\Models\PembayaranServis;
 use App\Models\PenerimaanServis;
 use App\Models\Penjualan;
+use App\Models\SaldoCustomer;
+use App\Models\SaldoDetail;
 use App\Models\SubPembayaran;
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
@@ -171,6 +174,7 @@ class PenerimaanServisController extends Controller
             'array_kendaraan_servis' => $array_kendaraan_servis,
             'array_tipe_servis' => $array_tipe_servis,
             'action' => $action,
+            'kendaraanServis' => $kendaraanServis
         ];
         if ($request->input('refresh_dataset')) {
             return response()->json($data);
@@ -186,14 +190,54 @@ class PenerimaanServisController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $data = [
-            'nama_penerimaanServis' => $request->input('nama_penerimaanServis'),
-            'status_penerimaanServis' => $request->input('status_penerimaanServis') !== null ? true : false,
-            'cabang_id' => session()->get('cabang_id'),
+
+        $payloadPenerimaanServis = $request->input('payloadPenerimaanServis');
+        $payloadPembayaranServis = $request->input('payloadPembayaranServis');
+        $payloadSaldoCustomer = $request->input('payloadSaldoCustomer');
+
+        // penerimaan servis
+        $penerimaanServis = PenerimaanServis::create($payloadPenerimaanServis);
+        $penerimaan_servis_id = $penerimaanServis->id;
+
+        // saldo customer
+        $customer_id = $payloadSaldoCustomer['customer_id'];
+        $checkSaldo = SaldoCustomer::where('customer_id')->get()->count();
+        $saldo_customer_id = 0;
+        if ($checkSaldo == 0) {
+            $saldoCustomer = SaldoCustomer::create([
+                'customer_id' => $customer_id,
+                'jumlah_saldocustomer' => $payloadSaldoCustomer['totalsaldo_detail'],
+                'cabang_id' => $payloadSaldoCustomer['cabang_id'],
+            ]);
+            $saldo_customer_id = $saldoCustomer->id;
+        } else {
+            $saldoCustomer = SaldoCustomer::where('customer_id')->first();
+            $saldo_customer_id = $saldoCustomer->id;
+        }
+
+        // saldo detail
+        $dataSaldoDetail = [
+            'saldo_customer_id' => $saldo_customer_id,
+            'pembayaran_servis_id' => $penerimaan_servis_id,
+            'totalsaldo_detail' => $payloadSaldoCustomer['totalsaldo_detail'],
+            'kembaliansaldo_detail' => $payloadSaldoCustomer['kembaliansaldo_detail'],
+            'hutangsaldo_detail' => $payloadSaldoCustomer['hutangsaldo_detail'],
+            'cabang_id' => $payloadSaldoCustomer['cabang_id']
         ];
-        Kategori::create($data);
-        return response()->json('Berhasil tambah data', 201);
+        SaldoDetail::create($dataSaldoDetail);
+
+
+        if ($payloadPenerimaanServis['isdp_pservis'] == true) {
+            $newPayloadPembayaranServis = [];
+            foreach ($payloadPembayaranServis as $key => $value) {
+                $merge = array_merge($value, ['penerimaan_servis_id' => $penerimaan_servis_id]);
+                $newPayloadPembayaranServis[] = $merge;
+            }
+        }
+        PembayaranServis::insert($newPayloadPembayaranServis);
+        return response()->json([
+            'message' => "Berhasil tambah penerimaan serivs",
+        ], 200);
     }
 
     /**

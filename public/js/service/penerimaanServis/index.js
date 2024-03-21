@@ -1,5 +1,6 @@
 // "use strict";
 var datatable;
+var myModal;
 
 $(document).ready(function () {
     function initDatatable() {

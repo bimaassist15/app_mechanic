@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card handle-metode-pembayaran">
     <div class="card-header bg-primary text-white p-3 mb-3">
         <strong>Metode Pembayaran</strong>
     </div>
@@ -17,17 +17,5 @@
         <hr style="color: #1381f0;" />
 
         <div id="output_metode_pembayaran"></div>
-
-        <div class="row mt-3">
-            <div class="col-lg-6"></div>
-            <div class="col-lg-6">
-                <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary btn-bayar" data-bs-toggle="modal"
-                        data-bs-target="#modalConfirmBayar" disabled="disabled">
-                        <i class="fa-solid fa-money-bill me-2"></i> Bayar
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
