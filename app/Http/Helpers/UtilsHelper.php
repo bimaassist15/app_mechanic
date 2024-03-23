@@ -310,8 +310,8 @@ class UtilsHelper
             $tipeTransaksi = 'hutang';
         } else {
             $hutang = $getPenjualan->hutang_penjualan;
-            $kembalian = 0;
-            $bayar = 0;
+            $kembalian = $getPenjualan->kembalian_penjualan;
+            $bayar = $getPenjualan->bayar_penjualan;
             $tipeTransaksi = $getPenjualan->tipe_penjualan;
         }
 
@@ -321,7 +321,7 @@ class UtilsHelper
             $cicilan = abs($calc);
         } else {
             $statusTransaksi = true;
-            $cicilan = ($calc);
+            $cicilan = 0;
         }
 
         return [
@@ -331,6 +331,7 @@ class UtilsHelper
             'tipe_transaksi' => $tipeTransaksi,
             'status_transaksi' => $statusTransaksi,
             'cicilan' => $cicilan,
+            'id' => $id,
         ];
     }
 

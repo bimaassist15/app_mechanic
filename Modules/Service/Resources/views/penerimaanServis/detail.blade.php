@@ -48,15 +48,17 @@
                     <div class="col-lg-12">
                         <div class="d-flex justify-content-center flex-wrap">
                             <x-button-main title="Detail Kendaraan" className="detail-kendaraan me-2"
-                                typeModal="extraLargeModal"
-                                urlCreate="{{ url('master/kendaraan/' . $row->kendaraan->id . '/detail') }}"
-                                icon='<i class="fa-solid fa-gear"></i>' color="btn-secondary" />
+                                typeModal="extraLargeModal" urlCreate="" icon='<i class="fa-solid fa-gear"></i>'
+                                color="btn-secondary" />
+
                             <x-button-main title="Identitas Customer" className="detail-customer me-2"
-                                typeModal="extraLargeModal" urlCreate="" icon='<i class="fa-solid fa-user"></i>'
-                                color="btn-warning" />
+                                typeModal="extraLargeModal" urlCreate="{{ url('master/customer/' . $row->customer->id) }}"
+                                icon='<i class="fa-solid fa-user"></i>' color="btn-warning" />
+
                             <x-button-main title="Identitas Kendaraan" className="identitas-kendaraan"
-                                typeModal="extraLargeModal" urlCreate="" icon='<i class="fa-solid fa-bicycle"></i>'
-                                color="btn-dark" />
+                                typeModal="extraLargeModal"
+                                urlCreate="{{ url('master/kendaraan/' . $row->kendaraan->id) }}"
+                                icon='<i class="fa-solid fa-bicycle"></i>' color="btn-dark" />
                         </div>
                     </div>
                 </div>

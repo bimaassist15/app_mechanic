@@ -21,7 +21,6 @@ Route::prefix('master')->middleware('auth')->group(function () {
     Route::get('generateBarcode/print', 'GenerateBarcodeController@print')->name('master.generateBarcode.print');
     Route::resource('customer', 'CustomerController');
     Route::resource('kendaraan', 'KendaraanController');
-    Route::get('kendaraan/{id}/detail', 'KendaraanController@detail')->name('kendaraan.detail');
     Route::resource('supplier', 'SupplierController');
     Route::resource('kategoriServis', 'KategoriServisController');
     Route::resource('hargaServis', 'HargaServisController');

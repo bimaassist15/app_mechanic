@@ -39,7 +39,26 @@ class Customer extends Model
 
     public function dataCustomer()
     {
-        return Customer::with('kendaraan', 'penjualan', 'penerimaanServis')
+        return Customer::with(
+            'kendaraan',
+            'kendaraan.customer',
+            'penjualan',
+            'penerimaanServis',
+            'penjualan.users',
+            'penjualan.users.profile',
+            'penjualan.penjualanProduct',
+            'penjualan.penjualanProduct.barang',
+            'penjualan.penjualanPembayaran',
+            'penjualan.penjualanPembayaran.kategoriPembayaran',
+            'penjualan.penjualanPembayaran.subPembayaran',
+            'penjualan.penjualanPembayaran.users',
+            'penjualan.penjualanPembayaran.users.profile',
+            'penjualan.penjualanCicilan',
+            'penjualan.penjualanCicilan.kategoriPembayaran',
+            'penjualan.penjualanCicilan.subPembayaran',
+            'penjualan.penjualanCicilan.users',
+            'penjualan.penjualanCicilan.users.profile',
+        )
             ->withCount(['penjualan', 'penerimaanServis'])
             ->where('cabang_id', session()->get('cabang_id'));
     }

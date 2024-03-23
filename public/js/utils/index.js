@@ -409,3 +409,20 @@ const formatDate = () => {
         seconds
     );
 };
+
+const formatDateFromDb = (dateString) => {
+    var date = new Date(dateString);
+    var formattedDate = date.toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    });
+    return formattedDate;
+};
+
+const formatUang = (nominal) => {
+    return number_format(nominal, 0, ".", ",");
+};

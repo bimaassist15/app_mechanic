@@ -55,7 +55,7 @@ $(document).ready(function () {
     // handle btn add data
     body.on("click", ".btn-add", function () {
         showModal({
-            url: $(this).attr("href"),
+            url: $(this).data("urlcreate"),
             modalId: $(this).data("typemodal"),
             title: "Form Customer",
             type: "get",
@@ -65,7 +65,7 @@ $(document).ready(function () {
     body.on("click", ".btn-delete", function (e) {
         e.preventDefault();
         basicDeleteConfirmDatatable({
-            urlDelete: $(this).data("url"),
+            urlDelete: $(this).attr("href"),
             data: {},
             text: "Apakah anda yakin ingin menghapus item ini?",
         });
@@ -77,6 +77,16 @@ $(document).ready(function () {
             url: $(this).attr("href"),
             modalId: $(this).data("typemodal"),
             title: "Form Customer",
+            type: "get",
+        });
+    });
+
+    body.on("click", ".btn-detail", function (e) {
+        e.preventDefault();
+        showModal({
+            url: $(this).attr("href"),
+            modalId: $(this).data("typemodal"),
+            title: "Detail Customer",
             type: "get",
         });
     });

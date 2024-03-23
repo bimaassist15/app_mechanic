@@ -2,6 +2,7 @@
 
 namespace Modules\Master\Http\Controllers;
 
+use App\Http\Helpers\UtilsHelper;
 use App\Models\Customer;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -49,7 +50,7 @@ class CustomerController extends Controller
                         <li>
                             <a data-typemodal="extraLargeModal" href="' . route('customer.show', $row->id) . '"
                                 class="dropdown-item d-flex align-items-center btn-detail">
-                                <i class="fa-solid fa-eye"></i> &nbsp; Update Servis
+                                <i class="fa-solid fa-eye"></i> &nbsp; Detail Customer
                             </a>
                         </li>
                         <li>
@@ -114,7 +115,14 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        return view('master::show');
+        $getCustomer = new Customer();
+        $row = $getCustomer->dataCustomer()->where('id', $id)->first();
+        $dataPayment = [];
+        foreach ($row->penjualan as $key => $value) {
+            $dataPayment[] = UtilsHelper::paymentStatisPenjualan($value->id);
+        }
+        $dataPayment = json_encode($dataPayment);
+        return view('master::customer.detail', compact('row', 'dataPayment'));
     }
 
     /**

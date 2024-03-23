@@ -103,7 +103,17 @@ class KendaraanController extends Controller
      */
     public function show($id)
     {
-        return view('master::show');
+        $action = url('master/kendaraan/' . $id . '?_method=put');
+        $row = Kendaraan::with('customer')->find($id);
+        $customer = Customer::dataTable()->get();
+        $array_customer = [];
+        foreach ($customer as $key => $value) {
+            $array_customer[] = [
+                'id' => $value->id,
+                'label' => $value->nama_customer . ' ' . '(' . $value->nowa_customer . ')'
+            ];
+        }
+        return view('master::kendaraan.detail', compact('action', 'row', 'array_customer'));
     }
 
     /**
@@ -115,21 +125,6 @@ class KendaraanController extends Controller
     {
         $action = url('master/kendaraan/' . $id . '?_method=put');
         $row = Kendaraan::find($id);
-        $customer = Customer::dataTable()->get();
-        $array_customer = [];
-        foreach ($customer as $key => $value) {
-            $array_customer[] = [
-                'id' => $value->id,
-                'label' => $value->nama_customer . ' ' . '(' . $value->nowa_customer . ')'
-            ];
-        }
-        return view('master::kendaraan.form', compact('action', 'row', 'array_customer'));
-    }
-
-    public function detail($id)
-    {
-        $action = url('master/kendaraan/' . $id . '?_method=put');
-        $row = Kendaraan::with('customer')->find($id);
         $customer = Customer::dataTable()->get();
         $array_customer = [];
         foreach ($customer as $key => $value) {
