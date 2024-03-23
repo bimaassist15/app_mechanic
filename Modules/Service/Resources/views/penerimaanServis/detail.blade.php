@@ -47,9 +47,10 @@
                 <div class="row mt-2">
                     <div class="col-lg-12">
                         <div class="d-flex justify-content-center flex-wrap">
-                            <x-button-main title="Detail Kendaraan" className="detail-kendaraan me-2"
-                                typeModal="extraLargeModal" urlCreate="" icon='<i class="fa-solid fa-gear"></i>'
-                                color="btn-secondary" />
+                            <x-button-main title="Detail Kendaraan" className="detail-penerimaan-servis me-2"
+                                typeModal="extraLargeModal"
+                                urlCreate="{{ url('service/penerimaanServis/detail/' . $row->id . '/penerimaanServis') }}"
+                                icon='<i class="fa-solid fa-gear"></i>' color="btn-secondary" />
 
                             <x-button-main title="Identitas Customer" className="detail-customer me-2"
                                 typeModal="extraLargeModal" urlCreate="{{ url('master/customer/' . $row->customer->id) }}"

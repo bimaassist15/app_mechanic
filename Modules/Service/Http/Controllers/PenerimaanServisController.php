@@ -315,4 +315,11 @@ class PenerimaanServisController extends Controller
         $myCabang = UtilsHelper::myCabang();
         return view('service::penerimaanServis.print', compact('penerimaanServis', 'myCabang'));
     }
+
+    public function detail($id)
+    {
+        $penerimaanServis = new PenerimaanServis();
+        $row = $penerimaanServis->transaksiServis($id);
+        return view('service::penerimaanServis.show', compact('row'));
+    }
 }
