@@ -10,54 +10,20 @@
 
         @include('service::penerimaanServis.partials.detailCustomer')
 
+        @include('service::penerimaanServis.partials.orderServis')
 
         <div class="card mt-4">
             <div class="card-header">
                 <div class="d-flex justify-content-between">
                     <div class="w-50">
-                        Biaya Jasa Servis <strong style="font-weight: 800; color:rgb(102, 102, 230);">No. Nota
+                        Biaya Sparepart <strong style="font-weight: 800; color:rgb(102, 102, 230);">No. Nota
                             {{ $row->nonota_pservis }}</strong>
                     </div>
                     <div class="w-50">
-                        <x-form-select-vertical label="Cari Nama Servis" name="harga_servis_id" :data="$array_harga_servis"
-                            value="" />
+                        <x-form-select-vertical label="Cari Barang" name="barang_id" :data="$array_barang" value="" />
                     </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive text-nowrap px-3">
-                    <table class="table" id="dataTable">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Kategori Servis</th>
-                                <th>Nama Servis</th>
-                                <th>Mekanik</th>
-                                <th>Biaya</th>
-                                <th style="width: 15%;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0" id="onLoadServis">
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="4" class="text-end">
-                                    <strong>Total Biaya Jasa</strong>
-                                </td>
-                                <td>
-                                    <span id="totalHargaServis"></span>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="card mt-4">
-            <div class="card-header">
-                Biaya Sparepart <strong style="font-weight: 800; color:rgb(102, 102, 230);">No. Nota
-                    {{ $row->nonota_pservis }}</strong>
+
             </div>
             <div class="card-body">
                 <div class="table-responsive text-nowrap px-3">
@@ -68,26 +34,21 @@
                                 <th>Nama</th>
                                 <th>Harga</th>
                                 <th>Qty</th>
-                                <th>No. SN</th>
+                                <th>Diskon</th>
+                                <th></th>
                                 <th>Sub Total</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody class="table-border-bottom-0">
-                            <tr>
-                                <td>1</td>
-                                <td>Motor</td>
-                                <td>Servis Mesin</td>
-                                <td>Afan T</td>
-                                <td>3829238</td>
-                                <td>Rp. 70.000</td>
-                            </tr>
+                        <tbody class="table-border-bottom-0" id="loadOrderBarang">
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="5" class="text-end">
+                                <td colspan="6" class="text-end">
                                     <strong>Total Biaya Sparepart</strong>
                                 </td>
-                                <td>Rp. 70.000</td>
+                                <td id="totalHargaBarang">Rp. 0</td>
+                                <td></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -177,5 +138,7 @@
     <script class="usersId" data-value="{{ $usersId }}"></script>
     <script class="penerimaanServisId" data-value="{{ $penerimaanServisId }}"></script>
     <script class="getServis" data-value="{{ $getServis }}"></script>
+    <script class="getBarang" data-value="{{ $barang }}"></script>
+    <script class="getTipeDiskon" data-value="{{ $tipeDiskon }}"></script>
     <script src="{{ asset('js/service/penerimaanServis/detail.js') }}"></script>
 @endpush

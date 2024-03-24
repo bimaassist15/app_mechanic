@@ -23,4 +23,5 @@ Route::prefix('service')->middleware('auth')->group(function () {
     Route::get('kendaraanServis/print/service', 'KendaraanServisController@print')->name('kendaraanServis.print.service');
 
     Route::resource('orderServis', 'OrderServisController');
+    Route::resource('orderBarang', 'OrderBarangController');
 });

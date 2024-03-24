@@ -56,4 +56,9 @@ class PenerimaanServis extends Model
     {
         return $this->hasMany(OrderServis::class);
     }
+
+    public function orderBarang()
+    {
+        return $this->hasMany(OrderBarang::class);
+    }
 }

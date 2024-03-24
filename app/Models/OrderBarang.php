@@ -12,5 +12,23 @@ class OrderBarang extends Model
     protected $guarded = [];
     public $timestamps = true;
 
-    
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function barang()
+    {
+        return $this->belongsTo(barang::class);
+    }
+
+    public function penerimaanServis()
+    {
+        return $this->belongsTo(penerimaanServis::class);
+    }
+
+    public function getOrderBarang()
+    {
+        return OrderBarang::with('users', 'barang', 'penerimaanServis');
+    }
 }

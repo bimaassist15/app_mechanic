@@ -19,7 +19,8 @@ return new class extends Migration
             $table->bigInteger('barang_id')->unsigned();
             $table->bigInteger('penerimaan_servis_id')->unsigned();
             $table->double('qty_orderbarang');
-            $table->double('diskon_orderbarang');
+            $table->enum('typediskon_orderbarang', ['fix', '%'])->nullable();
+            $table->double('diskon_orderbarang')->nullable();
             $table->double('subtotal_orderbarang');
             $table->timestamps();
 

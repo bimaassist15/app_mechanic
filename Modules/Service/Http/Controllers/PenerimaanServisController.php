@@ -3,6 +3,7 @@
 namespace Modules\Service\Http\Controllers;
 
 use App\Http\Helpers\UtilsHelper;
+use App\Models\Barang;
 use App\Models\HargaServis;
 use App\Models\KategoriPembayaran;
 use App\Models\KategoriServis;
@@ -99,7 +100,24 @@ class PenerimaanServisController extends Controller
         $usersId = Auth::id();
         $penerimaanServisId = $id;
 
-        return view('service::penerimaanServis.detail', compact('row', 'array_harga_servis', 'getServis', 'usersId', 'penerimaanServisId'));
+        $barang = Barang::dataTable()
+            ->with('satuan', 'kategori')
+            ->where('status_barang', 'dijual & untuk servis')
+            ->orWhere('status_barang', 'khusus servis')
+            ->get();
+        $array_barang = [];
+        foreach ($barang as $key => $item) {
+            $array_barang[] = [
+                'id' => $item->id,
+                'label' => '
+            <strong>[' . $item->barcode_barang . '] ' . $item->nama_barang . '</strong> <br />
+            <span>Stok: ' . $item->stok_barang . '</span>
+            '
+            ];
+        }
+        $tipeDiskon = json_encode($this->datastatis['tipe_diskon']);
+
+        return view('service::penerimaanServis.detail', compact('row', 'array_harga_servis', 'getServis', 'usersId', 'penerimaanServisId', 'barang', 'array_barang', 'tipeDiskon'));
     }
 
     /**

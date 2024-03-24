@@ -116,4 +116,9 @@ class User extends Authenticatable
                 $query->where('name', 'like', '%mekanik%');
             })->get();
     }
+
+    public function orderBarang()
+    {
+        return $this->hasMany(OrderBarang::class);
+    }
 }
