@@ -16,4 +16,19 @@ class PembayaranServis extends Model
     {
         return $this->belongsTo(PenerimaanServis::class);
     }
+
+    public function kategoriPembayaran()
+    {
+        return $this->belongsTo(KategoriPembayaran::class);
+    }
+
+    public function subPembayaran()
+    {
+        return $this->belongsTo(SubPembayaran::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -98,4 +98,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(PenerimaanServis::class);
     }
+
+    public function pembayaranServis()
+    {
+        return $this->hasMany(PembayaranServis::class);
+    }
+
+    public function orderServis()
+    {
+        return $this->hasMany(OrderServis::class);
+    }
+
+    public function getUsersMekanik()
+    {
+        return User::with('profile')->where('cabang_id', session()->get('cabang_id'))
+            ->whereHas('roles', function ($query) {
+                $query->where('name', 'like', '%mekanik%');
+            })->get();
+    }
 }

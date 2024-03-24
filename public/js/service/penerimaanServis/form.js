@@ -824,6 +824,7 @@ $(document).ready(function () {
                 kategori_pembayaran_id: value.kategori_pembayaran_selected.id,
                 sub_pembayaran_id: value.sub_pembayaran_selected.id,
                 bayar_pservis: value.bayar,
+                deposit_pservis: value.jumlah_deposit,
                 dibayaroleh_pservis:
                     value.dibayarkan_oleh === undefined
                         ? ""

@@ -41,7 +41,7 @@ class PenerimaanServis extends Model
 
     public function transaksiServis($penerimaan_servis_id)
     {
-        $data = PenerimaanServis::with('kendaraan', 'kendaraan.customer', 'kategoriServis', 'pembayaranServis', 'users')
+        $data = PenerimaanServis::with('kendaraan', 'kendaraan.customer', 'kategoriServis', 'pembayaranServis', 'users', 'pembayaranServis.kategoriPembayaran', 'pembayaranServis.subPembayaran', 'pembayaranServis.users')
             ->where('cabang_id', session()->get('cabang_id'))
             ->find($penerimaan_servis_id);
         return $data;
@@ -50,5 +50,10 @@ class PenerimaanServis extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function orderServis()
+    {
+        return $this->hasMany(OrderServis::class);
     }
 }

@@ -46,4 +46,9 @@ class KategoriPembayaran extends Model
     {
         return $this->hasMany(PembelianPembayaran::class);
     }
+
+    public function pembayaranServis()
+    {
+        return $this->hasMany(PembayaranServis::class);
+    }
 }

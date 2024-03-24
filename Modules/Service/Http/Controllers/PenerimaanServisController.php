@@ -3,6 +3,7 @@
 namespace Modules\Service\Http\Controllers;
 
 use App\Http\Helpers\UtilsHelper;
+use App\Models\HargaServis;
 use App\Models\KategoriPembayaran;
 use App\Models\KategoriServis;
 use App\Models\Kendaraan;
@@ -76,6 +77,7 @@ class PenerimaanServisController extends Controller
                 ->rawColumns(['action'])
                 ->toJson();
         }
+
         return view('service::penerimaanServis.index');
     }
 
@@ -83,7 +85,21 @@ class PenerimaanServisController extends Controller
     {
         $penerimaanServis = new PenerimaanServis();
         $row = $penerimaanServis->transaksiServis($id);
-        return view('service::penerimaanServis.detail', compact('row'));
+
+        $hargaServis = new HargaServis();
+        $getServis = $hargaServis->getServis()->get();
+        $array_harga_servis = [];
+        foreach ($getServis as $key => $item) {
+            $array_harga_servis[] = [
+                'label' => '<strong>Nama Servis: ' . $item->nama_hargaservis . '</strong> <br />
+                <span>Harga Servis: ' . UtilsHelper::formatUang($item->total_hargaservis) . '</span>',
+                'id' => $item->id,
+            ];
+        }
+        $usersId = Auth::id();
+        $penerimaanServisId = $id;
+
+        return view('service::penerimaanServis.detail', compact('row', 'array_harga_servis', 'getServis', 'usersId', 'penerimaanServisId'));
     }
 
     /**
@@ -320,6 +336,7 @@ class PenerimaanServisController extends Controller
     {
         $penerimaanServis = new PenerimaanServis();
         $row = $penerimaanServis->transaksiServis($id);
+
         return view('service::penerimaanServis.show', compact('row'));
     }
 }

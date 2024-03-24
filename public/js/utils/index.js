@@ -98,13 +98,22 @@ function basicDeleteConfirmDatatable({
                 dataType: "json",
                 data: data,
                 success: function (data) {
-                    runToast({
-                        type: "bg-success",
-                        title: "Successfully",
-                        description: data,
-                    });
-                    datatable.ajax.reload();
-                    dataFunction();
+                    if (data.is_bring_data) {
+                        runToast({
+                            type: "bg-success",
+                            title: "Successfully",
+                            description: data.message,
+                        });
+                        dataFunction(data);
+                    } else {
+                        runToast({
+                            type: "bg-success",
+                            title: "Successfully",
+                            description: data,
+                        });
+                        datatable.ajax.reload();
+                        dataFunction();
+                    }
                 },
             });
         }
