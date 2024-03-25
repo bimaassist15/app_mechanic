@@ -11,7 +11,7 @@
  Target Server Version : 100428 (10.4.28-MariaDB)
  File Encoding         : 65001
 
- Date: 24/03/2024 16:55:57
+ Date: 25/03/2024 12:31:33
 */
 
 SET NAMES utf8mb4;
@@ -53,10 +53,10 @@ INSERT INTO `barang` VALUES (2, 'KD002', 'Barang2', 2, 'Deskripsi Barang 2', 'sn
 INSERT INTO `barang` VALUES (3, 'KD003', 'Barang3', 3, 'Deskripsi Barang 3', 'sn', 30, 40000, 'A3', 3, 'dijual', 1, '2024-03-09 03:22:12', '2024-03-16 13:26:55');
 INSERT INTO `barang` VALUES (4, 'KD004', 'Barang4', 4, 'Deskripsi Barang 4', 'sn', 50, 50000, 'A4', 3, 'dijual', 1, '2024-03-09 03:22:44', '2024-03-16 10:00:27');
 INSERT INTO `barang` VALUES (5, 'KD005', 'Barang5', 4, 'Deskripsi Barang 5', 'sn', 40, 60000, 'A5', 1, 'dijual', 1, '2024-03-09 03:23:17', '2024-03-16 10:02:40');
-INSERT INTO `barang` VALUES (6, 'ORD001', 'BARANG ORDER SERVIS 1', 2, 'KETERANGAN BARANG ORDER SERVIS 1', 'sn', 100, 30000, 'A3', 1, 'dijual & untuk servis', 1, '2024-03-24 09:55:57', '2024-03-24 09:55:57');
-INSERT INTO `barang` VALUES (7, 'ORD002', 'BARANG ORDER SERVIS 2', 3, 'KETERANGAN BARANG ORDER SERVIS 2', 'sn', 150, 50000, 'A4', 3, 'khusus servis', 1, '2024-03-24 09:56:37', '2024-03-24 09:56:37');
-INSERT INTO `barang` VALUES (8, 'ORD003', 'BARANG ORDER SERVIS 3', 2, 'KETERANGAN BARANG ORDER SERVIS 1', 'sn', 70, 80000, 'A5', 2, 'khusus servis', 1, '2024-03-24 09:57:14', '2024-03-24 09:57:14');
-INSERT INTO `barang` VALUES (9, 'ORD004', 'BARANG ORDER SERVIS 4', 2, 'KETERANGAN BARANG ORDER SERVIS 4', 'sn', 90, 87000, 'A7', 3, 'khusus servis', 1, '2024-03-24 09:58:14', '2024-03-24 09:58:14');
+INSERT INTO `barang` VALUES (6, 'ORD001', 'BARANG ORDER SERVIS 1', 2, 'KETERANGAN BARANG ORDER SERVIS 1', 'sn', 94, 30000, 'A3', 1, 'dijual & untuk servis', 1, '2024-03-24 09:55:57', '2024-03-25 09:39:17');
+INSERT INTO `barang` VALUES (7, 'ORD002', 'BARANG ORDER SERVIS 2', 3, 'KETERANGAN BARANG ORDER SERVIS 2', 'sn', 144, 50000, 'A4', 3, 'khusus servis', 1, '2024-03-24 09:56:37', '2024-03-25 09:39:28');
+INSERT INTO `barang` VALUES (8, 'ORD003', 'BARANG ORDER SERVIS 3', 2, 'KETERANGAN BARANG ORDER SERVIS 1', 'sn', 69, 80000, 'A5', 2, 'khusus servis', 1, '2024-03-24 09:57:14', '2024-03-25 08:46:49');
+INSERT INTO `barang` VALUES (9, 'ORD004', 'BARANG ORDER SERVIS 4', 2, 'KETERANGAN BARANG ORDER SERVIS 4', 'sn', 88, 87000, 'A7', 3, 'khusus servis', 1, '2024-03-24 09:58:14', '2024-03-24 22:40:00');
 INSERT INTO `barang` VALUES (10, 'ORD005', 'BARANG ORDER SERVIS 5', 2, 'KETERANGAN BARANG ORDER SERVIS 5', 'sn', 88, 90000, 'A8', 2, 'khusus servis', 1, '2024-03-24 09:58:53', '2024-03-24 09:58:53');
 INSERT INTO `barang` VALUES (11, 'ORD006', 'BARANG ORDER SERVIS 6', 2, 'KETERANGAN BARANG ORDER SERVIS 6', 'sn', 180, 15000, 'A10', 1, 'dijual & untuk servis', 1, '2024-03-24 09:59:46', '2024-03-24 09:59:46');
 
@@ -295,7 +295,7 @@ CREATE TABLE `migrations`  (
   `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 78 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 85 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of migrations
@@ -366,6 +366,12 @@ INSERT INTO `migrations` VALUES (72, '2024_03_24_022629_add_column_to_pembayaran
 INSERT INTO `migrations` VALUES (73, '2024_03_24_024950_create_order_servis_table', 19);
 INSERT INTO `migrations` VALUES (74, '2024_03_24_092131_add_column_to_penerimaan_servis', 20);
 INSERT INTO `migrations` VALUES (77, '2024_03_24_094040_create_order_barangs_table', 21);
+INSERT INTO `migrations` VALUES (79, '2024_03_24_172820_create_service_histories_table', 22);
+INSERT INTO `migrations` VALUES (80, '2024_03_24_195604_add_column_to_order_barang', 23);
+INSERT INTO `migrations` VALUES (81, '2024_03_24_195633_add_column_to_order_servis', 23);
+INSERT INTO `migrations` VALUES (82, '2024_03_24_195837_add_column_to_service_histori', 23);
+INSERT INTO `migrations` VALUES (83, '2024_03_25_001510_add_column_to_penerimaan_servis', 24);
+INSERT INTO `migrations` VALUES (84, '2024_03_25_092548_add_column_to_penerimaan_servis', 25);
 
 -- ----------------------------
 -- Table structure for model_has_permissions
@@ -421,20 +427,26 @@ CREATE TABLE `order_barang`  (
   `subtotal_orderbarang` double NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `cabang_id` bigint UNSIGNED NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `order_barang_users_id_foreign`(`users_id` ASC) USING BTREE,
   INDEX `order_barang_barang_id_foreign`(`barang_id` ASC) USING BTREE,
   INDEX `order_barang_penerimaan_servis_id_foreign`(`penerimaan_servis_id` ASC) USING BTREE,
+  INDEX `order_barang_cabang_id_foreign`(`cabang_id` ASC) USING BTREE,
   CONSTRAINT `order_barang_barang_id_foreign` FOREIGN KEY (`barang_id`) REFERENCES `barang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `order_barang_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `order_barang_penerimaan_servis_id_foreign` FOREIGN KEY (`penerimaan_servis_id`) REFERENCES `penerimaan_servis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `order_barang_users_id_foreign` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of order_barang
 -- ----------------------------
-INSERT INTO `order_barang` VALUES (1, 8, 7, 18, 2, 'fix', 50000, 50000, '2024-03-24 11:08:39', '2024-03-24 16:54:17');
-INSERT INTO `order_barang` VALUES (2, 8, 6, 18, 3, NULL, NULL, 90000, '2024-03-24 14:06:04', '2024-03-24 16:43:30');
+INSERT INTO `order_barang` VALUES (13, 8, 7, 22, 1, NULL, NULL, 50000, '2024-03-25 08:46:41', '2024-03-25 08:46:41', 1);
+INSERT INTO `order_barang` VALUES (14, 8, 8, 22, 1, NULL, NULL, 80000, '2024-03-25 08:46:49', '2024-03-25 08:46:49', 1);
+INSERT INTO `order_barang` VALUES (15, 8, 6, 22, 1, NULL, NULL, 30000, '2024-03-25 09:05:28', '2024-03-25 09:05:28', 1);
+INSERT INTO `order_barang` VALUES (16, 8, 6, 23, 3, NULL, NULL, 90000, '2024-03-25 09:39:08', '2024-03-25 09:39:17', 1);
+INSERT INTO `order_barang` VALUES (17, 8, 7, 23, 2, NULL, NULL, 100000, '2024-03-25 09:39:23', '2024-03-25 09:39:28', 1);
 
 -- ----------------------------
 -- Table structure for order_servis
@@ -449,21 +461,25 @@ CREATE TABLE `order_servis`  (
   `harga_orderservis` double NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `cabang_id` bigint UNSIGNED NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `order_servis_users_id_foreign`(`users_id` ASC) USING BTREE,
   INDEX `order_servis_harga_servis_id_foreign`(`harga_servis_id` ASC) USING BTREE,
   INDEX `order_servis_penerimaan_servis_id_foreign`(`penerimaan_servis_id` ASC) USING BTREE,
+  INDEX `order_servis_cabang_id_foreign`(`cabang_id` ASC) USING BTREE,
+  CONSTRAINT `order_servis_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `order_servis_harga_servis_id_foreign` FOREIGN KEY (`harga_servis_id`) REFERENCES `harga_servis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `order_servis_penerimaan_servis_id_foreign` FOREIGN KEY (`penerimaan_servis_id`) REFERENCES `penerimaan_servis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `order_servis_users_id_foreign` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of order_servis
 -- ----------------------------
-INSERT INTO `order_servis` VALUES (2, 8, 1, 18, 11, 50000, '2024-03-24 03:53:58', '2024-03-24 09:20:03');
-INSERT INTO `order_servis` VALUES (6, 8, 2, 18, 11, 30000, '2024-03-24 09:32:39', '2024-03-24 09:33:20');
-INSERT INTO `order_servis` VALUES (7, 8, 3, 18, 11, 60000, '2024-03-24 09:32:46', '2024-03-24 09:33:27');
+INSERT INTO `order_servis` VALUES (10, 8, 2, 22, 11, 30000, '2024-03-25 08:45:59', '2024-03-25 08:46:20', 1);
+INSERT INTO `order_servis` VALUES (11, 8, 1, 22, 11, 50000, '2024-03-25 08:46:03', '2024-03-25 08:46:27', 1);
+INSERT INTO `order_servis` VALUES (12, 8, 3, 22, 11, 60000, '2024-03-25 08:46:10', '2024-03-25 08:46:35', 1);
+INSERT INTO `order_servis` VALUES (13, 8, 1, 23, 11, 50000, '2024-03-25 09:38:58', '2024-03-25 09:39:04', 1);
 
 -- ----------------------------
 -- Table structure for password_resets
@@ -501,7 +517,7 @@ CREATE TABLE `pembayaran_servis`  (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deposit_pservis` double NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of pembayaran_servis
@@ -525,6 +541,9 @@ INSERT INTO `pembayaran_servis` VALUES (18, 1, 9, 20000, 'Bima Ega', 8, 0, 0, NU
 INSERT INTO `pembayaran_servis` VALUES (19, 2, 12, 30000, NULL, 8, 0, 0, '32397987', 'Bima Ega', 17, 1, NULL, NULL, 0);
 INSERT INTO `pembayaran_servis` VALUES (20, 1, 9, 150000, 'Bima Ega', 8, 50000, 0, NULL, NULL, 18, 1, NULL, NULL, 100000);
 INSERT INTO `pembayaran_servis` VALUES (21, 2, 11, 50000, NULL, 8, 0, 0, '23038299', 'Bima Ega', 18, 1, NULL, NULL, 0);
+INSERT INTO `pembayaran_servis` VALUES (22, 1, 9, 100000, 'Bima Ega', 8, 0, 0, NULL, NULL, 21, 1, NULL, NULL, 100000);
+INSERT INTO `pembayaran_servis` VALUES (23, 1, 9, 150000, 'Bima Ega', 8, 50000, 0, NULL, NULL, 22, 1, NULL, NULL, 100000);
+INSERT INTO `pembayaran_servis` VALUES (24, 1, 9, 200000, 'Bima Ega', 8, 50000, 0, NULL, NULL, 23, 1, NULL, NULL, 150000);
 
 -- ----------------------------
 -- Table structure for pembelian
@@ -711,6 +730,15 @@ CREATE TABLE `penerimaan_servis`  (
   `nonota_pservis` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1',
   `customer_id` bigint UNSIGNED NOT NULL,
   `totalbiaya_pservis` double NOT NULL DEFAULT 0,
+  `kondisiservis_pservis` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `nilaiberkala_pservis` int NULL DEFAULT NULL,
+  `tipeberkala_pservis` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `pesanwa_pservis` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `catatanteknisi_pservis` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `servisberkala_pservis` date NULL DEFAULT NULL,
+  `nilaigaransi_pservis` int NULL DEFAULT NULL,
+  `tipegaransi_pservis` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `servisgaransi_pservis` date NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `penerimaan_servis_cabang_id_foreign`(`cabang_id` ASC) USING BTREE,
   INDEX `penerimaan_servis_users_id_foreign`(`users_id` ASC) USING BTREE,
@@ -718,12 +746,13 @@ CREATE TABLE `penerimaan_servis`  (
   CONSTRAINT `penerimaan_servis_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `penerimaan_servis_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `penerimaan_servis_users_id_foreign` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of penerimaan_servis
 -- ----------------------------
-INSERT INTO `penerimaan_servis` VALUES (18, 1, 1, 'Rusak parah', 'Keluhan kena hantam puso', 'Sedang tidak baik baik saja', '2000', 'data langsung ke bengkel', 1, 150000, '2024-03-24 02:31:11', '2024-03-24 16:54:17', 1, 50000, 0, 1, 'antrian servis masuk', 8, '1', 1, 280000);
+INSERT INTO `penerimaan_servis` VALUES (22, 1, 1, 'parah cuy', 'Keluhan nya kena hantam puso', 'rusak parah bet', '2000', 'data langsung ke bengkel', 1, 100000, '2024-03-25 08:45:30', '2024-03-25 09:34:57', 1, 0, 200000, 1, 'bisa diambil', 8, '1', 1, 300000, 'kondisi servis 1 bulan', 1, 'bulan', 'pesan wa berkala 1 bulan', 'Catatan teknisi 1 bulan', '2024-04-25', NULL, NULL, NULL);
+INSERT INTO `penerimaan_servis` VALUES (23, 2, 2, 'rusak nya dihantam', 'Keluhan kena gas puso', 'tidak nyala', '2000', 'data langsung ke bengkel', 1, 150000, '2024-03-25 09:38:46', '2024-03-25 09:40:42', 1, 0, 90000, 2, 'bisa diambil', 8, '2', 2, 240000, 'sudah membaik', 3, 'bulan', 'Pesan whats app ini penting', 'Udah saya buat mantap yah mbak', '2024-06-25', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for penjualan
@@ -1029,8 +1058,8 @@ CREATE TABLE `saldo_customer`  (
 -- ----------------------------
 -- Records of saldo_customer
 -- ----------------------------
-INSERT INTO `saldo_customer` VALUES (1, 1, 250000, '2024-03-21 14:18:45', '2024-03-24 02:31:11', 1);
-INSERT INTO `saldo_customer` VALUES (5, 2, 50000, '2024-03-21 14:26:14', '2024-03-24 02:23:47', 1);
+INSERT INTO `saldo_customer` VALUES (1, 1, 350000, '2024-03-21 14:18:45', '2024-03-25 08:45:30', 1);
+INSERT INTO `saldo_customer` VALUES (5, 2, 200000, '2024-03-21 14:26:14', '2024-03-25 09:38:46', 1);
 INSERT INTO `saldo_customer` VALUES (6, 3, 0, '2024-03-21 14:27:44', '2024-03-21 18:10:08', 1);
 
 -- ----------------------------
@@ -1052,7 +1081,7 @@ CREATE TABLE `saldo_detail`  (
   INDEX `saldo_detail_cabang_id_foreign`(`cabang_id` ASC) USING BTREE,
   CONSTRAINT `saldo_detail_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `saldo_detail_saldo_customer_id_foreign` FOREIGN KEY (`saldo_customer_id`) REFERENCES `saldo_customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of saldo_detail
@@ -1060,6 +1089,8 @@ CREATE TABLE `saldo_detail`  (
 INSERT INTO `saldo_detail` VALUES (10, 1, 16, '2024-03-22 02:00:46', '2024-03-22 02:00:46', 100000, 0, 0, 1);
 INSERT INTO `saldo_detail` VALUES (11, 5, 17, '2024-03-24 02:23:47', '2024-03-24 02:23:47', 50000, 0, 0, 1);
 INSERT INTO `saldo_detail` VALUES (12, 1, 18, '2024-03-24 02:31:11', '2024-03-24 02:31:11', 150000, 50000, 0, 1);
+INSERT INTO `saldo_detail` VALUES (14, 1, 22, '2024-03-25 08:45:30', '2024-03-25 08:45:30', 100000, 50000, 0, 1);
+INSERT INTO `saldo_detail` VALUES (15, 5, 23, '2024-03-25 09:38:46', '2024-03-25 09:38:46', 150000, 50000, 0, 1);
 
 -- ----------------------------
 -- Table structure for satuan
@@ -1157,6 +1188,36 @@ INSERT INTO `serial_barang` VALUES (47, '897948752', 'ready', 2, 1, NULL, NULL);
 INSERT INTO `serial_barang` VALUES (48, '8907497829', 'ready', 2, 1, NULL, NULL);
 INSERT INTO `serial_barang` VALUES (49, '897409827', 'ready', 2, 1, NULL, NULL);
 INSERT INTO `serial_barang` VALUES (50, '840798273', 'ready', 2, 1, NULL, NULL);
+
+-- ----------------------------
+-- Table structure for service_histori
+-- ----------------------------
+DROP TABLE IF EXISTS `service_histori`;
+CREATE TABLE `service_histori`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `penerimaan_servis_id` bigint UNSIGNED NOT NULL,
+  `status_histori` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `cabang_id` bigint UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `service_histori_penerimaan_servis_id_foreign`(`penerimaan_servis_id` ASC) USING BTREE,
+  INDEX `service_histori_cabang_id_foreign`(`cabang_id` ASC) USING BTREE,
+  CONSTRAINT `service_histori_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `service_histori_penerimaan_servis_id_foreign` FOREIGN KEY (`penerimaan_servis_id`) REFERENCES `penerimaan_servis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of service_histori
+-- ----------------------------
+INSERT INTO `service_histori` VALUES (5, 22, 'antrian servis masuk', '2024-03-25 08:45:30', '2024-03-25 08:45:30', 1);
+INSERT INTO `service_histori` VALUES (6, 22, 'menunggu sparepart', '2024-03-25 09:05:52', '2024-03-25 09:05:52', 1);
+INSERT INTO `service_histori` VALUES (7, 22, 'proses servis', '2024-03-25 09:05:59', '2024-03-25 09:05:59', 1);
+INSERT INTO `service_histori` VALUES (8, 22, 'bisa diambil', '2024-03-25 09:34:57', '2024-03-25 09:34:57', 1);
+INSERT INTO `service_histori` VALUES (9, 23, 'antrian servis masuk', '2024-03-25 09:38:46', '2024-03-25 09:38:46', 1);
+INSERT INTO `service_histori` VALUES (10, 23, 'menunggu sparepart', '2024-03-25 09:39:44', '2024-03-25 09:39:44', 1);
+INSERT INTO `service_histori` VALUES (11, 23, 'proses servis', '2024-03-25 09:40:11', '2024-03-25 09:40:11', 1);
+INSERT INTO `service_histori` VALUES (12, 23, 'bisa diambil', '2024-03-25 09:40:42', '2024-03-25 09:40:42', 1);
 
 -- ----------------------------
 -- Table structure for sub_pembayaran
