@@ -54,5 +54,10 @@ return [
         'bisa diambil' => 'Bisa Diambil',
         'tidak bisa' => 'Tidak Bisa',
         'cancel' => 'Cancel',
+    ],
+    'servis_berkala' => [
+        'hari' => 'Hari',
+        'bulan' => 'Bulan',
+        'tahun' => 'Tahun',
     ]
 ];

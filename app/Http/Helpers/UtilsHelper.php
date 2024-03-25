@@ -389,4 +389,27 @@ class UtilsHelper
     {
         return 'Jasmine Motor';
     }
+
+    public static function checkTanggalBerkala($data)
+    {
+        if ($data['status_pservis'] == 'proses servis' || $data['status_pservis'] == 'bisa diambil') {
+            $nilaiberkala_pservis = $data['nilaiberkala_pservis'];
+            $tipeberkala_pservis = $data['tipeberkala_pservis'];
+            $tanggalSekarang = date('Y-m-d');
+            $tanggal_service_berkala = date('Y-m-d');
+
+            if ($tipeberkala_pservis == 'hari') {
+                $tanggal_service_berkala = date('Y-m-d', strtotime($tanggalSekarang . ' +' . $nilaiberkala_pservis . ' days'));
+            }
+
+            if ($tipeberkala_pservis == 'bulan') {
+                $tanggal_service_berkala = date('Y-m-d', strtotime($tanggalSekarang . ' +' . $nilaiberkala_pservis . ' months'));
+            }
+            if ($tipeberkala_pservis == 'tahun') {
+                $tanggal_service_berkala = date('Y-m-d', strtotime($tanggalSekarang . ' +' . $nilaiberkala_pservis . ' years'));
+            }
+
+            return $tanggal_service_berkala;
+        }
+    }
 }

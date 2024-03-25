@@ -7,6 +7,9 @@ var jsonPenerimaanServisId = $(".penerimaanServisId").data("value");
 var jsonGetServis = $(".getServis").data("value");
 var jsonGetBarang = $(".getBarang").data("value");
 var jsonTipeDiskon = $(".getTipeDiskon").data("value");
+var jsonCabangId = $(".cabangId").data("value");
+var jsonServiceHistory = [];
+
 var urlRoot = $(".url_root").data("url");
 var renderListServis = () => {};
 var renderListBarang = () => {};
@@ -47,28 +50,38 @@ renderListServis = (data) => {
     $("#totalHargaServis").html(formatUang(totalHargaServis));
 };
 
-renderListBarang = (data) => {
+renderListBarang = (data, isOnlyTotalHarga = false) => {
     let output = ``;
     const { result, totalHargaBarang } = data;
     let no = 1;
     result.map((v) => {
-        setOrderBarang.push({
-            id: v.id,
-            barang_id: v.barang.id,
-            nama_barang: v.barang.nama_barang,
-            hargajual_barang: v.barang.hargajual_barang,
-            stok_barang: v.barang.stok_barang,
-            qty_orderbarang: v.qty_orderbarang,
-            typediskon_orderbarang:
-                v.typediskon_orderbarang == null
-                    ? ""
-                    : v.typediskon_orderbarang,
-            diskon_orderbarang:
-                v.diskon_orderbarang == null ? 0 : v.diskon_orderbarang,
-            subtotal_orderbarang: v.subtotal_orderbarang,
-        });
+        if (!isOnlyTotalHarga) {
+            const checkFindIndex = setOrderBarang.findIndex(
+                (item) => item.id === v.id
+            );
+            if (checkFindIndex == -1) {
+                setOrderBarang.push({
+                    id: v.id,
+                    barang_id: v.barang.id,
+                    nama_barang: v.barang.nama_barang,
+                    hargajual_barang: v.barang.hargajual_barang,
+                    stok_barang: v.barang.stok_barang,
+                    qty_orderbarang: v.qty_orderbarang,
+                    typediskon_orderbarang:
+                        v.typediskon_orderbarang == null
+                            ? ""
+                            : v.typediskon_orderbarang,
+                    diskon_orderbarang:
+                        v.diskon_orderbarang == null
+                            ? ""
+                            : v.diskon_orderbarang,
+                    subtotal_orderbarang: v.subtotal_orderbarang,
+                });
+            }
+        }
 
-        output += `
+        if (!isOnlyTotalHarga) {
+            output += `
     <tr>
         <td>${no++}</td>
         <td>${v.barang.nama_barang}</td>
@@ -87,15 +100,15 @@ renderListBarang = (data) => {
                 v.id
             }">
                 <option value="" selected>Tipe Diskon</option>`;
-        Object.keys(jsonTipeDiskon).map((item, i) => {
-            output += `
+            Object.keys(jsonTipeDiskon).map((item, i) => {
+                output += `
                     <option value="${item}" ${
-                v.typediskon_orderbarang == item ? "selected" : ""
-            }>${jsonTipeDiskon[item]}</option>
+                    v.typediskon_orderbarang == item ? "selected" : ""
+                }>${jsonTipeDiskon[item]}</option>
                     `;
-        });
+            });
 
-        output += `
+            output += `
             </select>
         </td>
         <td>
@@ -117,8 +130,8 @@ renderListBarang = (data) => {
         </td>
         <td>
             <a href="${urlRoot}/service/orderBarang/${
-            v.id
-        }?_method=delete" data-id="${v.id}"
+                v.id
+            }?_method=delete" data-id="${v.id}"
                 class="btn btn-danger delete-order-barang btn-small"
                 title="Delete Order Servis">
                 <i class="fa-solid fa-trash"></i>
@@ -126,8 +139,12 @@ renderListBarang = (data) => {
         </td>
     </tr>
     `;
+        }
     });
-    $("#loadOrderBarang").html(output);
+    if (!isOnlyTotalHarga) {
+        $("#loadOrderBarang").html(output);
+    }
+
     $("#totalHargaBarang").html(formatUang(totalHargaBarang));
 };
 
@@ -140,6 +157,140 @@ $(document).ready(function () {
         parent: ".content-wrapper",
         selector: "select[name='barang_id']",
     });
+    select2Standard({
+        parent: ".content-wrapper",
+        selector: "select[name='status_pservis']",
+    });
+    select2Standard({
+        parent: ".content-wrapper",
+        selector: "select[name='tipeberkala_pservis']",
+    });
+
+    const viewServiceHistori = (rowData) => {
+        $(".output_created_at").html(formatDateFromDb(rowData.created_at));
+        $(".status_pservis_label").html(
+            `Status Servis (${formatDateFromDb(rowData.updated_at)})`
+        );
+        $(".output_status_pservis").html(
+            capitalizeEachWord(rowData.status_pservis)
+        );
+        $(".output_name").html(capitalizeEachWord(rowData.users.name));
+
+        let outputService = ``;
+        let no = 1;
+        rowData.service_history.map((vData) => {
+            outputService += `
+            <tr>
+                <td class="w-25">${no++}</td>
+                <td>${formatDateFromDb(vData.created_at)}</td>
+                <td>${capitalizeEachWord(vData.status_histori)}</td>
+            </tr>
+            `;
+        });
+
+        $("#loadServiceHistory").html(outputService);
+    };
+
+    const refreshData = () => {
+        $.ajax({
+            url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
+            dataType: "json",
+            type: "get",
+            data: {
+                refresh: true,
+            },
+            success: function (data) {
+                jsonUsersId = data.usersId;
+                jsonPenerimaanServisId = data.penerimaanServisId;
+                jsonGetServis = data.getServis;
+                jsonGetBarang = data.barang;
+                jsonTipeDiskon = JSON.parse(data.tipeDiskon);
+                jsonCabangId = data.cabangId;
+                jsonServiceHistory = data.row.service_history;
+
+                let select2HargaServis = [];
+                select2HargaServis.push({
+                    id: "",
+                    text: "Pilih Harga Servis",
+                });
+                data.array_harga_servis.map((value, index) => {
+                    select2HargaServis.push({
+                        id: value.id,
+                        text: value.label,
+                    });
+                });
+
+                let select2Barang = [];
+                select2Barang.push({
+                    id: "",
+                    text: "Pilih Barang",
+                });
+                data.array_barang.map((value, index) => {
+                    select2Barang.push({
+                        id: value.id,
+                        text: value.label,
+                    });
+                });
+
+                var selectElementHargaServis = $(
+                    "select[name='harga_servis_id']"
+                );
+                selectElementHargaServis.empty();
+                $.each(select2HargaServis, function (index, option) {
+                    selectElementHargaServis.append(
+                        new Option(option.text, option.id, false, false)
+                    );
+                });
+                selectElementHargaServis.select2("destroy");
+
+                select2Standard({
+                    parent: ".content-wrapper",
+                    selector: "select[name='harga_servis_id']",
+                    data: select2HargaServis,
+                });
+
+                var selectElementBarang = $("select[name='barang_id']");
+                selectElementBarang.empty();
+                $.each(select2Barang, function (index, option) {
+                    selectElementBarang.append(
+                        new Option(option.text, option.id, false, false)
+                    );
+                });
+                selectElementBarang.select2("destroy");
+                select2Standard({
+                    parent: ".content-wrapper",
+                    selector: "select[name='barang_id']",
+                    data: select2Barang,
+                });
+
+                // output servis history
+                const rowData = data.row;
+                viewServiceHistori(rowData);
+
+                // check handle berkala
+                const statusAllowed = ["proses servis", "bisa diambil"];
+                if (statusAllowed.includes(rowData.status_pservis)) {
+                    $(".handle-berkala").removeClass("d-none");
+                } else {
+                    $(".handle-berkala").addClass("d-none");
+                }
+
+                // handle output transaksi
+                console.log("get row", rowData);
+                $(".output_totalbiaya_pservis").html(
+                    formatUang(rowData.totalbiaya_pservis)
+                );
+                $(".output_hutang_pservis").html(
+                    formatUang(rowData.hutang_pservis)
+                );
+                $(".output_total_dppservis").html(
+                    formatUang(rowData.total_dppservis)
+                );
+            },
+        });
+    };
+
+    refreshData();
 
     var body = $("body");
     body.on("click", ".detail-customer", function () {
@@ -201,6 +352,7 @@ $(document).ready(function () {
             harga_servis_id: value,
             penerimaan_servis_id: jsonPenerimaanServisId,
             harga_orderservis: getFindData.total_hargaservis,
+            cabang_id: jsonCabangId,
         };
 
         $.ajax({
@@ -257,6 +409,13 @@ $(document).ready(function () {
 
     body.on("change", "select[name='barang_id']", function () {
         const value = $(this).val();
+        if (value === "") {
+            return runToast({
+                type: "bg-danger",
+                description: "Barang wajib diisi",
+                title: "Form Validation",
+            });
+        }
 
         // handle input qty
         const findIndexOrderBarang = setOrderBarang.findIndex(
@@ -290,15 +449,9 @@ $(document).ready(function () {
 
             const getPayload = payloadOrderBarang(getDataBarang.id);
             updateOrderBarang(getPayload);
-            return;
-        }
 
-        if (value === "") {
-            return runToast({
-                type: "bg-danger",
-                description: "Barang wajib diisi",
-                title: "Form Validation",
-            });
+            handleDisplayInput();
+            return;
         }
 
         const getFindData = jsonGetBarang.find((item) => item.id == value);
@@ -309,6 +462,7 @@ $(document).ready(function () {
             penerimaan_servis_id: jsonPenerimaanServisId,
             qty_orderbarang: 1,
             subtotal_orderbarang: getFindData.hargajual_barang,
+            cabang_id: jsonCabangId,
         };
 
         $.ajax({
@@ -318,6 +472,7 @@ $(document).ready(function () {
             data: payload,
             success: function (data) {
                 renderListBarang(data);
+                refreshData();
             },
         });
     });
@@ -329,7 +484,8 @@ $(document).ready(function () {
             dataType: "json",
             data: payload,
             success: function (data) {
-                renderListBarang(data);
+                renderListBarang(data, true);
+                refreshData();
             },
         });
     };
@@ -406,21 +562,41 @@ $(document).ready(function () {
                 typediskon_orderbarang: dataOrderBarang.typediskon_orderbarang,
                 diskon_orderbarang: dataOrderBarang.diskon_orderbarang,
                 subtotal_orderbarang: dataOrderBarang.subtotal_orderbarang,
+                cabang_id: jsonCabangId,
             };
         }
         return payload;
+    };
+
+    const handleDisplayInput = () => {
+        setOrderBarang.map((vItem, iItem) => {
+            $(`input[name="qty_orderbarang"][data-id="${vItem.id}"]`).val(
+                formatNumber(vItem.qty_orderbarang)
+            );
+            $(
+                `select[name="typediskon_orderbarang"][data-id="${vItem.id}"]`
+            ).val(vItem.typediskon_orderbarang);
+            $(`input[name="diskon_orderbarang"][data-id="${vItem.id}"]`).val(
+                formatNumber(vItem.diskon_orderbarang)
+            );
+            $(`.output_subtotal_orderbarang[data-id="${vItem.id}"]`).html(
+                formatNumber(vItem.subtotal_orderbarang)
+            );
+        });
     };
 
     body.on(
         "input",
         'input[name="qty_orderbarang"]',
         debounce(function () {
-            const getValueInput = $(this).val();
+            const id = $(this).data("id");
+            const getValueInput = $(
+                `input[name="qty_orderbarang"][data-id="${id}"]`
+            ).val();
             if (getValueInput == "") {
                 return;
             }
 
-            const id = $(this).data("id");
             const qtyValue = parseFloat(removeCommas($(this).val()));
 
             // check awal
@@ -448,11 +624,20 @@ $(document).ready(function () {
 
             const getPayload = payloadOrderBarang(id);
             updateOrderBarang(getPayload);
-        }, 1000)
+
+            // update display input
+            handleDisplayInput();
+        }, 500)
     );
 
     body.on("change", 'select[name="typediskon_orderbarang"]', function () {
         const id = $(this).data("id");
+        const getValueInput = $(
+            `input[name="qty_orderbarang"][data-id="${id}"]`
+        ).val();
+        if (getValueInput == "") {
+            return;
+        }
 
         newOrderBarang(id);
 
@@ -471,6 +656,8 @@ $(document).ready(function () {
 
         const getPayload = payloadOrderBarang(id);
         updateOrderBarang(getPayload);
+
+        handleDisplayInput();
     });
 
     body.on(
@@ -478,6 +665,13 @@ $(document).ready(function () {
         'input[name="diskon_orderbarang"]',
         debounce(function () {
             const id = $(this).data("id");
+            const getValueInput = $(
+                `input[name="qty_orderbarang"][data-id="${id}"]`
+            ).val();
+            if (getValueInput == "") {
+                return;
+            }
+
             const getInputOrderBarang = inputOrderBarang(id);
 
             const getValue = parseFloat(removeCommas($(this).val()));
@@ -497,6 +691,129 @@ $(document).ready(function () {
 
             const getPayload = payloadOrderBarang(id);
             updateOrderBarang(getPayload);
-        }, 1000)
+
+            handleDisplayInput();
+        }, 500)
     );
+
+    body.on("click", ".delete-order-barang", function (e) {
+        e.preventDefault();
+
+        basicDeleteConfirmDatatable({
+            urlDelete: $(this).attr("href"),
+            data: {
+                penerimaan_servis_id: jsonPenerimaanServisId,
+            },
+            text: "Apakah anda yakin ingin menghapus item ini?",
+            dataFunction: renderListBarang,
+        });
+    });
+
+    const payloadSubmit = () => {
+        const getValue = (name) => $(`[name="${name}"]`).val() || "";
+
+        const payload = {
+            status_pservis: getValue("status_pservis"),
+            nilaiberkala_pservis: getValue("nilaiberkala_pservis"),
+            tipeberkala_pservis: getValue("tipeberkala_pservis"),
+            catatanteknisi_pservis: getValue("catatanteknisi_pservis"),
+            kondisiservis_pservis: getValue("kondisiservis_pservis"),
+            pesanwa_pservis: getValue("pesanwa_pservis"),
+        };
+
+        return payload;
+    };
+
+    body.on("click", ".btn-submit-data", function (e) {
+        e.preventDefault();
+        const payload = payloadSubmit();
+
+        const lastStatus = jsonServiceHistory.length - 1;
+        const getLastStatus = jsonServiceHistory[lastStatus].status_histori;
+        if (getLastStatus == payload.status_pservis) {
+            return runToast({
+                type: "bg-danger",
+                title: "Form Validation",
+                description:
+                    "Status servis anda terakhir sama dengan status servis anda yang baru",
+            });
+        }
+        if (
+            (payload.nilaiberkala_pservis == "" &&
+                payload.tipeberkala_pservis != "") ||
+            (payload.nilaiberkala_pservis != "" &&
+                payload.tipeberkala_pservis == "")
+        ) {
+            return runToast({
+                type: "bg-danger",
+                title: "Form Validation",
+                description:
+                    "Wajib mengisi nilai berkala, dan wajib mengisi tipe servis berkala",
+            });
+        }
+
+        $.ajax({
+            type: "post",
+            url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}?_method=put`,
+            data: payload,
+            dataType: "json",
+            beforeSend: function () {
+                clearError422();
+                $(".btn-submit-data").attr("disabled", true);
+                $(".btn-submit-data").html(disableButton);
+            },
+            success: function (data) {
+                runToast({
+                    title: "Successfully",
+                    description: data,
+                    type: "bg-success",
+                });
+                refreshData();
+            },
+            error: function (jqXHR, exception) {
+                $(".btn-submit-data").attr("disabled", false);
+                $(".btn-submit-data").html(enableButton);
+                if (jqXHR.status === 422) {
+                    showErrors422(jqXHR);
+                }
+            },
+            complete: function () {
+                $(".btn-submit-data").attr("disabled", false);
+                $(".btn-submit-data").html(enableButton);
+            },
+        });
+    });
+
+    const renderPrintKasir = () => {
+        var output = "";
+        $.ajax({
+            url: `${urlRoot}/service/print/kendaraan/servis`,
+            dataType: "json",
+            type: "get",
+            data: {
+                penerimaan_servis_id: jsonPenerimaanServisId,
+            },
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                output = data;
+            },
+        });
+
+        return output;
+    };
+
+    const printOutput = (output) => {
+        var printWindow = window.open("", "_blank");
+        printWindow.document.write(output);
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.close();
+    };
+
+    body.on("click", ".btn-print-data", function (e) {
+        e.preventDefault();
+        const output = renderPrintKasir();
+        printOutput(output);
+    });
 });

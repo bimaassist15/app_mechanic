@@ -58,6 +58,10 @@ $(document).ready(function () {
 
                 // refresh select 2 barang & supplier
                 let select2Barang = [];
+                select2Barang.push({
+                    id: '',
+                    text: 'Pilih Barang'
+                })
                 data.array_barang.map((value, index) => {
                     select2Barang.push({
                         id: value.id,
@@ -65,6 +69,10 @@ $(document).ready(function () {
                     });
                 });
                 let select2Supplier = [];
+                select2Supplier.push({
+                    id: '',
+                    text: 'Pilih Supplier'
+                })
                 data.array_supplier.map((value, index) => {
                     select2Supplier.push({
                         id: value.id,
@@ -72,6 +80,10 @@ $(document).ready(function () {
                     });
                 });
                 let select2KategoriPembayaran = [];
+                select2KategoriPembayaran.push({
+                    id: '',
+                    text: 'Pilih Kategori Pembayaran'
+                })
                 JSON.parse(data.array_kategori_pembayaran).map(
                     (value, index) => {
                         select2KategoriPembayaran.push({

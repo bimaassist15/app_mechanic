@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class FormTextAreaVertical extends Component
+class FormInputVertical extends Component
 {
     /**
      * Create a new component instance.
@@ -23,6 +23,6 @@ class FormTextAreaVertical extends Component
      */
     public function render()
     {
-        return view('components.form-textarea-vertical');
+        return view('components.form-input-vertical');
     }
 }

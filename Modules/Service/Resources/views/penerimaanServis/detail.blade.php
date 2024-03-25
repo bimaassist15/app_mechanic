@@ -10,123 +10,14 @@
 
         @include('service::penerimaanServis.partials.detailCustomer')
 
-        @include('service::penerimaanServis.partials.orderServis')
+        @include('service::penerimaanServis.partials.detailOrderServis')
 
-        <div class="card mt-4">
-            <div class="card-header">
-                <div class="d-flex justify-content-between">
-                    <div class="w-50">
-                        Biaya Sparepart <strong style="font-weight: 800; color:rgb(102, 102, 230);">No. Nota
-                            {{ $row->nonota_pservis }}</strong>
-                    </div>
-                    <div class="w-50">
-                        <x-form-select-vertical label="Cari Barang" name="barang_id" :data="$array_barang" value="" />
-                    </div>
-                </div>
+        @include('service::penerimaanServis.partials.detailOrderBarang')
 
-            </div>
-            <div class="card-body">
-                <div class="table-responsive text-nowrap px-3">
-                    <table class="table" id="dataTable">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Nama</th>
-                                <th>Harga</th>
-                                <th>Qty</th>
-                                <th>Diskon</th>
-                                <th></th>
-                                <th>Sub Total</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0" id="loadOrderBarang">
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="6" class="text-end">
-                                    <strong>Total Biaya Sparepart</strong>
-                                </td>
-                                <td id="totalHargaBarang">Rp. 0</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="card mt-4">
-            <div class="card-header">
-                History Servis <strong style="font-weight: 800; color:rgb(102, 102, 230);">No. Nota
-                    {{ $row->nonota_pservis }}</strong>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <x-data-customer label="Tanggal Masuk" value="22 Februari 2024 10:00 Wib" />
-                        <x-data-customer label="Status Servis (22 Februari 2024)" value="Sudah diambil" />
-                        <x-data-customer label="Penerima / Pembuat Nota Penerimaan Servis" value="Ijat" />
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-lg-8">
-                        <strong>Detail History Servis</strong>
-                        <table class="w-100 table">
-                            <tr>
-                                <td>1</td>
-                                <td>22 Februari 2024 10:00 Wib</td>
-                                <td>Bisa Diambil</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>22 Februari 2024 10:00 Wib</td>
-                                <td>No. Antrian Masuk</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>22 Februari 2024 10:00 Wib</td>
-                                <td>Cancel</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card mt-4">
-            <div class="card-header">
-                Komplain Garansi Servis <strong style="font-weight: 800; color:rgb(102, 102, 230);">No. Nota
-                    {{ $row->nonota_pservis }}</strong>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <x-data-customer label="Keluhan" value="Menyala Abangku" />
-                        <x-data-customer label="Penerima Komplain" value="Bg Bim" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card mt-4">
-            <div class="card-header">
-                Informasi Servis <strong style="font-weight: 800; color:rgb(102, 102, 230);">No. Nota
-                    {{ $row->nonota_pservis }}</strong>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <x-data-customer label="Sub Total" value="Rp. 70.000" />
-                        <x-data-customer label="Total Sisa Bayar" value="Rp. -30.000" />
-                        <x-data-customer label="Catatan Teknisi" value="Tolong data lagi setiap 3 bulan sekali" />
-                        <x-data-customer label="DP (Bayar Diawal)" value="Rp. 100.000" />
-                        <x-data-customer label="Kondisi Barang Servis" value="Sudah bagus" />
-                        <x-data-customer label="Status Servis" value="Sudah Diambil" />
-                        <x-data-customer label="Servis Berkala" value="3 Bulan Sekali" />
-                        <x-data-customer label="Servis Garansi" value="1 Bulan (24 Maret 2024)" />
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('service::penerimaanServis.partials.detailHistori')
+
+        @include('service::penerimaanServis.partials.detailInformasiServis')
+
     </div>
 @endsection
 
@@ -140,5 +31,6 @@
     <script class="getServis" data-value="{{ $getServis }}"></script>
     <script class="getBarang" data-value="{{ $barang }}"></script>
     <script class="getTipeDiskon" data-value="{{ $tipeDiskon }}"></script>
+    <script class="cabangId" data-value="{{ $cabangId }}"></script>
     <script src="{{ asset('js/service/penerimaanServis/detail.js') }}"></script>
 @endpush

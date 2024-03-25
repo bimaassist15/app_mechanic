@@ -12,6 +12,7 @@ use App\Models\PembayaranServis;
 use App\Models\PenerimaanServis;
 use App\Models\SaldoCustomer;
 use App\Models\SaldoDetail;
+use App\Models\ServiceHistory;
 use App\Models\SubPembayaran;
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
@@ -36,7 +37,7 @@ class PenerimaanServisController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = PenerimaanServis::dataTable();
+            $data = PenerimaanServis::dataTable()->where('status_pservis', 'antrian servis masuk');
             return DataTables::eloquent($data)
                 ->addColumn('action', function ($row) {
                     $buttonAksi = '
@@ -82,14 +83,14 @@ class PenerimaanServisController extends Controller
         return view('service::penerimaanServis.index');
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $penerimaanServis = new PenerimaanServis();
         $row = $penerimaanServis->transaksiServis($id);
 
         $hargaServis = new HargaServis();
         $getServis = $hargaServis->getServis()->get();
-        $array_harga_servis = [];
+
         foreach ($getServis as $key => $item) {
             $array_harga_servis[] = [
                 'label' => '<strong>Nama Servis: ' . $item->nama_hargaservis . '</strong> <br />
@@ -116,8 +117,47 @@ class PenerimaanServisController extends Controller
             ];
         }
         $tipeDiskon = json_encode($this->datastatis['tipe_diskon']);
+        $statusKendaraanServis = ($this->datastatis['status_kendaraan_servis']);
+        $serviceBerkala = ($this->datastatis['servis_berkala']);
+        $cabangId = session()->get('cabang_id');
 
-        return view('service::penerimaanServis.detail', compact('row', 'array_harga_servis', 'getServis', 'usersId', 'penerimaanServisId', 'barang', 'array_barang', 'tipeDiskon'));
+        $array_status_kendaraan = [];
+        foreach ($statusKendaraanServis as $key => $item) {
+            $array_status_kendaraan[] = [
+                'label' => $item,
+                'id' => $key,
+            ];
+        }
+
+        $array_service_berkala = [];
+        foreach ($serviceBerkala as $key => $item) {
+            $array_service_berkala[] = [
+                'label' => $item,
+                'id' => $key,
+            ];
+        }
+
+        $data = [
+            'row' => $row,
+            'array_harga_servis' => $array_harga_servis,
+            'getServis' => $getServis,
+            'usersId' => $usersId,
+            'penerimaanServisId' => $penerimaanServisId,
+            'barang' => $barang,
+            'array_barang' => $array_barang,
+            'tipeDiskon' => $tipeDiskon,
+            'statusKendaraanServis' => $array_status_kendaraan,
+            'serviceBerkala' => $array_service_berkala,
+            'cabangId' => $cabangId,
+        ];
+        if ($request->ajax()) {
+            $refresh = $request->input('refresh');
+            if ($refresh) {
+                return response()->json($data);
+            }
+        }
+
+        return view('service::penerimaanServis.detail', $data);
     }
 
     /**
@@ -224,7 +264,7 @@ class PenerimaanServisController extends Controller
             'array_kendaraan_servis' => $array_kendaraan_servis,
             'array_tipe_servis' => $array_tipe_servis,
             'action' => $action,
-            'kendaraanServis' => $kendaraanServis
+            'kendaraanServis' => $kendaraanServis,
         ];
         if ($request->input('refresh_dataset')) {
             return response()->json($data);
@@ -269,6 +309,13 @@ class PenerimaanServisController extends Controller
         );
         $penerimaanServis = PenerimaanServis::create($mergePenerimaanServis);
         $penerimaan_servis_id = $penerimaanServis->id;
+
+        // history servis
+        ServiceHistory::create([
+            'penerimaan_servis_id' => $penerimaan_servis_id,
+            'status_histori' => 'antrian servis masuk',
+            'cabang_id' => session()->get('cabang_id'),
+        ]);
 
         // saldo customer
         $checkSaldo = SaldoCustomer::where('customer_id', $customer_id)->get()->count();
@@ -356,5 +403,24 @@ class PenerimaanServisController extends Controller
         $row = $penerimaanServis->transaksiServis($id);
 
         return view('service::penerimaanServis.show', compact('row'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $data = $request->except(['_method']);
+        if ($data['status_pservis'] == 'proses servis' || $data['status_pservis'] == 'bisa diambil') {
+            $tanggal_service_berkala = UtilsHelper::checkTanggalBerkala($data);
+            $data = array_merge($data, ['servisberkala_pservis' => $tanggal_service_berkala]);
+        }
+        PenerimaanServis::find($id)->update($data);
+
+
+        $status_pservis = $data['status_pservis'];
+        ServiceHistory::create([
+            'penerimaan_servis_id' => $id,
+            'status_histori' => $status_pservis,
+            'cabang_id' => session()->get('cabang_id'),
+        ]);
+        return response()->json('Berhasil menambahkan progress pengerjaan');
     }
 }

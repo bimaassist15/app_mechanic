@@ -1,13 +1,25 @@
 @extends('layouts.app.index')
 
+@section('title')
+    Halaman Penerimaan Servis
+@endsection
+
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
-        {{ Breadcrumbs::render('pengembalianServis') }}
+        {{ Breadcrumbs::render('penerimaanServis') }}
 
         <!-- Basic Bootstrap Table -->
         <div class="card">
             <h5 class="card-header">
-                Data Pengembalian Servis
+                <div class="d-flex flex-wrap justify-content-between">
+                    <div>
+                        Data Penerimaan Servis
+                    </div>
+                    <div>
+                        <x-button-main title="Tambah" className="btn-add" typeModal="extraLargeModal"
+                            urlCreate="{{ route('penerimaanServis.create') }}" />
+                    </div>
+                </div>
             </h5>
             <div class="table-responsive text-nowrap px-3">
                 <table class="table" id="dataTable">
@@ -32,7 +44,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('pengembalianServis.index') }}"></script>
-        <script src="{{ asset('js/service/pengembalianServis/index.js') }}"></script>
+        <script class="url_datatable" data-url="{{ route('penerimaanServis.index') }}"></script>
+        <script src="{{ asset('js/service/penerimaanServis/index.js') }}"></script>
     @endpush
 @endsection

@@ -73,7 +73,7 @@
                 <div class="row mt-5">
                     <div class="col-lg-6"></div>
                     <div class="col-lg-6">
-                        <x-form-text-area-vertical label="Catatan (Optional)" name="catatan"
+                        <x-form-textarea-vertical label="Catatan (Optional)" name="catatan"
                             placeholder="Tambahkan catatan secara detail" />
                     </div>
                     <div class="col-lg-6"></div>

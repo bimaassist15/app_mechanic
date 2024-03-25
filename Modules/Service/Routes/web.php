@@ -18,10 +18,13 @@ Route::prefix('service')->middleware('auth')->group(function () {
     Route::get('penerimaanServis/detail/{id}/penerimaanServis', 'PenerimaanServisController@detail')->name('penerimaanServis.detail');
 
     Route::get('pengembalianServis', 'PengembalianServisController@index')->name('pengembalianServis.index');
+
     Route::resource('kendaraanServis', 'KendaraanServisController');
     Route::get('kendaraanServis/detailKendaraanServis/service', 'KendaraanServisController@detailKendaraanServis')->name('kendaraanServis.detailKendaraanServis.service');
     Route::get('kendaraanServis/print/service', 'KendaraanServisController@print')->name('kendaraanServis.print.service');
 
     Route::resource('orderServis', 'OrderServisController');
     Route::resource('orderBarang', 'OrderBarangController');
+
+    Route::get('print/kendaraan/servis', 'PrintServisController@index')->name('service.print.kendaraan');
 });

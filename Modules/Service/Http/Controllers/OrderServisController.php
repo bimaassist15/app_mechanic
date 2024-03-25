@@ -45,6 +45,26 @@ class OrderServisController extends Controller
         $getPenerimaanServis = PenerimaanServis::find($penerimaan_servis_id);
         $getPenerimaanServis->totalbiaya_pservis = $getPenerimaanServis->totalbiaya_pservis + $jumlahHarga;
         $getPenerimaanServis->save();
+        // end penerimaan servis
+
+        // handle hutang dan kembalian
+        $getPenerimaanServis = PenerimaanServis::find($penerimaan_servis_id);
+        $deposit = $getPenerimaanServis->total_dppservis;
+        $totalBiaya = $getPenerimaanServis->totalbiaya_pservis;
+        $kalkulasi = $deposit - $totalBiaya;
+        $hutang = 0;
+        $kembalian = 0;
+        if ($kalkulasi < 0) {
+            $hutang = abs($kalkulasi);
+            $kembalian = 0;
+        } else {
+            $hutang = 0;
+            $kembalian = $kalkulasi;
+        }
+        $getPenerimaanServis->kembalian_pservis = $kembalian;
+        $getPenerimaanServis->hutang_pservis = $hutang;
+        $getPenerimaanServis->save();
+        // end handle hutang dan kembalian
 
         $getOrder = $order->getOrderServis()->where('penerimaan_servis_id', $penerimaan_servis_id)->get();
         $totalHargaServis = $getOrder->sum('harga_orderservis');
@@ -112,6 +132,26 @@ class OrderServisController extends Controller
         $getPenerimaanServis = PenerimaanServis::find($penerimaan_servis_id);
         $getPenerimaanServis->totalbiaya_pservis = $getPenerimaanServis->totalbiaya_pservis - $jumlahHarga;
         $getPenerimaanServis->save();
+        // end update penerimaan servis
+
+        // handle hutang dan kembalian
+        $getPenerimaanServis = PenerimaanServis::find($penerimaan_servis_id);
+        $deposit = $getPenerimaanServis->total_dppservis;
+        $totalBiaya = $getPenerimaanServis->totalbiaya_pservis;
+        $kalkulasi = $deposit - $totalBiaya;
+        $hutang = 0;
+        $kembalian = 0;
+        if ($kalkulasi < 0) {
+            $hutang = abs($kalkulasi);
+            $kembalian = 0;
+        } else {
+            $hutang = 0;
+            $kembalian = $kalkulasi;
+        }
+        $getPenerimaanServis->kembalian_pservis = $kembalian;
+        $getPenerimaanServis->hutang_pservis = $hutang;
+        $getPenerimaanServis->save();
+        // end handle hutang dan kembalian
 
         $getOrder = $order->getOrderServis()->where('penerimaan_servis_id', $penerimaan_servis_id)->get();
         $totalHargaServis = $getOrder->sum('harga_orderservis');

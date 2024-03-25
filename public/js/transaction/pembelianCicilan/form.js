@@ -39,6 +39,10 @@ $(document).ready(function () {
                 jsonDefaultUser = data.defaultUser;
                 jsonCabangId = data.cabangId;
                 let select2KategoriPembayaran = [];
+                select2KategoriPembayaran.push({
+                    id: '',
+                    text: 'Pilih Kategori Pembayaran'
+                })
                 JSON.parse(data.array_kategori_pembayaran).map(
                     (value, index) => {
                         select2KategoriPembayaran.push({

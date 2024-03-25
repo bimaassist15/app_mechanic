@@ -2,6 +2,7 @@
 
 namespace Modules\Service\Http\Controllers;
 
+use App\Models\Barang;
 use App\Models\OrderBarang;
 use App\Models\PenerimaanServis;
 use App\Models\User;
@@ -40,11 +41,39 @@ class OrderBarangController extends Controller
         $getOrderBarang = $getOrder = $order->getOrderBarang()->find($order_servis_id);
         $jumlahHarga = $getOrderBarang->barang->hargajual_barang;
 
+        // barang
+        $qty_orderbarang = $request->input('qty_orderbarang');
+        $barang_id = $request->input('barang_id');
+        $barang = Barang::find($barang_id);
+        $barang->stok_barang = floatval($barang->stok_barang) - floatval($qty_orderbarang);
+        $barang->save();
+        // end barang
+
         // penerimaan servis
         $penerimaan_servis_id = $request->input('penerimaan_servis_id');
         $getPenerimaanServis = PenerimaanServis::find($penerimaan_servis_id);
         $getPenerimaanServis->totalbiaya_pservis = $getPenerimaanServis->totalbiaya_pservis + $jumlahHarga;
         $getPenerimaanServis->save();
+        // end penerimaan servis
+
+         // handle hutang dan kembalian
+         $getPenerimaanServis = PenerimaanServis::find($penerimaan_servis_id);
+         $deposit = $getPenerimaanServis->total_dppservis;
+         $totalBiaya = $getPenerimaanServis->totalbiaya_pservis;
+         $kalkulasi = $deposit - $totalBiaya;
+         $hutang = 0;
+         $kembalian = 0;
+         if ($kalkulasi < 0) {
+             $hutang = abs($kalkulasi);
+             $kembalian = 0;
+         } else {
+             $hutang = 0;
+             $kembalian = $kalkulasi;
+         }
+         $getPenerimaanServis->kembalian_pservis = $kembalian;
+         $getPenerimaanServis->hutang_pservis = $hutang;
+         $getPenerimaanServis->save();
+         // end handle hutang dan kembalian
 
         $getOrder = $order->getOrderBarang()->where('penerimaan_servis_id', $penerimaan_servis_id)->get();
         $totalHargaBarang = $getOrder->sum('subtotal_orderbarang');
@@ -78,6 +107,43 @@ class OrderBarangController extends Controller
         $getPenerimaanServis->save();
         // end penerimaan servis 2
 
+         // handle hutang dan kembalian
+         $getPenerimaanServis = PenerimaanServis::find($penerimaan_servis_id);
+         $deposit = $getPenerimaanServis->total_dppservis;
+         $totalBiaya = $getPenerimaanServis->totalbiaya_pservis;
+         $kalkulasi = $deposit - $totalBiaya;
+         $hutang = 0;
+         $kembalian = 0;
+         if ($kalkulasi < 0) {
+             $hutang = abs($kalkulasi);
+             $kembalian = 0;
+         } else {
+             $hutang = 0;
+             $kembalian = $kalkulasi;
+         }
+         $getPenerimaanServis->kembalian_pservis = $kembalian;
+         $getPenerimaanServis->hutang_pservis = $hutang;
+         $getPenerimaanServis->save();
+         // end handle hutang dan kembalian
+
+        // update stock barang
+
+        $barang_id = $getOrderBarang->barang_id;
+        $qty_orderbarang = $data['qty_orderbarang'];
+        // barang 1
+        $jumlah_qty_orderbarang = $getOrderBarang->qty_orderbarang;
+        $barang = Barang::find($barang_id);
+        $barang->stok_barang = $barang->stok_barang + $jumlah_qty_orderbarang;
+        $barang->save();
+        // end barang 1
+
+        // barang 2
+        $barang = Barang::find($barang_id);
+        $barang->stok_barang = floatval($barang->stok_barang) - floatval($qty_orderbarang);
+        $barang->save();
+        // end barang 2
+
+
         // update order barang
         $getOrderBarang->update($data);
         // end update
@@ -105,7 +171,10 @@ class OrderBarangController extends Controller
     {
         $order = new OrderBarang();
         $getOrderBarang = $order->getOrderBarang()->find($id);
-        $jumlahHarga = $getOrderBarang->barang->hargajual_barang;
+        $jumlahHarga = $getOrderBarang->subtotal_orderbarang;
+        $qty_orderbarang = $getOrderBarang->qty_orderbarang;
+        $barang_id = $getOrderBarang->barang_id;
+
 
         OrderBarang::destroy($id);
 
@@ -114,9 +183,39 @@ class OrderBarangController extends Controller
         $getPenerimaanServis = PenerimaanServis::find($penerimaan_servis_id);
         $getPenerimaanServis->totalbiaya_pservis = $getPenerimaanServis->totalbiaya_pservis - $jumlahHarga;
         $getPenerimaanServis->save();
+        // end update penerimaan servis
+
+         // handle hutang dan kembalian
+         $getPenerimaanServis = PenerimaanServis::find($penerimaan_servis_id);
+         $deposit = $getPenerimaanServis->total_dppservis;
+         $totalBiaya = $getPenerimaanServis->totalbiaya_pservis;
+         $kalkulasi = $deposit - $totalBiaya;
+         $hutang = 0;
+         $kembalian = 0;
+         if ($kalkulasi < 0) {
+             $hutang = abs($kalkulasi);
+             $kembalian = 0;
+         } else {
+             $hutang = 0;
+             $kembalian = $kalkulasi;
+         }
+         $getPenerimaanServis->kembalian_pservis = $kembalian;
+         $getPenerimaanServis->hutang_pservis = $hutang;
+         $getPenerimaanServis->save();
+         // end handle hutang dan kembalian
 
         $getOrder = $order->getOrderBarang()->where('penerimaan_servis_id', $penerimaan_servis_id)->get();
         $totalHargaBarang = $getOrder->sum('subtotal_orderbarang');
+        // end penerimaan servis
+
+        // update barang
+        $barang_id = $barang_id;
+        $jumlah_qty_orderbarang = $qty_orderbarang;
+
+        $barang = Barang::find($barang_id);
+        $barang->stok_barang = $barang->stok_barang + $jumlah_qty_orderbarang;
+        $barang->save();
+        // end update barang
 
         return response()->json([
             'result' => $getOrder,
