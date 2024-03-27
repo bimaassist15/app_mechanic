@@ -31,9 +31,15 @@
     <script class="json_sub_pembayaran" data-json="{{ $subPembayaran }}"></script>
     <script class="json_array_sub_pembayaran" data-json="{{ $array_sub_pembayaran }}"></script>
     <script class="json_data_user" data-json="{{ $dataUser }}"></script>
-    <script class="json_default_user" data-json="{{ $defaultUser }}"></script>
+    <script class="json_default_user" data-json="{{ $dataUser }}"></script>
     <script class="json_cabang_id" data-json="{{ $cabangId }}"></script>
+    <script class="jsonRow" data-json="{{ $jsonRow }}"></script>
+
+    <script class="getPembayaranServis" data-value="{{ $getPembayaranServis }}"></script>
+    <script class="is_deposit" data-value="{{ $is_deposit }}"></script>
     <script class="totalHutang" data-value="{{ $totalHutang }}"></script>
+    <script class="defaultUser" data-value="{{ $defaultUser }}"></script>
+
     {{-- end pembayaran --}}
     <script src="{{ asset('js/service/pengembalianServis/detail.js') }}"></script>
 @endpush

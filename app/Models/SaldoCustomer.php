@@ -11,4 +11,9 @@ class SaldoCustomer extends Model
     protected $table = 'saldo_customer';
     protected $guarded = [];
     public $timestamps = true;
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

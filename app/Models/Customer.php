@@ -37,6 +37,11 @@ class Customer extends Model
         return $this->hasMany(Penjualan::class);
     }
 
+    public function saldoCustomer()
+    {
+        return $this->hasOne(SaldoCustomer::class);
+    }
+
     public function dataCustomer()
     {
         return Customer::with(

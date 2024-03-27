@@ -140,7 +140,6 @@ class PengembalianServisController extends Controller
         // pembayaran
         $array_kategori_pembayaran = [];
         $kategoriPembayaran = KategoriPembayaran::dataTable()->where('status_kpembayaran', true)
-            ->whereNot('nama_kpembayaran', 'like', '%deposit%')
             ->get();
         foreach ($kategoriPembayaran as $value => $item) {
             $array_kategori_pembayaran[] = [
@@ -177,14 +176,10 @@ class PengembalianServisController extends Controller
         $penerimaanServis = $penerimaanServis->transaksiServis($penerimaanServisId);
         $dataHutang = $penerimaanServis->pembayaranServis;
         $totalHutang = 0;
-        $totalBayar = 0;
-        $totalKembalian = 0;
         $totalHutang = 0;
         if (count($dataHutang) > 0) {
             $getPembayaranServis = UtilsHelper::paymentStatisPenerimaanServis($penerimaanServisId);
-            dd($getPembayaranServis);
-
-            $totalHutang = $totalKembalian > 0 ?  $totalBayar - $totalKembalian : $dataHutang[0]->bayar_pservis + $dataHutang[0]->hutang_pservis;
+            $totalHutang = $getPembayaranServis['hutang'];
         }
 
         $totalHutang = $totalHutang;
@@ -192,6 +187,7 @@ class PengembalianServisController extends Controller
 
         $data = [
             'row' => $row,
+            'jsonRow' => json_encode($row),
             'array_harga_servis' => $array_harga_servis,
             'getServis' => $getServis,
             'usersId' => $usersId,
@@ -211,7 +207,8 @@ class PengembalianServisController extends Controller
             'cabangId' => $cabangId,
             'penerimaanServisId' => $penerimaanServisId,
             'totalHutang' => $totalHutang,
-            'getPembayaranServis' => UtilsHelper::paymentStatisPenerimaanServis($penerimaanServisId),
+            'is_deposit' => $row->isdp_pservis,
+            'getPembayaranServis' => json_encode(UtilsHelper::paymentStatisPenerimaanServis($penerimaanServisId)),
         ];
 
         if ($request->input('refresh_dataset')) {

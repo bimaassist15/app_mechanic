@@ -316,19 +316,12 @@ class UtilsHelper
 
             // check again
             if ($getPenerimaanServis->totalbiaya_pservis > 0) {
-                $calc = $bayar - $getPenerimaanServis->totalbiaya_pservis;
-                if ($calc < 0) {
-                    $statusTransaksi = false;
-                    $cicilan = abs($calc);
-                } else {
-                    $statusTransaksi = true;
-                    $cicilan = 0;
-                }
+                $hutang = $getPenerimaanServis->totalbiaya_pservis;
             }
         } else {
             $hutang = $getPenerimaanServis->hutang_pservis;
             $kembalian = $getPenerimaanServis->kembalian_pservis;
-            $bayar = $getPenerimaanServis->bayar_pservis;
+            $bayar = $getPenerimaanServis->total_dppservis;
             $tipeTransaksi = $getPenerimaanServis->tipe_pservis;
         }
 

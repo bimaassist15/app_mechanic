@@ -536,27 +536,30 @@ $(document).ready(function () {
         return output;
     };
 
-    const handleAnotherMethodLangsung = (index) => {
-        const getMetodePembayaran = metodePembayaran[index];
-        if (
-            getMetodePembayaran.kategori_pembayaran_selected.nama_kpembayaran.toLowerCase() !==
-            "langsung"
-        ) {
-            if (index === 0) {
-                if (parseFloat(getMetodePembayaran.bayar) > totalHargaItems) {
-                    metodePembayaran[index].bayar = totalHargaItems;
+    const handleAnotherMethodLangsung = () => {
+        metodePembayaran.map((v,index) => {
+            const getMetodePembayaran = metodePembayaran[index];
+            if (
+                getMetodePembayaran.kategori_pembayaran_selected.nama_kpembayaran.toLowerCase() !==
+                "langsung"
+            ) {
+                if (index === 0) {
+                    if (parseFloat(getMetodePembayaran.bayar) > totalHargaItems) {
+                        metodePembayaran[index].bayar = totalHargaItems;
+                    }
+                }
+                if (index > 0) {
+                    if (
+                        parseFloat(getMetodePembayaran.bayar) >
+                        parseFloat(metodePembayaran[index - 1].hutang)
+                    ) {
+                        metodePembayaran[index].bayar =
+                            metodePembayaran[index - 1].hutang;
+                    }
                 }
             }
-            if (index > 0) {
-                if (
-                    parseFloat(getMetodePembayaran.bayar) >
-                    parseFloat(metodePembayaran[index - 1].hutang)
-                ) {
-                    metodePembayaran[index].bayar =
-                        metodePembayaran[index - 1].hutang;
-                }
-            }
-        }
+        })
+      
     };
 
     const handleDisplayInput = () => {
@@ -1090,7 +1093,7 @@ $(document).ready(function () {
     body.on("input", 'input[name="bayar"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
-        handleAnotherMethodLangsung(index);
+        handleAnotherMethodLangsung();
         handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
@@ -1101,7 +1104,7 @@ $(document).ready(function () {
         const value = $(this).val();
         if (value !== null && value !== "") {
             handeMetodePembayaran(index);
-            handleAnotherMethodLangsung(index);
+            handleAnotherMethodLangsung();
             handleManageHutang();
             handleDisplayInput();
             handleButtonBayar();
@@ -1115,7 +1118,7 @@ $(document).ready(function () {
     body.on("change", 'select[name="sub_pembayaran_id_mp"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
-        handleAnotherMethodLangsung(index);
+        handleAnotherMethodLangsung();
         handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
@@ -1124,7 +1127,7 @@ $(document).ready(function () {
     body.on("input", 'input[name="nomor_kartu"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
-        handleAnotherMethodLangsung(index);
+        handleAnotherMethodLangsung();
         handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
@@ -1133,7 +1136,7 @@ $(document).ready(function () {
     body.on("input", 'input[name="nama_pemilik_kartu"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
-        handleAnotherMethodLangsung(index);
+        handleAnotherMethodLangsung();
         handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
@@ -1142,7 +1145,7 @@ $(document).ready(function () {
     body.on("change", 'select[name="akun"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
-        handleAnotherMethodLangsung(index);
+        handleAnotherMethodLangsung();
         handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
@@ -1151,7 +1154,7 @@ $(document).ready(function () {
     body.on("input", 'input[name="dibayar_oleh"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
-        handleAnotherMethodLangsung(index);
+        handleAnotherMethodLangsung();
         handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
