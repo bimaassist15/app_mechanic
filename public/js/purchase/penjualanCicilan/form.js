@@ -40,9 +40,9 @@ $(document).ready(function () {
                 jsonCabangId = data.cabangId;
                 let select2KategoriPembayaran = [];
                 select2KategoriPembayaran.push({
-                    id: '',
-                    text: 'Pilih Kategori Pembayaran'
-                })
+                    id: "",
+                    text: "Pilih Kategori Pembayaran",
+                });
                 JSON.parse(data.array_kategori_pembayaran).map(
                     (value, index) => {
                         select2KategoriPembayaran.push({
@@ -340,6 +340,7 @@ $(document).ready(function () {
         });
         return output;
     };
+
     const handleAnotherMethodLangsung = (index) => {
         const getMetodePembayaran = metodePembayaran[index];
         if (
@@ -362,6 +363,7 @@ $(document).ready(function () {
             }
         }
     };
+
     const handleDisplayInput = () => {
         metodePembayaran.map((value, index) => {
             $(
@@ -394,6 +396,7 @@ $(document).ready(function () {
             );
         });
     };
+
     const handeMetodePembayaran = (index) => {
         const kategori_pembayaran_id = $(
             `select[name="kategori_pembayaran_id_mp"][data-index="${index}"]`
@@ -456,6 +459,7 @@ $(document).ready(function () {
         metodePembayaran[index].nomor_kartu = nomor_kartu;
         metodePembayaran[index].nama_pemilik_kartu = nama_pemilik_kartu;
     };
+
     const handleManageHutang = () => {
         metodePembayaran.map((value, index) => {
             if (index === 0) {
@@ -498,6 +502,7 @@ $(document).ready(function () {
             }
         });
     };
+
     const handleButtonBayar = () => {
         let buttonDisabledTidakLangsung = false;
         let buttonDisabledLangsung = false;
@@ -538,6 +543,7 @@ $(document).ready(function () {
         buttonDisabled = buttonDisabledTidakLangsung || buttonDisabledLangsung;
         $(".btn-bayar").attr("disabled", buttonDisabled);
     };
+
     const handleSubPembayaran = (index) => {
         const value = $(
             `select[name="kategori_pembayaran_id_mp"][data-index="${index}"] option:selected`
@@ -555,11 +561,13 @@ $(document).ready(function () {
             metodePembayaran[index].sub_pembayaran = getSubPembayaran;
         }
     };
+
     const resetData = () => {
         metodePembayaran = [];
         handleButtonBayar();
         $("#output_metode_pembayaran").html("");
     };
+
     const printOutput = (output) => {
         var printWindow = window.open("", "_blank");
         printWindow.document.write(output);
@@ -626,6 +634,7 @@ $(document).ready(function () {
         }
     };
     renderEditData();
+
     const renderMetodePembayaran = (value) => {
         const findKategoriPembayaran = jsonKategoriPembayaran.findIndex(
             (item) => item.id == value
@@ -814,6 +823,7 @@ $(document).ready(function () {
         };
         return payload;
     };
+    
     const renderPrintKasir = (outputData) => {
         var output = "";
         $.ajax({

@@ -23,7 +23,9 @@
                     <tbody class="table-border-bottom-0">
                         @php
                             $no = 1;
+                            $setUrl = $pengembalian_servis ? 'pengembalianServis' : 'penerimaanServis';
                         @endphp
+
                         @foreach ($row->penerimaanServis as $item)
                             <tr>
                                 <td>{{ $no++ }}</td>
@@ -32,7 +34,7 @@
                                 <td>{{ ucwords($item->status_pservis) }}</td>
                                 <td>-</td>
                                 <td>
-                                    <a target="_blank" href="{{ url('service/penerimaanServis/' . $item->id) }}"
+                                    <a target="_blank" href="{{ url('service/' . $setUrl . '/' . $item->id) }}"
                                         data-id="{{ $item->id }}" class="btn btn-primary detail-servis btn-small"
                                         title="Detail Servis">
                                         <i class="fa-solid fa-eye"></i>

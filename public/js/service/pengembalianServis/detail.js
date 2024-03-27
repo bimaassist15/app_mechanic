@@ -1,3 +1,10 @@
+// "use strict";
+var myModal;
+var urlRoot = $(".url_root").data("url");
+var jsonPenerimaanServisId = $(".penerimaan_servis_id").data("value");
+var body = $("body");
+
+// to pembayaran
 var jsonKategoriPembayaran = $(".json_kategori_pembayaran").data("json");
 var jsonArrayKategoriPembayaran = $(".json_array_kategori_pembayaran").data(
     "json"
@@ -7,37 +14,30 @@ var jsonArraySubPembayaran = $(".json_array_sub_pembayaran").data("json");
 var jsonDataUser = $(".json_data_user").data("json");
 var jsonDefaultUser = $(".json_default_user").data("json");
 var jsonCabangId = $(".json_cabang_id").data("json");
-var jsonPembelianId = $(".pembelian_id").data("value");
-var jsonDataKendaraan = $(".data_kendaraan").data("value");
+var jsonPenjualanId = $(".penjualan_id").data("value");
 
-var body = $("body");
 var metodePembayaran = [];
 var totalHargaItems = $(".totalHutang").data("value");
+// end to pembayaran
 
 $(document).ready(function () {
-    // benar
     select2Standard({
-        parent: "#extraLargeModal",
-        selector: "select[name='kategori_servis_id']",
+        parent: ".content-wrapper",
+        selector: "select[name='tipeberkala_pservis']",
     });
     select2Standard({
-        parent: "#extraLargeModal",
-        selector: "select[name='kendaraan_id']",
+        parent: ".content-wrapper",
+        selector: "select[name='tipegaransi_pservis']",
     });
     select2Standard({
-        parent: "#extraLargeModal",
-        selector: "select[name='tipe_pservis']",
-    });
-    select2Standard({
-        parent: "#extraLargeModal",
+        parent: ".content-wrapper",
         selector: "select[name='kategori_pembayaran_id']",
     });
-    // end benar
 
     // benar
     const refreshDataSet = () => {
         $.ajax({
-            url: $(".url_transaction_kasir").data("url"),
+            url: $(".url_purchase_kasir").data("url"),
             type: "get",
             data: {
                 refresh_dataset: true,
@@ -81,10 +81,31 @@ $(document).ready(function () {
                     selector: "select[name='kategori_pembayaran_id']",
                     data: select2KategoriPembayaran,
                 });
+
+                $(".header_bayar_penjualan").html(
+                    number_format(data.getPenjualan.bayar, 0, ".", ",")
+                );
+                $(".header_hutang_penjualan").html(
+                    number_format(data.getPenjualan.hutang, 0, ".", ",")
+                );
+                $(".header_kembalian_penjualan").html(
+                    number_format(data.getPenjualan.kembalian, 0, ".", ",")
+                );
+                if (data.getPenjualan.status_transaksi) {
+                    $(".btn-add").attr("disabled", true);
+                    $(".btn-add").html("Lunas");
+                } else {
+                    $(".btn-add").attr("disabled", false);
+                    $(".btn-add").html(`
+                    <span>
+                        <i class="bx bx-plus me-sm-1"></i>
+                        Tambah
+                    </span>
+                `);
+                }
             },
         });
     };
-    // end benar
 
     const viewMetodePembayaran = () => {
         let output = "";
@@ -138,45 +159,28 @@ $(document).ready(function () {
                             </select>
                         </div>
                     </div>
-                    <div class="col-lg-8">
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label for="">Jumlah Deposit</label>
-                                    <input class="form-control" type="text" name="jumlah_deposit" data-index="${index}"
-                                        placeholder="Masukan Jumlah Deposit..."
-                                        value="${number_format(
-                                            value.jumlah_deposit,
-                                            0,
-                                            ".",
-                                            ","
-                                        )}">
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label for="">Bayar</label>
-                                    <input class="form-control" type="text" name="bayar" data-index="${index}"
-                                        placeholder="Masukan nominal pembayaran..."
-                                        value="${number_format(
-                                            value.bayar,
-                                            0,
-                                            ".",
-                                            ","
-                                        )}">
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label for="">Dibayar Oleh</label>
-                                    <input class="form-control" type="text" name="dibayar_oleh" data-index="${index}"
-                                        placeholder="Dibayarkan oleh..." value="${
-                                            value.dibayarkan_oleh !== undefined
-                                                ? value.dibayarkan_oleh
-                                                : ""
-                                        }">
-                                </div>
-                            </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="">Bayar</label>
+                            <input class="form-control" type="text" name="bayar" data-index="${index}"
+                                placeholder="Masukan nominal pembayaran..."
+                                value="${number_format(
+                                    value.bayar,
+                                    0,
+                                    ".",
+                                    ","
+                                )}">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="">Dibayar Oleh</label>
+                            <input class="form-control" type="text" name="dibayar_oleh" data-index="${index}"
+                                placeholder="Dibayarkan oleh..." value="${
+                                    value.dibayarkan_oleh !== undefined
+                                        ? value.dibayarkan_oleh
+                                        : ""
+                                }">
                         </div>
                     </div>
                 </div>
@@ -351,9 +355,30 @@ $(document).ready(function () {
         });
         return output;
     };
-    // end benar
 
-    // benar
+    const handleAnotherMethodLangsung = (index) => {
+        const getMetodePembayaran = metodePembayaran[index];
+        if (
+            getMetodePembayaran.kategori_pembayaran_selected.nama_kpembayaran.toLowerCase() !==
+            "langsung"
+        ) {
+            if (index === 0) {
+                if (parseFloat(getMetodePembayaran.bayar) > totalHargaItems) {
+                    metodePembayaran[index].bayar = totalHargaItems;
+                }
+            }
+            if (index > 0) {
+                if (
+                    parseFloat(getMetodePembayaran.bayar) >
+                    parseFloat(metodePembayaran[index - 1].hutang)
+                ) {
+                    metodePembayaran[index].bayar =
+                        metodePembayaran[index - 1].hutang;
+                }
+            }
+        }
+    };
+
     const handleDisplayInput = () => {
         metodePembayaran.map((value, index) => {
             $(
@@ -362,9 +387,6 @@ $(document).ready(function () {
             $(`select[name="sub_pembayaran_id_mp"][data-index="${index}"]`).val(
                 value.sub_pembayaran_selected &&
                     value.sub_pembayaran_selected.id
-            );
-            $(`input[name="jumlah_deposit"][data-index="${index}"]`).val(
-                formatNumber(value.jumlah_deposit)
             );
             $(`input[name="bayar"][data-index="${index}"]`).val(
                 formatNumber(value.bayar)
@@ -389,9 +411,7 @@ $(document).ready(function () {
             );
         });
     };
-    // end benar
 
-    // benar
     const handeMetodePembayaran = (index) => {
         const kategori_pembayaran_id = $(
             `select[name="kategori_pembayaran_id_mp"][data-index="${index}"]`
@@ -400,28 +420,22 @@ $(document).ready(function () {
             `select[name="sub_pembayaran_id_mp"][data-index="${index}"]`
         ).val();
         const users_id = $(`select[name="akun"][data-index="${index}"]`).val();
-        let jumlah_deposit = $(
-            `input[name="jumlah_deposit"][data-index="${index}"]`
-        ).val();
-        jumlah_deposit = removeCommas(jumlah_deposit);
-        jumlah_deposit =
-            jumlah_deposit == null
-                ? 0
-                : isNaN(jumlah_deposit)
-                ? 0
-                : jumlah_deposit;
-
         let bayar = $(`input[name="bayar"][data-index="${index}"]`).val();
         bayar = removeCommas(bayar);
         let hutang = $(`input[name="hutang"][data-index="${index}"]`).val();
-        hutang = 0;
-
+        hutang = removeCommas(hutang);
+        if (index === 0) {
+            hutang = totalHargaItems;
+        }
+        if (index > 0) {
+            const beforeData = index - 1;
+            const getBeforeData = metodePembayaran[beforeData];
+            hutang = getBeforeData.hutang;
+        }
         let kembalian = $(
             `input[name="kembalian"][data-index="${index}"]`
         ).val();
         kembalian = removeCommas(kembalian);
-        kembalian = kembalian == null ? 0 : kembalian;
-
         const dibayar_oleh = $(
             `input[name="dibayar_oleh"][data-index="${index}"]`
         ).val();
@@ -431,7 +445,14 @@ $(document).ready(function () {
         const nama_pemilik_kartu = $(
             `input[name="nama_pemilik_kartu"][data-index="${index}"]`
         ).val();
-
+        const transaction = bayar - hutang;
+        if (transaction < 0) {
+            hutang = Math.abs(transaction);
+            kembalian = 0;
+        } else {
+            hutang = 0;
+            kembalian = transaction;
+        }
         let getKategoriPembayaran = metodePembayaran[index].kategori_pembayaran;
         getKategoriPembayaran = getKategoriPembayaran.find(
             (item) => item.id == kategori_pembayaran_id
@@ -446,39 +467,61 @@ $(document).ready(function () {
             getKategoriPembayaran;
         metodePembayaran[index].sub_pembayaran_selected = getSubPembayaran;
         metodePembayaran[index].bayar = bayar;
-        metodePembayaran[index].jumlah_deposit = jumlah_deposit;
         metodePembayaran[index].dibayarkan_oleh = dibayar_oleh;
         metodePembayaran[index].user_selected = getUsers;
         metodePembayaran[index].kembalian = kembalian;
         metodePembayaran[index].hutang = hutang;
         metodePembayaran[index].nomor_kartu = nomor_kartu;
         metodePembayaran[index].nama_pemilik_kartu = nama_pemilik_kartu;
-
-        console.log("metode pembayaran", metodePembayaran);
     };
-    // end benar
 
-    // benar
+    const handleManageHutang = () => {
+        metodePembayaran.map((value, index) => {
+            if (index === 0) {
+                const getData = metodePembayaran[index];
+                const bayar = getData.bayar;
+                let hutang = totalHargaItems;
+                const transaction = bayar - hutang;
+                if (transaction < 0) {
+                    hutang = Math.abs(transaction);
+                    kembalian = 0;
+                } else {
+                    hutang = 0;
+                    kembalian = transaction;
+                }
+                metodePembayaran[index].bayar = bayar;
+                metodePembayaran[index].hutang = hutang;
+                metodePembayaran[index].kembalian = kembalian;
+            }
+            if (index > 0) {
+                const calcHutang = () => {
+                    const dataNow = metodePembayaran[index];
+                    const dataBefore = metodePembayaran[index - 1];
+                    if (dataNow !== undefined) {
+                        const bayar = dataNow.bayar;
+                        let hutang = dataBefore.hutang;
+                        const transaction = bayar - hutang;
+                        if (transaction < 0) {
+                            hutang = Math.abs(transaction);
+                            kembalian = 0;
+                        } else {
+                            hutang = 0;
+                            kembalian = transaction;
+                        }
+                        metodePembayaran[index].bayar = bayar;
+                        metodePembayaran[index].hutang = hutang;
+                        metodePembayaran[index].kembalian = kembalian;
+                    }
+                };
+                calcHutang();
+            }
+        });
+    };
+
     const handleButtonBayar = () => {
         let buttonDisabledTidakLangsung = false;
         let buttonDisabledLangsung = false;
         let buttonDisabled;
-        let sumBayar = 0;
-        let sumDeposit = 0;
-        sumBayar = metodePembayaran.reduce((total, item) => {
-            return (
-                parseFloat(total) +
-                (item.bayar == ""
-                    ? 0
-                    : isNaN(item.bayar)
-                    ? 0
-                    : parseFloat(item.bayar))
-            );
-        }, 0);
-        sumDeposit = metodePembayaran.reduce((total, item) => {
-            return parseFloat(total) + parseFloat(item.jumlah_deposit);
-        }, 0);
-
         metodePembayaran.map((value, index) => {
             if (
                 value.kategori_pembayaran_selected.nama_kpembayaran.toLowerCase() !==
@@ -490,7 +533,8 @@ $(document).ready(function () {
                     value.bayar === "" ||
                     value.user_selected === undefined ||
                     value.nama_pemilik_kartu === "" ||
-                    value.nomor_kartu === ""
+                    value.nomor_kartu === "" ||
+                    totalHargaItems == 0
                 ) {
                     buttonDisabledTidakLangsung = true;
                 } else {
@@ -501,9 +545,9 @@ $(document).ready(function () {
                     value.kategori_pembayaran_selected === undefined ||
                     value.sub_pembayaran_selected === undefined ||
                     value.bayar === "" ||
-                    value.jumlah_deposit === "" ||
                     value.user_selected === undefined ||
-                    value.dibayarkan_oleh === ""
+                    value.dibayarkan_oleh === "" ||
+                    totalHargaItems == 0
                 ) {
                     buttonDisabledLangsung = true;
                 } else {
@@ -511,17 +555,10 @@ $(document).ready(function () {
                 }
             }
         });
-
-        if (sumBayar < sumDeposit) {
-            buttonDisabledLangsung = true;
-            buttonDisabledTidakLangsung = true;
-        }
         buttonDisabled = buttonDisabledTidakLangsung || buttonDisabledLangsung;
         $(".btn-bayar").attr("disabled", buttonDisabled);
     };
-    // end benar
 
-    // benar
     const handleSubPembayaran = (index) => {
         const value = $(
             `select[name="kategori_pembayaran_id_mp"][data-index="${index}"] option:selected`
@@ -539,42 +576,13 @@ $(document).ready(function () {
             metodePembayaran[index].sub_pembayaran = getSubPembayaran;
         }
     };
-    // end benar
 
-    // benar
     const resetData = () => {
         metodePembayaran = [];
         handleButtonBayar();
         $("#output_metode_pembayaran").html("");
     };
-    // end benar
 
-    // pending
-    const renderEditData = () => {
-        const isEdit = $(".isEdit").data("value");
-        if (isEdit == true) {
-            $.ajax({
-                url: $(".url_transaction_kasir").data("url"),
-                type: "get",
-                data: {
-                    refresh_dataset: true,
-                },
-                dataType: "json",
-                success: function (data) {
-                    const pembelian = data.pembelian;
-                    handleDisplayInput();
-                    handleButtonBayar();
-
-                    const output = viewMetodePembayaran();
-                    $("#output_metode_pembayaran").html(output);
-                },
-            });
-        }
-    };
-    renderEditData();
-    // end pending
-
-    // benar
     const renderMetodePembayaran = (value) => {
         const findKategoriPembayaran = jsonKategoriPembayaran.findIndex(
             (item) => item.id == value
@@ -603,60 +611,20 @@ $(document).ready(function () {
             dataMetodePembayaran.user = jsonDataUser;
             dataMetodePembayaran.user_selected = defaultUser;
             dataMetodePembayaran.bayar = 0;
-            dataMetodePembayaran.jumlah_deposit = 0;
             dataMetodePembayaran.dibayarkan_oleh = "";
             dataMetodePembayaran.kembalian = 0;
-            dataMetodePembayaran.hutang = 0;
+            dataMetodePembayaran.hutang =
+                metodePembayaran.length == 0 ? totalHargaItems : 0;
             dataMetodePembayaran.nomor_kartu = "";
             dataMetodePembayaran.nama_pemilik_kartu = "";
             metodePembayaran.push(dataMetodePembayaran);
         }
+        handleManageHutang();
         handleButtonBayar();
         const output = viewMetodePembayaran();
         $("#output_metode_pembayaran").html(output);
     };
-    // end benar
 
-    const formValidation = (getPenerimaanServis) => {
-        let error = {};
-        let boolean = false;
-        if (getPenerimaanServis.kategori_servis_id === "") {
-            error.kategori_servis_id = "Kategori Servis wajib diisi";
-        }
-        if (getPenerimaanServis.keluhan_pservis === "") {
-            error.keluhan_pservis = "Keluhan wajib diisi";
-        }
-        if (getPenerimaanServis.kendaraan_id === "") {
-            error.kendaraan_id = "Kendaraan wajib diisi";
-        }
-        if (getPenerimaanServis.kerusakan_pservis === "") {
-            error.kerusakan_pservis = "Kerusakan wajib diisi";
-        }
-        if (getPenerimaanServis.kondisi_pservis === "") {
-            error.kondisi_pservis = "Kondisi kendaraan wajib diisi";
-        }
-        if (getPenerimaanServis.tipe_pservis === "") {
-            error.tipe_pservis = "Tipe Servis wajib diisi";
-        }
-        let output = "";
-        Object.keys(error).map((item) => {
-            const message = error[item];
-            output += `${message} <br />`;
-            boolean = true;
-        });
-        if (boolean) {
-            runToast({
-                type: "bg-danger",
-                title: "Form Validation",
-                description: output,
-            });
-            $("#btn-pop-over").popover("hide");
-        }
-        return boolean;
-    };
-
-    // benar
-    body.off("click", ".btn-add-pembayaran");
     body.on("click", ".btn-add-pembayaran", function (e) {
         e.preventDefault();
         const value = $(
@@ -665,67 +633,33 @@ $(document).ready(function () {
         renderMetodePembayaran(value);
     });
 
-    body.off("click", ".btn-delete-pembayaran");
     body.on("click", ".btn-delete-pembayaran", function (e) {
         e.preventDefault();
         const index = $(this).data("index");
         metodePembayaran.splice(index, 1);
+        handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
         const output = viewMetodePembayaran();
         $("#output_metode_pembayaran").html(output);
     });
-    // end benar
 
-    // benar
-    body.off("input", 'input[name="jumlah_deposit"]');
-    body.on("input", 'input[name="jumlah_deposit"]', function () {
-        const index = $(this).data("index");
-        handeMetodePembayaran(index);
-        metodePembayaran[index].bayar = metodePembayaran[index].jumlah_deposit;
-        handleDisplayInput();
-        handleButtonBayar();
-    });
-
-    body.off("input", 'input[name="bayar"]');
     body.on("input", 'input[name="bayar"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
-        const getMetodePembayaran = metodePembayaran[index];
-        if (
-            getMetodePembayaran.kategori_pembayaran_selected.nama_kpembayaran.toLowerCase() ===
-            "langsung"
-        ) {
-            let kembalian = getMetodePembayaran.kembalian;
-            let bayar = getMetodePembayaran.bayar;
-            if (
-                parseFloat(getMetodePembayaran.bayar) >
-                parseFloat(getMetodePembayaran.jumlah_deposit)
-            ) {
-                kembalian =
-                    parseFloat(getMetodePembayaran.bayar) -
-                    parseFloat(getMetodePembayaran.jumlah_deposit);
-            }
-            if (
-                parseFloat(getMetodePembayaran.bayar) <
-                parseFloat(getMetodePembayaran.jumlah_deposit)
-            ) {
-                kembalian = 0;
-            }
-            metodePembayaran[index].bayar = bayar;
-            metodePembayaran[index].kembalian = kembalian;
-        }
-
+        handleAnotherMethodLangsung(index);
+        handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
     });
 
-    body.off("change", 'select[name="kategori_pembayaran_id_mp"]');
     body.on("change", 'select[name="kategori_pembayaran_id_mp"]', function () {
         const index = $(this).data("index");
         const value = $(this).val();
         if (value !== null && value !== "") {
             handeMetodePembayaran(index);
+            handleAnotherMethodLangsung(index);
+            handleManageHutang();
             handleDisplayInput();
             handleButtonBayar();
             handleSubPembayaran(index);
@@ -734,197 +668,112 @@ $(document).ready(function () {
         }
     });
 
-    body.off("change", 'select[name="sub_pembayaran_id_mp"]');
     body.on("change", 'select[name="sub_pembayaran_id_mp"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
+        handleAnotherMethodLangsung(index);
+        handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
     });
 
-    body.off("input", 'input[name="nomor_kartu"]');
     body.on("input", 'input[name="nomor_kartu"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
+        handleAnotherMethodLangsung(index);
+        handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
     });
 
-    body.off("input", 'input[name="nama_pemilik_kartu"]');
     body.on("input", 'input[name="nama_pemilik_kartu"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
+        handleAnotherMethodLangsung(index);
+        handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
     });
 
-    body.off("change", 'select[name="akun"]');
     body.on("change", 'select[name="akun"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
+        handleAnotherMethodLangsung(index);
+        handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
     });
 
-    body.off("input", 'input[name="dibayar_oleh"]');
     body.on("input", 'input[name="dibayar_oleh"]', function () {
         const index = $(this).data("index");
         handeMetodePembayaran(index);
+        handleAnotherMethodLangsung(index);
+        handleManageHutang();
         handleDisplayInput();
         handleButtonBayar();
     });
-
-    body.off("input", 'input[name="isdp_pservis"]');
-    body.on("input", 'input[name="isdp_pservis"]', function () {
-        if ($(this).is(":checked")) {
-            $(".handle-metode-pembayaran").removeClass("d-none");
-            $(".btn-bayar").attr("disabled", true);
-        } else {
-            $(".handle-metode-pembayaran").addClass("d-none");
-            $(".btn-bayar").attr("disabled", false);
-        }
-    });
     // end benar
 
-    // pending
-    const payloadKasir = () => {
-        let sumDeposit = 0;
-        let sumKembalian = 0;
-        let sumHutang = 0;
-        metodePembayaran.map((item) => {
-            if (
-                item.kategori_pembayaran_selected.nama_kpembayaran.toLowerCase() ===
-                "langsung"
-            ) {
-                sumDeposit += parseFloat(item.jumlah_deposit);
-            } else {
-                sumDeposit += parseFloat(item.bayar);
-            }
-
-            sumKembalian +=
-                item.kembalian == "undefined" ? 0 : parseFloat(item.kembalian);
-            sumHutang += parseFloat(item.hutang);
+    body.on("click", ".detail-customer", function () {
+        showModal({
+            url: $(this).data("urlcreate"),
+            modalId: $(this).data("typemodal"),
+            title: "Detail Kendaraan",
+            type: "get",
+            data: {
+                pengembalian_servis: true,
+            },
         });
-
-        const kendaraan_id = $('select[name="kendaraan_id"]').val();
-        const payloadPenerimaanServis = {
-            kendaraan_id: kendaraan_id,
-            kategori_servis_id: $('select[name="kategori_servis_id"]').val(),
-            kerusakan_pservis: $('input[name="kerusakan_pservis"]').val(),
-            keluhan_pservis: $('textarea[name="keluhan_pservis"]').val(),
-            kondisi_pservis: $('input[name="kondisi_pservis"]').val(),
-            kmsekarang_pservis: $('input[name="kmsekarang_pservis"]').val(),
-            tipe_pservis: $('select[name="tipe_pservis"]').val(),
-            isdp_pservis:
-                $('input[name="isdp_pservis"]').val() === "on" ? 1 : 0,
-            total_dppservis: sumDeposit,
-            bayar_pservis: sumDeposit,
-            cabang_id: jsonCabangId,
-            kembalian_pservis: sumKembalian,
-            hutang_pservis: sumHutang,
-        };
-
-        let payloadPembayaranServis = [];
-        metodePembayaran.map((value) => {
-            payloadPembayaranServis.push({
-                kategori_pembayaran_id: value.kategori_pembayaran_selected.id,
-                sub_pembayaran_id: value.sub_pembayaran_selected.id,
-                bayar_pservis: value.bayar,
-                deposit_pservis: value.jumlah_deposit,
-                dibayaroleh_pservis:
-                    value.dibayarkan_oleh === undefined
-                        ? ""
-                        : value.dibayarkan_oleh,
-                users_id: value.user_selected.id,
-                kembalian_pservis:
-                    value.kembalian === "undefined" ? 0 : value.kembalian,
-                hutang_pservis: value.hutang,
-                nomorkartu_pservis:
-                    value.nomor_kartu === undefined ? "" : value.nomor_kartu,
-                pemilikkartu_pservis:
-                    value.nama_pemilik_kartu === undefined
-                        ? ""
-                        : value.nama_pemilik_kartu,
-                cabang_id: jsonCabangId,
-            });
-        });
-        let payloadSaldoCustomer = {};
-        const getFindDataKendaraan = jsonDataKendaraan.find(
-            (item) => item.id == kendaraan_id
-        );
-
-        payloadSaldoCustomer = {
-            saldo_customer_id: "",
-            pembayaran_servis_id: "",
-            totalsaldo_detail: sumDeposit,
-            kembaliansaldo_detail: sumKembalian,
-            hutangsaldo_detail: sumHutang,
-            customer_id:
-                getFindDataKendaraan != null
-                    ? getFindDataKendaraan.customer_id
-                    : "",
-            cabang_id: jsonCabangId,
-        };
-
-        return {
-            payloadPenerimaanServis,
-            payloadPembayaranServis,
-            payloadSaldoCustomer,
-        };
-    };
-    // end pending
-
-    body.off("click", ".popover.close");
-    body.on("click", ".popover.close", function (e) {
-        e.preventDefault();
-        $("#btn-pop-over").popover("hide");
     });
 
-    body.off("click", ".btn-confirm-bayar");
-    body.on("click", ".btn-confirm-bayar", function (e) {
-        e.preventDefault();
-        const getPayloadKasir = payloadKasir();
-        const getPenerimaanServis = getPayloadKasir.payloadPenerimaanServis;
-        const error = formValidation(getPenerimaanServis);
-        if (error) return;
+    body.on("click", ".detail-penerimaan-servis", function () {
+        showModal({
+            url: $(this).data("urlcreate"),
+            modalId: $(this).data("typemodal"),
+            title: "Detail Kendaraan",
+            type: "get",
+        });
+    });
 
+    body.on("click", ".identitas-kendaraan", function () {
+        showModal({
+            url: $(this).data("urlcreate"),
+            modalId: $(this).data("typemodal"),
+            title: "Detail Kendaraan",
+            type: "get",
+        });
+    });
+
+    const renderPrintKasir = () => {
+        var output = "";
         $.ajax({
-            type: "post",
-            url: $(".url_simpan_kasir").data("url"),
-            data: payloadKasir(),
+            url: `${urlRoot}/service/print/kendaraan/pengembalian`,
             dataType: "json",
-            beforeSend: function () {
-                clearError422();
-                $(".btn-confirm-bayar").attr("disabled", true);
-                $(".btn-confirm-bayar").html(disableButton);
+            type: "get",
+            data: {
+                penerimaan_servis_id: jsonPenerimaanServisId,
             },
+            dataType: "text",
+            async: false,
             success: function (data) {
-                runToast({
-                    title: "Successfully",
-                    description: data.message,
-                    type: "bg-success",
-                });
-
-                // tutup modal
-                $("#btn-pop-over").popover("hide");
-
-                // reset data
-                resetData();
-                refreshDataSet();
-                myModal.hide();
-                datatable.ajax.reload();
-            },
-            error: function (jqXHR, exception) {
-                $(".btn-confirm-bayar").attr("disabled", false);
-                $(".btn-confirm-bayar").html(enableButton);
-                if (jqXHR.status === 422) {
-                    showErrors422(jqXHR);
-                }
-            },
-            complete: function () {
-                $(".btn-confirm-bayar").attr("disabled", false);
-                $(".btn-confirm-bayar").html(enableButton);
+                output = data;
             },
         });
+
+        return output;
+    };
+
+    const printOutput = (output) => {
+        var printWindow = window.open("", "_blank");
+        printWindow.document.write(output);
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.close();
+    };
+
+    body.on("click", ".btn-print-data", function (e) {
+        e.preventDefault();
+        const output = renderPrintKasir();
+        printOutput(output);
     });
 });

@@ -17,6 +17,20 @@ class ServiceController extends Controller
         return view('service::index');
     }
 
+    public function checkFile(Request $request)
+    {
+        $data = json_decode($request->input('no_antrian'));
+        $fileCorrect = [];
+        foreach ($data as $key => $item) {
+            $checkFile = file_exists(public_path('antrian/' . $item . '.wav'));
+            if ($checkFile) {
+                $fileCorrect[] = $item . '.wav';
+            }
+        }
+
+        return response()->json(json_encode($fileCorrect));
+    }
+
     /**
      * Show the form for creating a new resource.
      * @return Renderable

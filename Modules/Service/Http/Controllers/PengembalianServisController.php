@@ -39,44 +39,36 @@ class PengembalianServisController extends Controller
         if ($request->ajax()) {
             $data = PenerimaanServis::dataTable()->where('status_pservis', 'bisa diambil');
             return DataTables::eloquent($data)
+                ->addColumn('created_at', function ($row) {
+                    return UtilsHelper::tanggalBulanTahunKonversi($row->created_at);
+                })
+                ->addColumn('totalbiaya_pservis', function ($row) {
+                    return UtilsHelper::formatUang($row->totalbiaya_pservis);
+                })
                 ->addColumn('action', function ($row) {
-                    $buttonAksi = '
-                    <button type="button" 
-                    class="btn btn-primary dropdown-toggle" 
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <i class="bx bx-menu me-1"></i> 
-                    Aksi
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a target="_blank" href="' . url('service/penerimaanServis/' . $row->id) . '"
-                                class="dropdown-item d-flex align-items-center" target="_blank">
-                                <i class="fa-solid fa-pencil"></i> &nbsp; Update Servis
-                            </a>
-                        </li>
-                        <li>
-                            <a href="' . url('service/penerimaanServis/' . $row->id . '?_method=delete') . '"
-                                class="dropdown-item d-flex align-items-center btn-delete">
-                                <i class="fa-solid fa-trash"></i> &nbsp; Delete</a>
-                        </li>
-                        <li>
-                            <a href="' . url('service/penerimaanServis/print/' . $row->id . '/penerimaanServis') . '"
-                                class="dropdown-item d-flex align-items-center btn-print">
-                                <i class="fa-solid fa-print"></i> &nbsp; Print Nota</a>
-                        </li>
-                    </ul>';
-
-
+                    $buttonAntrian = '
+                    <a class="btn btn-success btn-call btn-sm"
+                    title="Panggil Antrian"
+                    data-noantrian="' . $row->noantrian_pservis . '"
+                    >
+                        <i class="fa-solid fa-volume-high"></i>
+                    </a>
+                    ';
+                    $buttonDetail = '
+                    <a title="Detail transaksi" class="btn btn-primary btn-sm" href="' . url('service/pengembalianServis/' . $row->id) . '">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    ';
 
                     $button = '
                 <div class="text-center">
-                    ' . $buttonAksi . '
+                    ' . $buttonAntrian . '
+                    ' . $buttonDetail . '
                 </div>
                 ';
                     return $button;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'created_at'])
                 ->toJson();
         }
 
@@ -137,27 +129,96 @@ class PengembalianServisController extends Controller
             ];
         }
 
+        $array_service_garansi = [];
+        foreach ($serviceBerkala as $key => $item) {
+            $array_service_garansi[] = [
+                'label' => $item,
+                'id' => $key,
+            ];
+        }
+
+        // pembayaran
+        $array_kategori_pembayaran = [];
+        $kategoriPembayaran = KategoriPembayaran::dataTable()->where('status_kpembayaran', true)
+            ->whereNot('nama_kpembayaran', 'like', '%deposit%')
+            ->get();
+        foreach ($kategoriPembayaran as $value => $item) {
+            $array_kategori_pembayaran[] = [
+                'id' => $item->id,
+                'label' => $item->nama_kpembayaran
+            ];
+        }
+        $kategoriPembayaran = json_encode($kategoriPembayaran);
+        $array_kategori_pembayaran = json_encode($array_kategori_pembayaran);
+
+        $array_sub_pembayaran = [];
+        $subPembayaran = SubPembayaran::dataTable()->where('status_spembayaran', true)
+            ->get();
+        foreach ($subPembayaran as $value => $item) {
+            $array_sub_pembayaran[] = [
+                'id' => $item->id,
+                'label' => $item->nama_spembayaran,
+                'kategori_pembayaran_id' => $item->kategori_pembayaran_id
+            ];
+        }
+        $subPembayaran = json_encode($subPembayaran);
+        $array_sub_pembayaran = json_encode($array_sub_pembayaran);
+
+        $dataUser = User::dataTable()
+            ->join('roles', 'roles.id', '=', 'users.roles_id')
+            ->with('profile')
+            ->select('users.*', 'roles.id as roles_id', 'roles.name as roles_name', 'roles.guard_name as roles_guard')
+            ->get();
+        $dataUser = json_encode($dataUser);
+        $defaultUser = Auth::id();
+        $cabangId = session()->get('cabang_id');
+
+        $penerimaanServis = new PenerimaanServis();
+        $penerimaanServis = $penerimaanServis->transaksiServis($penerimaanServisId);
+        $dataHutang = $penerimaanServis->pembayaranServis;
+        $totalHutang = 0;
+        $totalBayar = 0;
+        $totalKembalian = 0;
+        $totalHutang = 0;
+        if (count($dataHutang) > 0) {
+            $getPembayaranServis = UtilsHelper::paymentStatisPenerimaanServis($penerimaanServisId);
+            dd($getPembayaranServis);
+
+            $totalHutang = $totalKembalian > 0 ?  $totalBayar - $totalKembalian : $dataHutang[0]->bayar_pservis + $dataHutang[0]->hutang_pservis;
+        }
+
+        $totalHutang = $totalHutang;
+        // end pembayaran
+
         $data = [
             'row' => $row,
             'array_harga_servis' => $array_harga_servis,
             'getServis' => $getServis,
             'usersId' => $usersId,
-            'penerimaanServisId' => $penerimaanServisId,
             'barang' => $barang,
             'array_barang' => $array_barang,
             'tipeDiskon' => $tipeDiskon,
             'statusKendaraanServis' => $array_status_kendaraan,
             'serviceBerkala' => $array_service_berkala,
+            'serviceGaransi' => $array_service_garansi,
+
+            'kategoriPembayaran' => $kategoriPembayaran,
+            'array_kategori_pembayaran' => $array_kategori_pembayaran,
+            'subPembayaran' => $subPembayaran,
+            'array_sub_pembayaran' => $array_sub_pembayaran,
+            'dataUser' => $dataUser,
+            'defaultUser' => $defaultUser,
             'cabangId' => $cabangId,
+            'penerimaanServisId' => $penerimaanServisId,
+            'totalHutang' => $totalHutang,
+            'getPembayaranServis' => UtilsHelper::paymentStatisPenerimaanServis($penerimaanServisId),
         ];
-        if ($request->ajax()) {
-            $refresh = $request->input('refresh');
-            if ($refresh) {
-                return response()->json($data);
-            }
+
+        if ($request->input('refresh_dataset')) {
+            return response()->json($data);
         }
 
-        return view('service::penerimaanServis.detail', $data);
+        return view('service::pengembalianServis.detail', $data);
     }
 
     /**

@@ -161,12 +161,6 @@ Breadcrumbs::for('detailPenerimaanServis', function (BreadcrumbTrail $trail, $id
     $trail->parent('penerimaanServis');
     $trail->push('Detail Penerimaan Servis', url('service/penerimaanServis/' . $id));
 });
-
-// Home > pengembalianServis
-Breadcrumbs::for('pengembalianServis', function (BreadcrumbTrail $trail) {
-    $trail->parent('home');
-    $trail->push('Pengembalian Servis', url('service/pengembalianServis'));
-});
 // Home > kendaraanServis
 Breadcrumbs::for('kendaraanServis', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
@@ -200,4 +194,16 @@ Breadcrumbs::for('penjualanCicilan', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('pembelianCicilan', function (BreadcrumbTrail $trail) {
     $trail->parent('belumLunasTransaction');
     $trail->push('Pembelian Cicilan', url('transaction/pembelianCicilan?pembelian_id=' . request()->query('pembelian_id')));
+});
+
+// Home > pengembalianServis
+Breadcrumbs::for('pengembalianServis', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Pengembalian Servis', url('service/pengembalianServis'));
+});
+
+// Home > detailPengembalianServis
+Breadcrumbs::for('detailPengembalianServis', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('pengembalianServis');
+    $trail->push('Detail Pengembalian Servis', url('service/pengembalianServis/' . $id));
 });

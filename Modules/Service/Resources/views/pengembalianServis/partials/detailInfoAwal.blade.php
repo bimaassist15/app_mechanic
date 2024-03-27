@@ -11,7 +11,8 @@
     <div>
         <div class="row justify-content-end">
             <div class="col-sm-12">
-                {{ Breadcrumbs::render('detailPenerimaanServis', $row->id) }}
+                {{ Breadcrumbs::render('detailPengembalianServis', $row->id) }}
+
             </div>
         </div>
     </div>

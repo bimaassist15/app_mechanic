@@ -1,12 +1,15 @@
 // "use strict";
 var datatable;
+var myModal;
+var urlRoot = $(".url_root").data("url");
+var public_path = $(".public_path").data("value");
 
 $(document).ready(function () {
     function initDatatable() {
-        datatable = basicDatatable(
-            $("#dataTable"),
-            $(".url_datatable").data("url"),
-            [
+        datatable = basicDatatable({
+            tableId: $("#dataTable"),
+            ajaxUrl: $(".url_datatable").data("url"),
+            columns: [
                 {
                     data: null,
                     orderable: false,
@@ -14,13 +17,33 @@ $(document).ready(function () {
                     className: "text-center",
                 },
                 {
-                    data: "nama_kategori",
-                    name: "nama_kategori",
+                    data: "nonota_pservis",
+                    name: "nonota_pservis",
                     searchable: true,
                 },
                 {
-                    data: "status_kategori",
-                    name: "status_kategori",
+                    data: "noantrian_pservis",
+                    name: "noantrian_pservis",
+                    searchable: true,
+                },
+                {
+                    data: "kendaraan.customer.nama_customer",
+                    name: "kendaraan.customer.nama_customer",
+                    searchable: true,
+                },
+                {
+                    data: "created_at",
+                    name: "created_at",
+                    searchable: true,
+                },
+                {
+                    data: "status_pservis",
+                    name: "status_pservis",
+                    searchable: true,
+                },
+                {
+                    data: "totalbiaya_pservis",
+                    name: "totalbiaya_pservis",
                     searchable: true,
                 },
                 {
@@ -29,19 +52,60 @@ $(document).ready(function () {
                     searchable: false,
                     orderable: false,
                 },
-            ]
-        );
+            ],
+            dataAjaxUrl: {},
+        });
     }
-    // initDatatable();
+    initDatatable();
 
     var body = $("body");
-    // handle btn add data
-    body.on("click", ".btn-add", function () {
-        showModal({
-            url: $(this).data("urlcreate"),
-            modalId: $(this).data("typemodal"),
-            title: "Form Penerimaan Service",
-            type: "get",
+    const checkFile = (data) => {
+        var output = "";
+        $.ajax({
+            url: `${urlRoot}/service/checkFile`,
+            dataType: "json",
+            data: {
+                no_antrian: JSON.stringify(data),
+            },
+            type: "post",
+            async: false,
+            success: function (data) {
+                output = data;
+            },
         });
+
+        return output;
+    };
+    body.on("click", ".btn-call", function (e) {
+        e.preventDefault();
+        let setAntrian = [];
+        const setPath = `${public_path}antrian`;
+        const tingtung = `${setPath}/tingtung.mp3`;
+        const nomor_antrian = `${setPath}/nomor_antrian.wav`;
+        const segera_menuju_kasir = `${setPath}/segera_menuju_kasir.wav`;
+        setAntrian.push(tingtung);
+        setAntrian.push(nomor_antrian);
+
+        const getNoAntrian = $(this).data("noantrian");
+        let antrian = angkaKeTeks(getNoAntrian);
+        const splitAntrian = antrian.split(" ");
+        let pushNoAntrian = [];
+        splitAntrian.map((v) => {
+            pushNoAntrian.push(v);
+        });
+        const checkData = JSON.parse(checkFile(pushNoAntrian));
+        checkData.map((v) => {
+            setAntrian.push(`${setPath}/${v}`);
+        });
+
+        setAntrian.push(segera_menuju_kasir);
+
+        playAudioSequentially(setAntrian)
+            .then(() => {
+                console.log("Semua audio dangdut telah diputar.");
+            })
+            .catch((error) => {
+                console.error("Terjadi kesalahan:", error);
+            });
     });
 });

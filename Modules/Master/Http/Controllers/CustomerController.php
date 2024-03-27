@@ -113,7 +113,7 @@ class CustomerController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $getCustomer = new Customer();
         $row = $getCustomer->dataCustomer()->where('id', $id)->first();
@@ -122,7 +122,8 @@ class CustomerController extends Controller
             $dataPayment[] = UtilsHelper::paymentStatisPenjualan($value->id);
         }
         $dataPayment = json_encode($dataPayment);
-        return view('master::customer.detail', compact('row', 'dataPayment'));
+        $pengembalian_servis = $request->input('pengembalian_servis') != null ? $request->input('pengembalian_servis') : false;
+        return view('master::customer.detail', compact('row', 'dataPayment', 'pengembalian_servis'));
     }
 
     /**

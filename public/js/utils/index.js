@@ -453,3 +453,78 @@ const capitalizeEachWord = (str) => {
         return char.toUpperCase();
     });
 };
+
+const angkaKeTeks = (angka) => {
+    var angkaTeks = [
+        "",
+        "satu",
+        "dua",
+        "tiga",
+        "empat",
+        "lima",
+        "enam",
+        "tujuh",
+        "delapan",
+        "sembilan",
+        "sepuluh",
+        "sebelas",
+        "dua belas",
+        "tiga belas",
+        "empat belas",
+        "lima belas",
+        "enam belas",
+        "tujuh belas",
+        "delapan belas",
+        "sembilan belas",
+    ];
+    var belasan = [
+        "",
+        "",
+        "dua puluh",
+        "tiga puluh",
+        "empat puluh",
+        "lima puluh",
+        "enam puluh",
+        "tujuh puluh",
+        "delapan puluh",
+        "sembilan puluh",
+    ];
+
+    if (angka < 20) {
+        return angkaTeks[angka];
+    } else if (angka < 100) {
+        return belasan[Math.floor(angka / 10)] + " " + angkaTeks[angka % 10];
+    } else if (angka < 1000) {
+        let setNilai = Math.floor(angka / 100);
+        setNilai = setNilai == 1 ? "seratus " : angkaTeks[setNilai] + " ratus ";
+        return setNilai + angkaKeTeks(angka % 100);
+    } else if (angka < 1000000) {
+        let setNilai = Math.floor(angka / 1000);
+        setNilai = setNilai == 1 ? "seribu " : angkaTeks[setNilai] + " ribu ";
+
+        return setNilai + angkaKeTeks(angka % 1000);
+    } else {
+        return "Angka terlalu besar untuk diolah.";
+    }
+};
+
+const playAudioSequentially = (audioUrls) => {
+    if (audioUrls.length === 0) {
+        return Promise.resolve();
+    }
+
+    const currentAudioUrl = audioUrls.shift();
+    const audio = new Audio(currentAudioUrl);
+
+    return new Promise((resolve, reject) => {
+        audio.onended = () => {
+            playAudioSequentially(audioUrls).then(resolve);
+        };
+
+        audio.onerror = (error) => {
+            reject(error);
+        };
+
+        audio.play();
+    });
+};

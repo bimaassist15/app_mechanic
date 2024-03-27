@@ -4,6 +4,7 @@ namespace App\Http\Helpers;
 
 use App\Models\Cabang;
 use App\Models\Pembelian;
+use App\Models\PenerimaanServis;
 use App\Models\Penjualan;
 use App\Models\User;
 use Carbon\Carbon;
@@ -283,6 +284,72 @@ class UtilsHelper
     public static function formatUang($nominal)
     {
         return number_format($nominal, 0, '.', ',');
+    }
+
+    public static function paymentStatisPenerimaanServis($id)
+    {
+        $penerimaanServis = new PenerimaanServis();
+        $getPenerimaanServis = $penerimaanServis->transaksiServis($id);
+
+        $hutang = 0;
+        $kembalian = 0;
+        $bayar = 0;
+        $tipeTransaksi = '';
+        $statusTransaksi = false;
+        $cicilan = 0;
+
+
+        if (count($getPenerimaanServis->pembayaranServis) > 0) {
+            $getPembayaranServis = $getPenerimaanServis->pembayaranServis;
+            $getPembayaranServis = $getPembayaranServis[0];
+
+            $getBayarCicilan = $getPenerimaanServis->pembayaranServis->pluck('bayar_pservis')->toArray();
+            $totalBayar = array_sum($getBayarCicilan);
+
+            $hutang = $getPembayaranServis->deposit_pservis + $getPembayaranServis->hutang_pservis;
+            $kembalian = $getPenerimaanServis->kembalian_pservis;
+            $bayar = $totalBayar;
+            if ($getPembayaranServis->kembalian_pservis > 0) {
+                $bayar = $totalBayar - $getPembayaranServis->kembalian_pservis;
+            }
+            $tipeTransaksi = 'hutang';
+
+            // check again
+            if ($getPenerimaanServis->totalbiaya_pservis > 0) {
+                $calc = $bayar - $getPenerimaanServis->totalbiaya_pservis;
+                if ($calc < 0) {
+                    $statusTransaksi = false;
+                    $cicilan = abs($calc);
+                } else {
+                    $statusTransaksi = true;
+                    $cicilan = 0;
+                }
+            }
+        } else {
+            $hutang = $getPenerimaanServis->hutang_pservis;
+            $kembalian = $getPenerimaanServis->kembalian_pservis;
+            $bayar = $getPenerimaanServis->bayar_pservis;
+            $tipeTransaksi = $getPenerimaanServis->tipe_pservis;
+        }
+
+        $calc = $bayar - $hutang;
+        if ($calc < 0) {
+            $statusTransaksi = false;
+            $cicilan = abs($calc);
+        } else {
+            $statusTransaksi = true;
+            $cicilan = 0;
+        }
+
+        return [
+            'hutang' => $hutang,
+            'kembalian' => $kembalian,
+            'bayar' => $bayar,
+            'tipe_transaksi' => $tipeTransaksi,
+            'status_transaksi' => $statusTransaksi,
+            'cicilan' => $cicilan,
+            'id' => $id,
+        ];
     }
 
     public static function paymentStatisPenjualan($id)
