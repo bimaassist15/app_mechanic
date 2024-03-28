@@ -218,267 +218,47 @@ class PengembalianServisController extends Controller
         return view('service::pengembalianServis.detail', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create(Request $request)
-    {
-        $action = route('penerimaanServis.store');
-        $kategoriServis = KategoriServis::dataTable()->get();
-        $tipeServis = $this->datastatis['tipe_servis'];
-        $kendaraanServis = Kendaraan::with('customer', 'cabang')->get();
-        $array_kendaraan_servis = [];
-        foreach ($kendaraanServis as $key => $item) {
-            $array_kendaraan_servis[] = [
-                'label' => '<strong>No. Polisi: ' . $item->nopol_kendaraan . '</strong><br />
-                <span>Customer: ' . $item->customer->nama_customer . '</span>
-                ',
-                'id' => $item->id,
-            ];
-        }
-
-        $array_tipe_servis = [];
-        foreach ($tipeServis as $key => $item) {
-            $array_tipe_servis[] = [
-                'label' => $item,
-                'id' => $key,
-            ];
-        }
-
-        $array_kategori_servis = [];
-        foreach ($kategoriServis as $key => $item) {
-            $array_kategori_servis[] = [
-                'label' => $item->nama_kservis,
-                'id' => $item->id,
-            ];
-        }
-
-        $array_kategori_pembayaran = [];
-        $kategoriPembayaran = KategoriPembayaran::dataTable()->where('status_kpembayaran', true)
-            ->whereNot('nama_kpembayaran', 'like', '%deposit%')
-            ->get();
-        foreach ($kategoriPembayaran as $value => $item) {
-            $array_kategori_pembayaran[] = [
-                'id' => $item->id,
-                'label' => $item->nama_kpembayaran
-            ];
-        }
-        $kategoriPembayaran = json_encode($kategoriPembayaran);
-        $array_kategori_pembayaran = json_encode($array_kategori_pembayaran);
-
-
-        $array_sub_pembayaran = [];
-        $subPembayaran = SubPembayaran::dataTable()->where('status_spembayaran', true)
-            ->get();
-        foreach ($subPembayaran as $value => $item) {
-            $array_sub_pembayaran[] = [
-                'id' => $item->id,
-                'label' => $item->nama_spembayaran,
-                'kategori_pembayaran_id' => $item->kategori_pembayaran_id
-            ];
-        }
-        $subPembayaran = json_encode($subPembayaran);
-        $array_sub_pembayaran = json_encode($array_sub_pembayaran);
-
-        $dataUser = User::dataTable()
-            ->join('roles', 'roles.id', '=', 'users.roles_id')
-            ->with('profile')
-            ->select('users.*', 'roles.id as roles_id', 'roles.name as roles_name', 'roles.guard_name as roles_guard')
-            ->get();
-        $dataUser = json_encode($dataUser);
-        $defaultUser = Auth::id();
-        $cabangId = session()->get('cabang_id');
-        $isEdit = $request->query('isEdit');
-        $penerimaanServis = new PenerimaanServis();
-
-        // $dataHutang = $penerimaanServis->pembayaranServis;
-
-        // $totalHutang = 0;
-        // $totalBayar = 0;
-        // $totalKembalian = 0;
-        // if (count($dataHutang) > 0) {
-        //     foreach ($dataHutang as $key => $item) {
-        //         $totalBayar += $item->bayar_pbcicilan;
-        //         $totalKembalian += $item->kembalian_pbcicilan;
-        //     }
-        //     $totalHutang = $totalKembalian > 0 ?  $totalBayar - $totalKembalian : $dataHutang[0]->bayar_pbcicilan + $dataHutang[0]->hutang_pbcicilan;
-        // }
-
-        // $totalHutang = $isEdit == true ? $totalHutang : $penerimaanServis->hutang_penerimaanServis;
-        $totalHutang = 0;
-        $data = [
-            'array_kategori_pembayaran' => $array_kategori_pembayaran,
-            'kategoriPembayaran' => $kategoriPembayaran,
-            'subPembayaran' => $subPembayaran,
-            'array_sub_pembayaran' => $array_sub_pembayaran,
-            'dataUser' => $dataUser,
-            'defaultUser' => $defaultUser,
-            'cabangId' => $cabangId,
-            'isEdit' => $isEdit,
-            'penerimaanServis' => $penerimaanServis,
-            'totalHutang' => $totalHutang,
-            'array_kategori_servis' => $array_kategori_servis,
-            'array_kendaraan_servis' => $array_kendaraan_servis,
-            'array_tipe_servis' => $array_tipe_servis,
-            'action' => $action,
-            'kendaraanServis' => $kendaraanServis,
-        ];
-        if ($request->input('refresh_dataset')) {
-            return response()->json($data);
-        }
-
-        return view('service::penerimaanServis.form', $data);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        $payloadPenerimaanServis = $request->input('payloadPenerimaanServis');
-        $payloadPembayaranServis = $request->input('payloadPembayaranServis');
-        $payloadSaldoCustomer = $request->input('payloadSaldoCustomer');
-
-        // penerimaan servis
-        $dateNow = date('Y-m-d');
-        $noAntrianStatis = PenerimaanServis::whereDate('created_at', $dateNow)
-            ->orderBy('id', 'asc')
-            ->pluck('noantrian_pservis')
-            ->max();
-        $noNotaStatis = PenerimaanServis::orderBy('id', 'asc')
-            ->pluck('nonota_pservis')
-            ->max();
-
-        $customer_id = $payloadSaldoCustomer['customer_id'];
-        $noAntrianStatis++;
-        $noNotaStatis++;
-        $mergePenerimaanServis = array_merge(
-            $payloadPenerimaanServis,
-            [
-                'noantrian_pservis' => $noAntrianStatis,
-                'nonota_pservis' => $noNotaStatis,
-                'status_pservis' => 'antrian servis masuk',
-                'users_id' => Auth::id(),
-                'customer_id' => $customer_id,
-            ],
-        );
-        $penerimaanServis = PenerimaanServis::create($mergePenerimaanServis);
-        $penerimaan_servis_id = $penerimaanServis->id;
-
-        // history servis
-        ServiceHistory::create([
-            'penerimaan_servis_id' => $penerimaan_servis_id,
-            'status_histori' => 'antrian servis masuk',
-            'cabang_id' => session()->get('cabang_id'),
-        ]);
-
-        // saldo customer
-        $checkSaldo = SaldoCustomer::where('customer_id', $customer_id)->get()->count();
-        $saldo_customer_id = 0;
-        if ($checkSaldo == 0) {
-            $saldoCustomer = SaldoCustomer::create([
-                'customer_id' => $customer_id,
-                'jumlah_saldocustomer' => $payloadSaldoCustomer['totalsaldo_detail'],
-                'cabang_id' => $payloadSaldoCustomer['cabang_id'],
-            ]);
-            $saldo_customer_id = $saldoCustomer->id;
-        } else {
-            $saldoCustomer = SaldoCustomer::where('customer_id', $customer_id)->first();
-            $saldoCustomer->jumlah_saldocustomer = $saldoCustomer->jumlah_saldocustomer + $payloadSaldoCustomer['totalsaldo_detail'];
-            $saldoCustomer->save();
-            $saldo_customer_id = $saldoCustomer->id;
-        }
-
-        // saldo detail
-        $dataSaldoDetail = [
-            'saldo_customer_id' => $saldo_customer_id,
-            'penerimaan_servis_id' => $penerimaan_servis_id,
-            'totalsaldo_detail' => $payloadSaldoCustomer['totalsaldo_detail'],
-            'kembaliansaldo_detail' => $payloadSaldoCustomer['kembaliansaldo_detail'],
-            'hutangsaldo_detail' => $payloadSaldoCustomer['hutangsaldo_detail'],
-            'cabang_id' => $payloadSaldoCustomer['cabang_id']
-        ];
-        SaldoDetail::create($dataSaldoDetail);
-
-
-        if ($payloadPenerimaanServis['isdp_pservis'] == true) {
-            $newPayloadPembayaranServis = [];
-            foreach ($payloadPembayaranServis as $key => $value) {
-                $merge = array_merge($value, ['penerimaan_servis_id' => $penerimaan_servis_id]);
-                $newPayloadPembayaranServis[] = $merge;
-            }
-        }
-        PembayaranServis::insert($newPayloadPembayaranServis);
-        return response()->json([
-            'message' => "Berhasil tambah penerimaan serivs",
-        ], 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
-        $penerimaanServis = new PenerimaanServis();
-
-        $getPenerimaanServis = $penerimaanServis->transaksiServis($id);
-        $saldoDetail = SaldoDetail::where("penerimaan_servis_id", $id)->first();
-
-        if ($saldoDetail) {
-            $totalDpDetail = $saldoDetail->totalsaldo_detail;
-
-            // update saldo customer
-            $customer_id = $getPenerimaanServis->kendaraan->customer_id;
-            $saldoCustomer = SaldoCustomer::where('customer_id', $customer_id)->first();
-            $saldoCustomer->jumlah_saldocustomer = $saldoCustomer->jumlah_saldocustomer - $totalDpDetail;
-            $saldoCustomer->save();
-
-            // delete saldo detail
-            $saldoDetail->delete();
-        }
-
-        PenerimaanServis::destroy($id);
-        return response()->json('Berhasil hapus data', 200);
-    }
-
-    public function print($id)
-    {
-        $penerimaanServis = new PenerimaanServis();
-        $penerimaanServis = $penerimaanServis->transaksiServis($id);
-        $myCabang = UtilsHelper::myCabang();
-        return view('service::penerimaanServis.print', compact('penerimaanServis', 'myCabang'));
-    }
-
-    public function detail($id)
-    {
-        $penerimaanServis = new PenerimaanServis();
-        $row = $penerimaanServis->transaksiServis($id);
-
-        return view('service::penerimaanServis.show', compact('row'));
-    }
 
     public function update(Request $request, $id)
     {
-        $data = $request->except(['_method']);
-        if ($data['status_pservis'] == 'proses servis' || $data['status_pservis'] == 'bisa diambil') {
-            $tanggal_service_berkala = UtilsHelper::checkTanggalBerkala($data);
-            $data = array_merge($data, ['servisberkala_pservis' => $tanggal_service_berkala]);
-        }
-        PenerimaanServis::find($id)->update($data);
+        dd($request->all());
+        // pembayaran servis
+        $pembayaran_servis = $request->input('pembayaran_servis');
+        PembayaranServis::insert($pembayaran_servis);
 
-
-        $status_pservis = $data['status_pservis'];
-        ServiceHistory::create([
-            'penerimaan_servis_id' => $id,
-            'status_histori' => $status_pservis,
-            'cabang_id' => session()->get('cabang_id'),
+        // penerimaan servis
+        $penerimaan_servis = $request->input('penerimaan_servis');
+        PenerimaanServis::find($id)->update([
+            'bayar_pservis' => $penerimaan_servis['bayar_pservis'],
+            'hutang_pservis' => $penerimaan_servis['hutang_pservis'],
+            'kembalian_pservis' => $penerimaan_servis['kembalian_pservis'],
         ]);
-        return response()->json('Berhasil menambahkan progress pengerjaan');
+
+        // saldo customer
+        $saldo_customer = $request->input('saldo_customer');
+        $customer_id = $saldo_customer['customer_id'];
+        $saldo_customer_model = SaldoCustomer::where('customer_id', $customer_id)->first();
+        if ($saldo_customer_model) {
+            $saldo_customer_model->update([
+                'customer_id' => $saldo_customer['customer_id'],
+                'jumlah_saldocustomer' => $saldo_customer['jumlah_saldocustomer'],
+                'cabang_id' => $saldo_customer['cabang_id'],
+            ]);
+
+            // saldo detail
+            $saldo_detail = $request->input('saldo_detail');
+            SaldoDetail::create([
+                'saldo_customer_id' => $saldo_customer_model->id,
+                'penerimaan_servis_id' => $saldo_detail['penerimaan_servis_id'],
+                'totalsaldo_detail' => $saldo_detail['totalsaldo_detail'],
+                'kembaliansaldo_detail' => $saldo_detail['kembaliansaldo_detail'],
+                'hutangsaldo_detail' => $saldo_detail['hutangsaldo_detail'],
+                'cabang_id' => $saldo_detail['cabang_id'],
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Berhasil melakukan transaksi pengembalian kendaraan',
+        ], 201);
     }
 }

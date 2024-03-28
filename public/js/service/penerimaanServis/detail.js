@@ -362,6 +362,7 @@ $(document).ready(function () {
             data: payload,
             success: function (data) {
                 renderListServis(data);
+                refreshData();
             },
         });
     });
@@ -769,6 +770,9 @@ $(document).ready(function () {
                     type: "bg-success",
                 });
                 refreshData();
+                if(payload.status_pservis == 'bisa diambil'){
+                    window.location.href = `${urlRoot}/service/pengembalianServis/${jsonPenerimaanServisId}`;
+                }
             },
             error: function (jqXHR, exception) {
                 $(".btn-submit-data").attr("disabled", false);

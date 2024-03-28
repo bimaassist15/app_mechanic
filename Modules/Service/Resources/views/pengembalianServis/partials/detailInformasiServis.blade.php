@@ -93,10 +93,7 @@
         <div class="row mb-3">
             <div class="col-lg-12">
                 <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-info me-2 btn-print-data">
-                        <i class="fa-solid fa-print me-2"></i> Print Data
-                    </button>
-                    <button type="button" class="btn btn-primary me-2 btn-submit-data">
+                    <button type="button" class="btn btn-primary me-2 btn-submit-data" disabled>
                         <i class="fa-solid fa-paper-plane me-2"></i> Submit
                     </button>
                 </div>
