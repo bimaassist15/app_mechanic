@@ -18,7 +18,6 @@ var row = $('.jsonRow').data('json');
 var jsonPenjualanId = $(".penjualan_id").data("value");
 var jsonDefaultUser = $(".defaultUser").data("value");
 var is_deposit = $('.is_deposit').data('value');
-var defaultUser = $('.defaultUser').data('value');
 var getPembayaranServis = $('.getPembayaranServis').data('value');
 
 
@@ -720,7 +719,7 @@ $(document).ready(function () {
         const getKategoriPembayaran = jsonKategoriPembayaran.find(item => item.nama_kpembayaran.toLowerCase() == 'deposit');
     
         const getSubPembayaran = jsonSubPembayaran.find(item => item.kategori_pembayaran_id == getKategoriPembayaran.id);
-        const userSelected = jsonDataUser.find(item => item.id == defaultUser);
+        const userSelected = jsonDataUser.find(item => item.id == jsonDefaultUser);
 
         let dataMetodePembayaran = {};
             dataMetodePembayaran.kategori_pembayaran = jsonKategoriPembayaran;
@@ -771,7 +770,6 @@ $(document).ready(function () {
                 (item) =>
                     item.kategori_pembayaran_id == getKategoriPembayaran.id
             );
-            console.log('jsonDefaultUser', jsonDefaultUser);
             const getDefaultUser = jsonDataUser.findIndex(
                 (item) => item.id == jsonDefaultUser
             );

@@ -29,6 +29,7 @@ Route::prefix('service')->middleware('auth')->group(function () {
     Route::resource('orderBarang', 'OrderBarangController');
 
     Route::get('print/kendaraan/servis', 'PrintServisController@index')->name('service.print.kendaraan');
+    Route::get('print/kendaraan/selesaiServis', 'PrintServisController@selesaiServis')->name('service.print.selesaiServis');
 
     Route::post('checkFile', 'ServiceController@checkFile')->name('service.checkFile');
 });

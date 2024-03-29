@@ -1,5 +1,9 @@
 @extends('layouts.app.index')
 
+@section('title')
+    Halaman Kendaraan Servis
+@endsection
+
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         {{ Breadcrumbs::render('kendaraanServis') }}
@@ -8,7 +12,7 @@
         <div class="card">
             <h5 class="card-header">
                 <div class="d-flex flex-wrap justify-content-between">
-                    Data Penerimaan Servis
+                    Data Kendaraan Servis
                 </div>
             </h5>
             <div class="table-responsive text-nowrap px-3">
@@ -26,20 +30,6 @@
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                        <tr>
-                            <th>1</th>
-                            <td>7</td>
-                            <td>2</td>
-                            <td>Customer We</td>
-                            <td>24 Februri 2024</td>
-                            <td>Status</td>
-                            <td>24 Februari 2024</td>
-                            <td>
-                                <x-button-main color="btn-primary" className="btn-detail"
-                                    icon='<i class="fa-solid fa-circle-info"></i>' typeModal="extraLargeModal"
-                                    urlCreate="{{ route('kendaraanServis.show', 1) }}" />
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -48,7 +38,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('kendaraanServis.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('service/kendaraanServis') }}"></script>
         <script src="{{ asset('js/service/kendaraanServis/index.js') }}"></script>
     @endpush
 @endsection

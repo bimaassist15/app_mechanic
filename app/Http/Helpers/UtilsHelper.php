@@ -472,4 +472,25 @@ class UtilsHelper
             return $tanggal_service_berkala;
         }
     }
+
+    public static function checkTanggalGaransi($data)
+    {
+        $nilaigaransi_pservis = $data['nilaigaransi_pservis'];
+        $tipegaransi_pservis = $data['tipegaransi_pservis'];
+        $tanggalSekarang = date('Y-m-d');
+        $tanggal_service_berkala = date('Y-m-d');
+
+        if ($tipegaransi_pservis == 'hari') {
+            $tanggal_service_berkala = date('Y-m-d', strtotime($tanggalSekarang . ' +' . $nilaigaransi_pservis . ' days'));
+        }
+
+        if ($tipegaransi_pservis == 'bulan') {
+            $tanggal_service_berkala = date('Y-m-d', strtotime($tanggalSekarang . ' +' . $nilaigaransi_pservis . ' months'));
+        }
+        if ($tipegaransi_pservis == 'tahun') {
+            $tanggal_service_berkala = date('Y-m-d', strtotime($tanggalSekarang . ' +' . $nilaigaransi_pservis . ' years'));
+        }
+
+        return $tanggal_service_berkala;
+    }
 }

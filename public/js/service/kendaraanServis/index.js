@@ -3,10 +3,10 @@ var datatable;
 
 $(document).ready(function () {
     function initDatatable() {
-        datatable = basicDatatable(
-            $("#dataTable"),
-            $(".url_datatable").data("url"),
-            [
+        datatable = basicDatatable({
+            tableId: $("#dataTable"),
+            ajaxUrl: $(".url_datatable").data("url"),
+            columns: [
                 {
                     data: null,
                     orderable: false,
@@ -14,13 +14,34 @@ $(document).ready(function () {
                     className: "text-center",
                 },
                 {
-                    data: "nama_kategori",
-                    name: "nama_kategori",
+                    data: "nonota_pservis",
+                    name: "nonota_pservis",
                     searchable: true,
                 },
                 {
-                    data: "status_kategori",
-                    name: "status_kategori",
+                    data: "noantrian_pservis",
+                    name: "noantrian_pservis",
+                    searchable: true,
+                },
+                {
+                    data: "kendaraan.customer.nama_customer",
+                    name: "kendaraan.customer.nama_customer",
+                    searchable: true,
+                },
+                {
+                    data: "created_at",
+                    name: "created_at",
+                    searchable: true,
+                },
+       
+                {
+                    data: "status_pservis",
+                    name: "status_pservis",
+                    searchable: true,
+                },
+                {
+                    data: "tanggalambil_pservis",
+                    name: "tanggalambil_pservis",
                     searchable: true,
                 },
                 {
@@ -29,10 +50,11 @@ $(document).ready(function () {
                     searchable: false,
                     orderable: false,
                 },
-            ]
-        );
+            ],
+            dataAjaxUrl: {},
+        });
     }
-    // initDatatable();
+    initDatatable();
 
     var body = $("body");
     body.on("click", ".btn-detail", function () {

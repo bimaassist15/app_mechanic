@@ -222,6 +222,12 @@ class PengembalianServisController extends Controller
     public function update(Request $request, $id)
     {
         dd($request->all());
+        $penerimaan_servis = $request->input('penerimaan_servis');
+        $nilaigaransi_pservis = $penerimaan_servis['nilaigaransi_pservis'];
+        $tipegaransi_pservis = $penerimaan_servis['tipegaransi_pservis'];
+        $checkTanggalGaransi = UtilsHelper::checkTanggalGaransi($penerimaan_servis);
+        $servisgaransi_pservis = $checkTanggalGaransi;
+
         // pembayaran servis
         $pembayaran_servis = $request->input('pembayaran_servis');
         PembayaranServis::insert($pembayaran_servis);
@@ -232,6 +238,10 @@ class PengembalianServisController extends Controller
             'bayar_pservis' => $penerimaan_servis['bayar_pservis'],
             'hutang_pservis' => $penerimaan_servis['hutang_pservis'],
             'kembalian_pservis' => $penerimaan_servis['kembalian_pservis'],
+            'nilaigaransi_pservis' => $nilaigaransi_pservis,
+            'tipegaransi_pservis' => $tipegaransi_pservis,
+            'servisgaransi_pservis' => $servisgaransi_pservis,
+            'tanggalambil_pservis' => date('Y-m-d H:i:s'),
         ]);
 
         // saldo customer

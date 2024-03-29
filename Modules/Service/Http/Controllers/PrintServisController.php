@@ -23,6 +23,15 @@ class PrintServisController extends Controller
         return view('service::print.index', compact('row', 'myCabang'));
     }
 
+    public function selesaiServis(Request $request)
+    {
+        $penerimaan_servis_id = $request->input('penerimaan_servis_id');
+        $penerimaanServis = new PenerimaanServis();
+        $row = $penerimaanServis->transaksiServis($penerimaan_servis_id);
+        $myCabang = UtilsHelper::myCabang();
+        return view('service::print.index', compact('row', 'myCabang'));
+    }
+
     /**
      * Show the form for creating a new resource.
      * @return Renderable
