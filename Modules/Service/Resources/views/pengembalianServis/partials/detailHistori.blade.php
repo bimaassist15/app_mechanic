@@ -19,7 +19,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <strong>Detail History Servis</strong>
-                <table class="w-100 table mt-3" id="loadServiceHistory">
+                <table class="w-100 table mt-3 loadServiceHistory" id="">
                     @php
                         $no = 1;
                     @endphp

@@ -197,8 +197,8 @@ $(document).ready(function () {
             </tr>
             `;
         });
-        $("#orderBarang").html(output);
-        $("#total_harga_all").html(number_format(totalHargaItems, 0, ".", ","));
+        $(".orderBarang").html(output);
+        $(".total_harga_all").html(number_format(totalHargaItems, 0, ".", ","));
     };
 
     const domViewKasir = (orderItemsValue) => {
@@ -218,7 +218,7 @@ $(document).ready(function () {
         totalHargaItems = orderItems.reduce(function (sum, current) {
             return sum + current.totalHarga;
         }, 0);
-        $("#total_harga_all").html(number_format(totalHargaItems, 0, ".", ","));
+        $(".total_harga_all").html(number_format(totalHargaItems, 0, ".", ","));
     };
 
     const changeHandleInput = (id) => {
@@ -778,9 +778,9 @@ $(document).ready(function () {
         totalHargaItems = 0;
         customerId = "";
         $("#load_customer_id").html("");
-        $("#orderBarang").html("");
-        $("#output_metode_pembayaran").html("");
-        $("#total_harga_all").html("0");
+        $(".orderBarang").html("");
+        $(".output_metode_pembayaran").html("");
+        $(".total_harga_all").html("0");
         handleButtonBayar();
     };
 
@@ -894,7 +894,7 @@ $(document).ready(function () {
                     handleManageHutang();
                     handleButtonBayar();
                     const output = viewMetodePembayaran();
-                    $("#output_metode_pembayaran").html(output);
+                    $(".output_metode_pembayaran").html(output);
                 },
             });
         }
@@ -1067,7 +1067,7 @@ $(document).ready(function () {
         handleManageHutang();
         handleButtonBayar();
         const output = viewMetodePembayaran();
-        $("#output_metode_pembayaran").html(output);
+        $(".output_metode_pembayaran").html(output);
     };
 
     body.on("click", ".btn-add-pembayaran", function (e) {
@@ -1087,7 +1087,7 @@ $(document).ready(function () {
         handleDisplayInput();
         handleButtonBayar();
         const output = viewMetodePembayaran();
-        $("#output_metode_pembayaran").html(output);
+        $(".output_metode_pembayaran").html(output);
     });
 
     body.on("input", 'input[name="bayar"]', function () {
@@ -1111,7 +1111,7 @@ $(document).ready(function () {
             handleSubPembayaran(index);
 
             const output = viewMetodePembayaran();
-            $("#output_metode_pembayaran").html(output);
+            $(".output_metode_pembayaran").html(output);
         }
     });
 

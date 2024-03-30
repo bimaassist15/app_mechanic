@@ -16,6 +16,8 @@
         </div>
         <hr style="color: #1381f0;" />
 
-        <div id="output_metode_pembayaran"></div>
+        <div class="output_metode_pembayaran"></div>
     </div>
 </div>
+
+<div class="output_metode_pembayaran d-none"></div>

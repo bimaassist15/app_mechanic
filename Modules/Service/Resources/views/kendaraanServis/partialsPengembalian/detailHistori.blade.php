@@ -8,6 +8,11 @@
             <div class="col-lg-12">
                 <x-data-customer label="Tanggal Masuk"
                     value="{{ UtilsHelp::tanggalBulanTahunKonversi($row->created_at) }}" class="output_created_at" />
+                <span class="display_after_bisa_diambil d-none">
+                    <x-data-customer label="Tanggal Diambil"
+                        value="{{ $row->tanggalambil_pservis != null ? UtilsHelp::tanggalBulanTahunKonversi($row->tanggalambil_pservis) : '-' }}"
+                        class="output_tanggalambil_pservis" />
+                </span>
                 <x-data-customer labelClass="status_pservis_label"
                     label="Status Servis ({{ UtilsHelp::tanggalBulanTahunKonversi($row->updated_at) }})"
                     value="{{ ucwords($row->status_pservis) }}" class="output_status_pservis" />

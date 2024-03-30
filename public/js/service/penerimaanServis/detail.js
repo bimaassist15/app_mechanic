@@ -11,6 +11,137 @@ var jsonCabangId = $(".cabangId").data("value");
 var jsonServiceHistory = [];
 
 var urlRoot = $(".url_root").data("url");
+const viewServiceHistori = (rowData) => {
+    $(".output_created_at").html(formatDateFromDb(rowData.created_at));
+    $(".status_pservis_label").html(
+        `Status Servis (${formatDateFromDb(rowData.updated_at)})`
+    );
+    $(".output_status_pservis").html(
+        capitalizeEachWord(rowData.status_pservis)
+    );
+    $(".output_name").html(capitalizeEachWord(rowData.users.name));
+
+    let outputService = ``;
+    let no = 1;
+    rowData.service_history.map((vData) => {
+        outputService += `
+        <tr>
+            <td class="w-25">${no++}</td>
+            <td>${formatDateFromDb(vData.created_at)}</td>
+            <td>${capitalizeEachWord(vData.status_histori)}</td>
+        </tr>
+        `;
+    });
+
+    $(".loadServiceHistory").html(outputService);
+};
+
+const refreshData = () => {
+    $.ajax({
+        url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
+        dataType: "json",
+        type: "get",
+        data: {
+            refresh: true,
+        },
+        success: function (data) {
+            jsonUsersId = data.usersId;
+            jsonPenerimaanServisId = data.penerimaanServisId;
+            jsonGetServis = data.getServis;
+            jsonGetBarang = data.barang;
+            jsonTipeDiskon = JSON.parse(data.tipeDiskon);
+            jsonCabangId = data.cabangId;
+            jsonServiceHistory = data.row.service_history;
+
+            let select2HargaServis = [];
+            select2HargaServis.push({
+                id: "",
+                text: "Pilih Harga Servis",
+            });
+            data.array_harga_servis.map((value, index) => {
+                select2HargaServis.push({
+                    id: value.id,
+                    text: value.label,
+                });
+            });
+
+            let select2Barang = [];
+            select2Barang.push({
+                id: "",
+                text: "Pilih Barang",
+            });
+            data.array_barang.map((value, index) => {
+                select2Barang.push({
+                    id: value.id,
+                    text: value.label,
+                });
+            });
+
+            var selectElementHargaServis = $("select[name='harga_servis_id']");
+            selectElementHargaServis.empty();
+            $.each(select2HargaServis, function (index, option) {
+                selectElementHargaServis.append(
+                    new Option(option.text, option.id, false, false)
+                );
+            });
+            selectElementHargaServis.select2("destroy");
+
+            select2Standard({
+                parent: ".content-wrapper",
+                selector: "select[name='harga_servis_id']",
+                data: select2HargaServis,
+            });
+
+            var selectElementBarang = $("select[name='barang_id']");
+            selectElementBarang.empty();
+            $.each(select2Barang, function (index, option) {
+                selectElementBarang.append(
+                    new Option(option.text, option.id, false, false)
+                );
+            });
+            selectElementBarang.select2("destroy");
+            select2Standard({
+                parent: ".content-wrapper",
+                selector: "select[name='barang_id']",
+                data: select2Barang,
+            });
+
+            // output servis history
+            const rowData = data.row;
+            viewServiceHistori(rowData);
+
+            // check handle berkala
+            const statusAllowed = ["proses servis", "bisa diambil"];
+            if (statusAllowed.includes(rowData.status_pservis)) {
+                $(".handle-berkala").removeClass("d-none");
+            } else {
+                $(".handle-berkala").addClass("d-none");
+            }
+
+            // handle output transaksi
+            $(".output_totalbiaya_pservis").html(
+                formatUang(rowData.totalbiaya_pservis)
+            );
+            $(".output_hutang_pservis").html(
+                formatUang(rowData.hutang_pservis)
+            );
+            $(".output_total_dppservis").html(
+                formatUang(rowData.total_dppservis)
+            );
+
+            // handle status cancel
+            const getStatus = rowData.status_pservis;
+            const statusCancel = ["tidak bisa", "cancel"];
+            if (statusCancel.includes(getStatus)) {
+                $(".display_if_status_cancel").removeClass("d-none");
+                $(".hidden_if_status_cancel").addClass("d-none");
+            } else {
+                $(".hidden_if_status_cancel").removeClass("d-none");
+                $(".display_if_status_cancel").addClass("d-none");
+            }
+        },
+    });
+};
 var renderListServis = () => {};
 var renderListBarang = () => {};
 var setOrderBarang = [];
@@ -46,8 +177,9 @@ renderListServis = (data) => {
     </tr>
     `;
     });
-    $("#onLoadServis").html(output);
-    $("#totalHargaServis").html(formatUang(totalHargaServis));
+    $(".onLoadServis").html(output);
+    $(".totalHargaServis").html(formatUang(totalHargaServis));
+    refreshData();
 };
 
 renderListBarang = (data, isOnlyTotalHarga = false) => {
@@ -142,10 +274,11 @@ renderListBarang = (data, isOnlyTotalHarga = false) => {
         }
     });
     if (!isOnlyTotalHarga) {
-        $("#loadOrderBarang").html(output);
+        $(".loadOrderBarang").html(output);
     }
 
-    $("#totalHargaBarang").html(formatUang(totalHargaBarang));
+    $(".totalHargaBarang").html(formatUang(totalHargaBarang));
+    refreshData();
 };
 
 $(document).ready(function () {
@@ -165,130 +298,6 @@ $(document).ready(function () {
         parent: ".content-wrapper",
         selector: "select[name='tipeberkala_pservis']",
     });
-
-    const viewServiceHistori = (rowData) => {
-        $(".output_created_at").html(formatDateFromDb(rowData.created_at));
-        $(".status_pservis_label").html(
-            `Status Servis (${formatDateFromDb(rowData.updated_at)})`
-        );
-        $(".output_status_pservis").html(
-            capitalizeEachWord(rowData.status_pservis)
-        );
-        $(".output_name").html(capitalizeEachWord(rowData.users.name));
-
-        let outputService = ``;
-        let no = 1;
-        rowData.service_history.map((vData) => {
-            outputService += `
-            <tr>
-                <td class="w-25">${no++}</td>
-                <td>${formatDateFromDb(vData.created_at)}</td>
-                <td>${capitalizeEachWord(vData.status_histori)}</td>
-            </tr>
-            `;
-        });
-
-        $("#loadServiceHistory").html(outputService);
-    };
-
-    const refreshData = () => {
-        $.ajax({
-            url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
-            dataType: "json",
-            type: "get",
-            data: {
-                refresh: true,
-            },
-            success: function (data) {
-                jsonUsersId = data.usersId;
-                jsonPenerimaanServisId = data.penerimaanServisId;
-                jsonGetServis = data.getServis;
-                jsonGetBarang = data.barang;
-                jsonTipeDiskon = JSON.parse(data.tipeDiskon);
-                jsonCabangId = data.cabangId;
-                jsonServiceHistory = data.row.service_history;
-
-                let select2HargaServis = [];
-                select2HargaServis.push({
-                    id: "",
-                    text: "Pilih Harga Servis",
-                });
-                data.array_harga_servis.map((value, index) => {
-                    select2HargaServis.push({
-                        id: value.id,
-                        text: value.label,
-                    });
-                });
-
-                let select2Barang = [];
-                select2Barang.push({
-                    id: "",
-                    text: "Pilih Barang",
-                });
-                data.array_barang.map((value, index) => {
-                    select2Barang.push({
-                        id: value.id,
-                        text: value.label,
-                    });
-                });
-
-                var selectElementHargaServis = $(
-                    "select[name='harga_servis_id']"
-                );
-                selectElementHargaServis.empty();
-                $.each(select2HargaServis, function (index, option) {
-                    selectElementHargaServis.append(
-                        new Option(option.text, option.id, false, false)
-                    );
-                });
-                selectElementHargaServis.select2("destroy");
-
-                select2Standard({
-                    parent: ".content-wrapper",
-                    selector: "select[name='harga_servis_id']",
-                    data: select2HargaServis,
-                });
-
-                var selectElementBarang = $("select[name='barang_id']");
-                selectElementBarang.empty();
-                $.each(select2Barang, function (index, option) {
-                    selectElementBarang.append(
-                        new Option(option.text, option.id, false, false)
-                    );
-                });
-                selectElementBarang.select2("destroy");
-                select2Standard({
-                    parent: ".content-wrapper",
-                    selector: "select[name='barang_id']",
-                    data: select2Barang,
-                });
-
-                // output servis history
-                const rowData = data.row;
-                viewServiceHistori(rowData);
-
-                // check handle berkala
-                const statusAllowed = ["proses servis", "bisa diambil"];
-                if (statusAllowed.includes(rowData.status_pservis)) {
-                    $(".handle-berkala").removeClass("d-none");
-                } else {
-                    $(".handle-berkala").addClass("d-none");
-                }
-
-                // handle output transaksi
-                console.log("get row", rowData);
-                $(".output_totalbiaya_pservis").html(
-                    formatUang(rowData.totalbiaya_pservis)
-                );
-                $(".output_hutang_pservis").html(
-                    formatUang(rowData.hutang_pservis)
-                );
-                $(".output_total_dppservis").html(
-                    formatUang(rowData.total_dppservis)
-                );
-            },
-        });
-    };
 
     refreshData();
 
@@ -739,12 +748,18 @@ $(document).ready(function () {
                     "Status servis anda terakhir sama dengan status servis anda yang baru",
             });
         }
-        if (
+
+        const getValueStatus = $('select[name="status_pservis"]').val();
+        const statusAllowed = ["bisa diambil"];
+        const fieldStatusAmbil =
             (payload.nilaiberkala_pservis == "" &&
                 payload.tipeberkala_pservis != "") ||
             (payload.nilaiberkala_pservis != "" &&
-                payload.tipeberkala_pservis == "")
-        ) {
+                payload.tipeberkala_pservis == "") ||
+            (payload.nilaiberkala_pservis == "" &&
+                payload.tipeberkala_pservis == "");
+
+        if (fieldStatusAmbil && statusAllowed.includes(getValueStatus)) {
             return runToast({
                 type: "bg-danger",
                 title: "Form Validation",
@@ -770,8 +785,13 @@ $(document).ready(function () {
                     type: "bg-success",
                 });
                 refreshData();
-                if(payload.status_pservis == 'bisa diambil'){
+                if (payload.status_pservis == "bisa diambil") {
                     window.location.href = `${urlRoot}/service/pengembalianServis/${jsonPenerimaanServisId}`;
+                }
+
+                const statusCancel = ["tidak bisa", "cancel"];
+                if (statusCancel.includes(payload.status_pservis)) {
+                    window.location.href = `${urlRoot}/service/kendaraanServis/${jsonPenerimaanServisId}`;
                 }
             },
             error: function (jqXHR, exception) {

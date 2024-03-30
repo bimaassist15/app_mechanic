@@ -545,7 +545,7 @@ $(document).ready(function () {
     const resetData = () => {
         metodePembayaran = [];
         handleButtonBayar();
-        $("#output_metode_pembayaran").html("");
+        $(".output_metode_pembayaran").html("");
     };
     // end benar
 
@@ -566,7 +566,7 @@ $(document).ready(function () {
                     handleButtonBayar();
 
                     const output = viewMetodePembayaran();
-                    $("#output_metode_pembayaran").html(output);
+                    $(".output_metode_pembayaran").html(output);
                 },
             });
         }
@@ -613,7 +613,7 @@ $(document).ready(function () {
         }
         handleButtonBayar();
         const output = viewMetodePembayaran();
-        $("#output_metode_pembayaran").html(output);
+        $(".output_metode_pembayaran").html(output);
     };
     // end benar
 
@@ -673,7 +673,7 @@ $(document).ready(function () {
         handleDisplayInput();
         handleButtonBayar();
         const output = viewMetodePembayaran();
-        $("#output_metode_pembayaran").html(output);
+        $(".output_metode_pembayaran").html(output);
     });
     // end benar
 
@@ -730,7 +730,7 @@ $(document).ready(function () {
             handleButtonBayar();
             handleSubPembayaran(index);
             const output = viewMetodePembayaran();
-            $("#output_metode_pembayaran").html(output);
+            $(".output_metode_pembayaran").html(output);
         }
     });
 
@@ -831,6 +831,7 @@ $(document).ready(function () {
                 sub_pembayaran_id: value.sub_pembayaran_selected.id,
                 bayar_pservis: value.bayar,
                 deposit_pservis: value.jumlah_deposit,
+                saldodeposit_pservis: value.jumlah_deposit,
                 dibayaroleh_pservis:
                     value.dibayarkan_oleh === undefined
                         ? ""

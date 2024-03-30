@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="mt-2 mb-2">
-                <div id="load_supplier_id"></div>
+                <div class="load_supplier_id"></div>
             </div>
         </div>
     </div>

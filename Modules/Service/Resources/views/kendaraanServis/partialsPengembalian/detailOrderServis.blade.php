@@ -19,7 +19,7 @@
                         <th>Biaya</th>
                     </tr>
                 </thead>
-                <tbody class="table-border-bottom-0">
+                <tbody class="table-border-bottom-0 onLoadServis">
                     @php
                         $no = 1;
                     @endphp
@@ -42,7 +42,7 @@
                             <strong>Total Biaya Jasa</strong>
                         </td>
                         <td>
-                            <strong>
+                            <strong class="totalHargaServis">
                                 {{ UtilsHelp::formatUang($totalBiayaJasa) }}
                             </strong>
                         </td>

@@ -23,7 +23,7 @@
                         <th>Diskon</th>
                         <th></th>
                         <th>Sub Total</th>
-                        <th>Action</th>
+                        <th class="hidden_after_bisa_diambil">Action</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0 loadOrderBarang" id="">

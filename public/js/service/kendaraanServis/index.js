@@ -33,7 +33,7 @@ $(document).ready(function () {
                     name: "created_at",
                     searchable: true,
                 },
-       
+
                 {
                     data: "status_pservis",
                     name: "status_pservis",
@@ -57,12 +57,32 @@ $(document).ready(function () {
     initDatatable();
 
     var body = $("body");
-    body.on("click", ".btn-detail", function () {
-        showModal({
-            url: $(this).data("urlcreate"),
-            modalId: $(this).data("typemodal"),
-            title: "Form Data Servis",
+    const renderPrint = (url) => {
+        var output = "";
+        $.ajax({
+            url,
             type: "get",
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                output = data;
+            },
         });
+        return output;
+    };
+
+    const printOutput = (output) => {
+        var printWindow = window.open("", "_blank");
+        printWindow.document.write(output);
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.close();
+    };
+
+    body.on("click", ".btn-print", function (e) {
+        e.preventDefault();
+        const url = $(this).attr("href");
+        const output = renderPrint(url);
+        printOutput(output);
     });
 });

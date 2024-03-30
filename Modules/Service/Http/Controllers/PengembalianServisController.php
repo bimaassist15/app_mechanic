@@ -37,7 +37,10 @@ class PengembalianServisController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = PenerimaanServis::dataTable()->where('status_pservis', 'bisa diambil');
+            $data = PenerimaanServis::dataTable()
+                ->where('status_pservis', 'bisa diambil')
+                ->where('tanggalambil_pservis', null);
+
             return DataTables::eloquent($data)
                 ->addColumn('created_at', function ($row) {
                     return UtilsHelper::tanggalBulanTahunKonversi($row->created_at);
@@ -221,7 +224,6 @@ class PengembalianServisController extends Controller
 
     public function update(Request $request, $id)
     {
-        dd($request->all());
         $penerimaan_servis = $request->input('penerimaan_servis');
         $nilaigaransi_pservis = $penerimaan_servis['nilaigaransi_pservis'];
         $tipegaransi_pservis = $penerimaan_servis['tipegaransi_pservis'];

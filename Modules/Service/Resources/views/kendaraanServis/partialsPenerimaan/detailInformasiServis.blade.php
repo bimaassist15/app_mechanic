@@ -14,13 +14,8 @@
             <div class="col-lg-6">
                 <x-data-customer label="Deposit" value="{{ UtilsHelp::formatUang($row->total_dppservis) }}"
                     class="output_total_dppservis" />
-                <div class="hidden_if_status_cancel">
-                    <x-form-select-horizontal name="status_pservis" label="Status Servis" :data="$statusKendaraanServis"
-                        value="{{ $row->status_pservis }}" />
-                </div>
-                <div class="display_if_status_cancel d-none">
-                    <span class="output_status_pservis">{{ $row->status_pservis }}</span>
-                </div>
+                <x-form-select-horizontal name="status_pservis" label="Status Servis" :data="$statusKendaraanServis"
+                    value="{{ $row->status_pservis }}" />
             </div>
         </div>
         <hr class="handle-berkala d-none">
@@ -61,7 +56,7 @@
                     placeholder="Pesan Whatsapp Servis Berkala..." value="{{ $row->pesanwa_pservis }}" />
             </div>
         </div>
-        <div class="row mb-3 hidden_if_status_cancel">
+        <div class="row mb-3">
             <div class="col-lg-12">
                 <div class="d-flex justify-content-end">
                     <button type="button" class="btn btn-info me-2 btn-print-data">
@@ -70,15 +65,6 @@
                     <button type="button" class="btn btn-primary me-2 btn-submit-data">
                         <i class="fa-solid fa-paper-plane me-2"></i> Submit
                     </button>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-3 display_if_status_cancel d-none">
-            <div class="col-lg-12">
-                <div class="d-flex justify-content-end">
-                    <h5 class="text-danger badge bg-danger text-white">
-                        Transaksi Ini Dibatalkan
-                    </h5>
                 </div>
             </div>
         </div>

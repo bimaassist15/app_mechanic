@@ -207,3 +207,9 @@ Breadcrumbs::for('detailPengembalianServis', function (BreadcrumbTrail $trail, $
     $trail->parent('pengembalianServis');
     $trail->push('Detail Pengembalian Servis', url('service/pengembalianServis/' . $id));
 });
+
+// Home > detailKendaraanServis
+Breadcrumbs::for('detailKendaraanServis', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('kendaraanServis');
+    $trail->push('Detail Kendaraan Servis', url('service/kendaraanServis/' . $id));
+});

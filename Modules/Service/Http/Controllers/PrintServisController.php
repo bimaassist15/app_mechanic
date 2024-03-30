@@ -29,7 +29,7 @@ class PrintServisController extends Controller
         $penerimaanServis = new PenerimaanServis();
         $row = $penerimaanServis->transaksiServis($penerimaan_servis_id);
         $myCabang = UtilsHelper::myCabang();
-        return view('service::print.index', compact('row', 'myCabang'));
+        return view('service::print.selesaiServis', compact('row', 'myCabang'));
     }
 
     /**

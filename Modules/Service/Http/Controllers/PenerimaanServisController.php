@@ -369,9 +369,23 @@ class PenerimaanServisController extends Controller
         //
         $penerimaanServis = new PenerimaanServis();
 
+        // update if order stock barang
         $getPenerimaanServis = $penerimaanServis->transaksiServis($id);
-        $saldoDetail = SaldoDetail::where("penerimaan_servis_id", $id)->first();
 
+        // update stok barang
+        $orderBarang = $getPenerimaanServis->orderBarang;
+        if (count($orderBarang) > 0) {
+            foreach ($orderBarang as $key => $item) {
+                // update stok barang
+                $barang = Barang::find($item->barang_id);
+                $barang->stok_barang = $barang->stok_barang + $item->qty_orderbarang;
+                $barang->save();
+            }
+        }
+
+
+        // saldo customer
+        $saldoDetail = SaldoDetail::where("penerimaan_servis_id", $id)->first();
         if ($saldoDetail) {
             $totalDpDetail = $saldoDetail->totalsaldo_detail;
 
@@ -421,6 +435,41 @@ class PenerimaanServisController extends Controller
             'status_histori' => $status_pservis,
             'cabang_id' => session()->get('cabang_id'),
         ]);
+
+        // check if cancel
+        $statusServis = ['cancel', 'tidak bisa'];
+        if (in_array($status_pservis, $statusServis)) {
+
+            $penerimaanServis = new PenerimaanServis();
+            $getPenerimaanServis = $penerimaanServis->transaksiServis($id);
+
+            // update if order stock barang
+            $orderBarang = $getPenerimaanServis->orderBarang;
+            if (count($orderBarang) > 0) {
+                foreach ($orderBarang as $key => $item) {
+                    // update stok barang
+                    $barang = Barang::find($item->barang_id);
+                    $barang->stok_barang = $barang->stok_barang + $item->qty_orderbarang;
+                    $barang->save();
+                }
+            }
+
+            // saldo customer
+            $saldoDetail = SaldoDetail::where("penerimaan_servis_id", $id)->first();
+            if ($saldoDetail) {
+                $totalDpDetail = $saldoDetail->totalsaldo_detail;
+
+                // update saldo customer
+                $customer_id = $getPenerimaanServis->kendaraan->customer_id;
+                $saldoCustomer = SaldoCustomer::where('customer_id', $customer_id)->first();
+                $saldoCustomer->jumlah_saldocustomer = $saldoCustomer->jumlah_saldocustomer - $totalDpDetail;
+                $saldoCustomer->save();
+
+                // delete saldo detail
+                $saldoDetail->delete();
+            }
+        }
+
         return response()->json('Berhasil menambahkan progress pengerjaan');
     }
 }

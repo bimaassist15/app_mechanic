@@ -567,7 +567,7 @@ $(document).ready(function () {
     const resetData = () => {
         metodePembayaran = [];
         handleButtonBayar();
-        $("#output_metode_pembayaran").html("");
+        $(".output_metode_pembayaran").html("");
     };
 
     const printOutput = (output) => {
@@ -630,7 +630,7 @@ $(document).ready(function () {
                     handleManageHutang();
                     handleButtonBayar();
                     const output = viewMetodePembayaran();
-                    $("#output_metode_pembayaran").html(output);
+                    $(".output_metode_pembayaran").html(output);
                 },
             });
         }
@@ -676,7 +676,7 @@ $(document).ready(function () {
         handleManageHutang();
         handleButtonBayar();
         const output = viewMetodePembayaran();
-        $("#output_metode_pembayaran").html(output);
+        $(".output_metode_pembayaran").html(output);
     };
 
     body.off("click", ".btn-add-pembayaran");
@@ -697,7 +697,7 @@ $(document).ready(function () {
         handleDisplayInput();
         handleButtonBayar();
         const output = viewMetodePembayaran();
-        $("#output_metode_pembayaran").html(output);
+        $(".output_metode_pembayaran").html(output);
     });
 
     body.off("input", 'input[name="bayar"]');
@@ -722,7 +722,7 @@ $(document).ready(function () {
             handleButtonBayar();
             handleSubPembayaran(index);
             const output = viewMetodePembayaran();
-            $("#output_metode_pembayaran").html(output);
+            $(".output_metode_pembayaran").html(output);
         }
     });
 

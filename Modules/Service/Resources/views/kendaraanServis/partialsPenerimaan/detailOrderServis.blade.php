@@ -2,8 +2,11 @@
     <div class="card-header">
         <div class="d-flex justify-content-between">
             <div class="w-50">
-                Biaya Jasa Servis <strong style="font-weight: 800; color:rgb(102, 102, 230);">No. Nota
-                    {{ $row->nonota_pservis }}</strong>
+                Biaya Jasa Servis
+                <strong style="font-weight: 800; color:rgb(102, 102, 230);">
+                    No. Nota
+                    {{ $row->nonota_pservis }}
+                </strong>
             </div>
             <div class="w-50">
                 <x-form-select-vertical label="Cari Nama Servis" name="harga_servis_id" :data="$array_harga_servis" value="" />
@@ -20,7 +23,7 @@
                         <th>Nama Servis</th>
                         <th>Mekanik</th>
                         <th>Biaya</th>
-                        <th style="width: 15%;">Action</th>
+                        <th style="width: 15%;" class="hidden_after_bisa_diambil">Action</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0 onLoadServis" id="">

@@ -1,9 +1,9 @@
-<div class="card handle-metode-pembayaran">
+<div class="card">
     <div class="card-header bg-primary text-white p-3 mb-3">
         <strong>Metode Pembayaran</strong>
     </div>
-    <div class="card-body">
-        <div class="row mt-4">
+    <div class="card-body ">
+        <div class="row mt-4 hidden_tanggal_diambil">
             <div class="col-lg-6">
                 <x-form-select-vertical label="Metode Pembayaran" name="kategori_pembayaran_id" :data="json_decode($array_kategori_pembayaran)"
                     value="" />

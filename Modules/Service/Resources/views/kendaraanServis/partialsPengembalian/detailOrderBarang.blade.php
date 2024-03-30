@@ -22,7 +22,7 @@
                         <th>Sub Total</th>
                     </tr>
                 </thead>
-                <tbody class="table-border-bottom-0">
+                <tbody class="table-border-bottom-0 loadOrderBarang">
                     @php
                         $no = 1;
                     @endphp
@@ -46,7 +46,7 @@
                         <td colspan="6" class="text-end">
                             <strong>Total Biaya Sparepart</strong>
                         </td>
-                        <td>
+                        <td class="">
                             <strong class="totalHargaBarang">
                                 {{ UtilsHelp::formatUang($totalBiayaSparepart) }}
                             </strong>
