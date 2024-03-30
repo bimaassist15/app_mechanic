@@ -760,6 +760,14 @@ const runDataPenerimaan = () => {
         body.on("click", ".delete-order-barang", function (e) {
             e.preventDefault();
 
+            const id = $(this).data("id");
+            const indexOrderBarang = setOrderBarang.findIndex(
+                (item) => item.id == id
+            );
+            if (indexOrderBarang !== -1) {
+                setOrderBarang.splice(indexOrderBarang, 1);
+            }
+
             basicDeleteConfirmDatatable({
                 urlDelete: $(this).attr("href"),
                 data: {
@@ -768,7 +776,6 @@ const runDataPenerimaan = () => {
                 text: "Apakah anda yakin ingin menghapus item ini?",
                 dataFunction: renderListBarang,
             });
-            refreshData();
         });
 
         const payloadSubmit = () => {

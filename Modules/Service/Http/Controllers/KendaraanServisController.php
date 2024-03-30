@@ -61,7 +61,7 @@ class KendaraanServisController extends Controller
                                 <i class="fa-solid fa-pen-to-square"></i> &nbsp; Servis</a>
                         </li>
                         <li>
-                            <a href="' . url('service/kendaraanServis/' . $row->id . '?_method=delete') . '"
+                            <a href="' . url('service/penerimaanServis/' . $row->id . '?_method=delete') . '"
                                 class="dropdown-item d-flex align-items-center btn-delete">
                                 <i class="fa-solid fa-trash"></i> &nbsp; Delete</a>
                         </li>
@@ -250,40 +250,5 @@ class KendaraanServisController extends Controller
         }
 
         return view('service::kendaraanServis.detail', $data);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('service::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    public function detailKendaraanServis()
-    {
     }
 }

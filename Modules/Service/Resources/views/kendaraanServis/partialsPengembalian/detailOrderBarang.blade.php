@@ -22,7 +22,7 @@
                         <th>Sub Total</th>
                     </tr>
                 </thead>
-                <tbody class="table-border-bottom-0 loadOrderBarang">
+                <tbody class="table-border-bottom-0 loadOrderBarangKendaraan">
                     @php
                         $no = 1;
                     @endphp

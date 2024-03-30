@@ -85,4 +85,13 @@ $(document).ready(function () {
         const output = renderPrint(url);
         printOutput(output);
     });
+
+    body.on("click", ".btn-delete", function (e) {
+        e.preventDefault();
+        basicDeleteConfirmDatatable({
+            urlDelete: $(this).attr("href"),
+            data: {},
+            text: "Apakah anda yakin ingin menghapus item ini?",
+        });
+    });
 });

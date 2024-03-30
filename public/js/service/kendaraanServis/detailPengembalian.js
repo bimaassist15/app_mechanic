@@ -7,18 +7,12 @@ const runDataPengembalian = () => {
 
     // to pembayaran
     var jsonKategoriPembayaran = $(".json_kategori_pembayaran").data("json");
-    var jsonArrayKategoriPembayaran = $(".json_array_kategori_pembayaran").data(
-        "json"
-    );
     var jsonSubPembayaran = $(".json_sub_pembayaran").data("json");
-    var jsonArraySubPembayaran = $(".json_array_sub_pembayaran").data("json");
     var jsonDataUser = $(".json_data_user").data("json");
     var jsonCabangId = $(".json_cabang_id").data("json");
     var row = $(".jsonRow").data("json");
 
-    var jsonPenjualanId = $(".penjualan_id").data("value");
     var jsonDefaultUser = $(".defaultUser").data("value");
-    var is_deposit = $(".is_deposit").data("value");
     var getPembayaranServis = $(".getPembayaranServis").data("value");
 
     var metodePembayaran = [];
@@ -817,13 +811,9 @@ const runDataPengembalian = () => {
             $(".output_metode_pembayaran").html(output);
         };
 
-        if (is_deposit == true) {
-            renderDeposit();
-        }
-
         const refreshDataArea = () => {
             $.ajax({
-                url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
+                url: `${urlRoot}/service/kendaraanServis/${jsonPenerimaanServisId}`,
                 dataType: "json",
                 type: "get",
                 data: {
@@ -876,26 +866,69 @@ const runDataPengembalian = () => {
             $(".loadServiceHistory").html(outputService);
         };
 
+        const viewOrderBarangKendaraan = (rowData) => {
+            const orderBarang = rowData.order_barang;
+
+            let output = ``;
+            let no = 1;
+
+            orderBarang.map((item) => {
+                output += `
+                <tr>
+                    <td>${no++}</td>
+                    <td>${item.barang.nama_barang}</td>
+                    <td>${formatUang(item.barang.hargajual_barang)}</td>
+                    <td>${formatUang(item.qty_orderbarang)}</td>
+                    <td> ${capitalizeEachWord(
+                        item.typediskon_orderbarang == null
+                            ? ""
+                            : item.typediskon_orderbarang
+                    )} </td>
+                    <td>${formatUang(
+                        item.diskon_orderbarang == null
+                            ? 0
+                            : item.diskon_orderbarang
+                    )} </td>
+                    <td>${formatUang(item.subtotal_orderbarang)} </td>
+                </tr>
+                `;
+            });
+
+            return output;
+        };
+
         const refreshData = () => {
             $.ajax({
-                url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
+                url: `${urlRoot}/service/kendaraanServis/${jsonPenerimaanServisId}`,
                 dataType: "json",
                 type: "get",
                 data: {
                     refresh: true,
                 },
                 success: function (data) {
-                    jsonUsersId = data.usersId;
                     jsonPenerimaanServisId = data.penerimaanServisId;
-                    jsonGetServis = data.getServis;
-                    jsonGetBarang = data.barang;
-                    jsonTipeDiskon = JSON.parse(data.tipeDiskon);
+                    jsonKategoriPembayaran = JSON.parse(
+                        data.kategoriPembayaran
+                    );
+                    jsonSubPembayaran = JSON.parse(data.subPembayaran);
+                    jsonDataUser = JSON.parse(data.dataUser);
                     jsonCabangId = data.cabangId;
-                    jsonServiceHistory = data.row.service_history;
+                    jsonDefaultUser = data.defaultUser;
+                    is_deposit = data.is_deposit;
+                    getPembayaranServis = JSON.parse(data.getPembayaranServis);
+                    totalHargaItems = data.totalHutang;
+                    saldoDepositCustomer =
+                        data.row.customer.saldo_customer.jumlah_saldocustomer;
+                    customerId = data.row.customer.id;
 
                     // output servis history
                     const rowData = data.row;
                     viewServiceHistori(rowData);
+
+                    // handle deposit
+                    if (data.is_deposit) {
+                        renderDeposit();
+                    }
 
                     // handle output transaksi
                     $(".output_totalbiaya_pservis").html(
@@ -909,6 +942,12 @@ const runDataPengembalian = () => {
                     );
                     $(".output_tanggalambil_pservis").html(
                         formatDateFromDb(rowData.tanggalambil_pservis)
+                    );
+                    $(".output_bayar_pservis").html(
+                        formatUang(rowData.bayar_pservis)
+                    );
+                    $(".output_kembalian_pservis").html(
+                        formatUang(rowData.kembalian_pservis)
                     );
 
                     // handle pembayaran servis
@@ -1139,6 +1178,13 @@ const runDataPengembalian = () => {
                         $(".hidden_after_bisa_diambil").removeClass("d-none");
                         $(".if_status_cancel").addClass("d-none");
                     }
+
+                    // handle view loadOrderBarangKendaraan
+                    const outputOrderBarangKendaraan =
+                        viewOrderBarangKendaraan(rowData);
+                    $(".loadOrderBarangKendaraan").html(
+                        outputOrderBarangKendaraan
+                    );
                 },
             });
         };
@@ -1564,6 +1610,7 @@ const runDataPengembalian = () => {
         printWindow.close();
     };
 
+    body.off("click", ".btn-print-data");
     body.on("click", ".btn-print-data", function (e) {
         e.preventDefault();
         const url = `${urlRoot}/service/print/kendaraan/selesaiServis?penerimaan_servis_id=${jsonPenerimaanServisId}`;

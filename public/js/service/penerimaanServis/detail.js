@@ -387,6 +387,14 @@ $(document).ready(function () {
     body.on("click", ".delete-order-servis", function (e) {
         e.preventDefault();
 
+        const id = $(this).data("id");
+        const indexOrderBarang = setOrderBarang.findIndex(
+            (item) => item.id == id
+        );
+        if (indexOrderBarang !== -1) {
+            setOrderBarang.splice(indexOrderBarang, 1);
+        }
+
         basicDeleteConfirmDatatable({
             urlDelete: $(this).attr("href"),
             data: {
