@@ -56,8 +56,15 @@ const refreshDataArea = () => {
                 getGlobalRefresh = true;
                 runGlobalRefresh();
             } else {
-                getGlobalRefresh = false;
-                runGlobalRefresh();
+                const statusCancel = ["tidak bisa", "cancel"];
+
+                if (!statusCancel.includes(rowData.status_pservis)) {
+                    getGlobalRefresh = false;
+                    runGlobalRefresh();
+                } else {
+                    getGlobalRefresh = true;
+                    runGlobalRefresh();
+                }
             }
         },
     });
@@ -289,6 +296,13 @@ renderListBarang = (data, isOnlyTotalHarga = false) => {
      </td>
  </tr>
  `;
+        }
+
+        if (isOnlyTotalHarga) {
+            $(`input[name="qty_orderbarang"][data-id="${v.id}" ]`).attr(
+                "title",
+                `Stok Barang: ${v.barang.stok_barang}`
+            );
         }
     });
     if (!isOnlyTotalHarga) {

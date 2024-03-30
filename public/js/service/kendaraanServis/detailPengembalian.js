@@ -837,8 +837,15 @@ const runDataPengembalian = () => {
                         getGlobalRefresh = true;
                         runGlobalRefresh();
                     } else {
-                        getGlobalRefresh = false;
-                        runGlobalRefresh();
+                        const statusCancel = ["tidak bisa", "cancel"];
+
+                        if (!statusCancel.includes(rowData.status_pservis)) {
+                            getGlobalRefresh = false;
+                            runGlobalRefresh();
+                        } else {
+                            getGlobalRefresh = true;
+                            runGlobalRefresh();
+                        }
                     }
                 },
             });
@@ -899,6 +906,9 @@ const runDataPengembalian = () => {
                     );
                     $(".output_total_dppservis").html(
                         formatUang(rowData.total_dppservis)
+                    );
+                    $(".output_tanggalambil_pservis").html(
+                        formatDateFromDb(rowData.tanggalambil_pservis)
                     );
 
                     // handle pembayaran servis
@@ -998,7 +1008,7 @@ const runDataPengembalian = () => {
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
-                                            <label for="">Dibayar Oleh</label>
+                                            <label for="">Dibayar Oleh</label> <br />
                                             ${v.dibayaroleh_pservis}
                                         </div>
                                     </div>
@@ -1082,7 +1092,6 @@ const runDataPengembalian = () => {
                         const statusCancel = ["cancel", "tidak bisa"];
                         if (statusCancel.includes(rowData.status_pservis)) {
                             $(".label_total_dppservis").closest(".row").hide();
-
                             $(".display_after_bisa_diambil").removeClass(
                                 "d-none"
                             );
@@ -1124,8 +1133,8 @@ const runDataPengembalian = () => {
 
                         if (statusCancel.includes(rowData.status_pservis)) {
                             $(".if_status_cancel").removeClass("d-none");
-                            $(".hidden_after_bisa_diambil").addClass("d-none");
                         }
+                        $(".hidden_after_bisa_diambil").addClass("d-none");
                     } else {
                         $(".hidden_after_bisa_diambil").removeClass("d-none");
                         $(".if_status_cancel").addClass("d-none");

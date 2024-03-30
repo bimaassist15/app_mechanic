@@ -1099,6 +1099,7 @@ $(document).ready(function () {
                 pemilikkartu_pservis: item.nama_pemilik_kartu || "",
                 penerimaan_servis_id: jsonPenerimaanServisId,
                 cabang_id: jsonCabangId,
+                saldodeposit_pservis: item.saldo_deposit,
                 deposit_pservis: item.sisasaldo_deposit,
             });
         });
@@ -1168,7 +1169,7 @@ $(document).ready(function () {
                 });
 
                 resetData();
-                window.location.href = `${urlRoot}/service/kendaraanServis`;
+                window.location.href = `${urlRoot}/service/kendaraanServis/${jsonPenerimaanServisId}`;
             },
             error: function (jqXHR, exception) {
                 $(".btn-submit-data").attr("disabled", false);

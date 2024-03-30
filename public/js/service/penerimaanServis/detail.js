@@ -272,7 +272,15 @@ renderListBarang = (data, isOnlyTotalHarga = false) => {
     </tr>
     `;
         }
+
+        if (isOnlyTotalHarga) {
+            $(`input[name="qty_orderbarang"][data-id="${v.id}" ]`).attr(
+                "title",
+                `Stok Barang: ${v.barang.stok_barang}`
+            );
+        }
     });
+
     if (!isOnlyTotalHarga) {
         $(".loadOrderBarang").html(output);
     }
