@@ -68,7 +68,7 @@
         <div class="row mb-3 hidden_tanggal_diambil">
             <div class="col-lg-6 mb-2"></div>
             <div class="col-lg-6 mb-2">
-                <label for="">Servis Berkala (Datang Kembali): </label>
+                <label for="">Servis Garansi (Datang Kembali): </label>
             </div>
             <div class="col-lg-6"></div>
             <div class="col-lg-6">
@@ -106,7 +106,7 @@
             <div class="row mb-3">
                 <div class="col-lg-6 mb-2"></div>
                 <div class="col-lg-6 mb-2">
-                    <label for="">Servis Berkala (Datang Kembali): </label>
+                    <label for="">Servis Garansi (Datang Kembali): </label>
                 </div>
                 <div class="col-lg-6"></div>
                 <div class="col-lg-6">
@@ -128,6 +128,33 @@
                     </div>
                 </div>
             </div>
+            <hr class="">
+            <div class="row mb-3">
+                <div class="col-lg-12">
+                    Garansi Kendaraan <strong style="font-weight: 800; color:rgb(102, 102, 230);">No. Nota
+                        {{ $row->nonota_pservis }}</strong>
+                </div>
+            </div>
+            <hr>
+            <div class="row hidden_garansi_pservis">
+                <div class="col-lg-6">
+                    <x-form-textarea-vertical label="Keluhan Komplain Garansi Servis" name="garansi_pservis"
+                        value="{{ $row->garansi_pservis }}" placeholder="Keluhan Komplain Garansi..."
+                        rows="4" />
+                </div>
+                <div class="col-lg-6"></div>
+            </div>
+            <div class="row display_garansi_pservis d-none">
+                <div class="col-lg-6">
+                    <x-data-vertical label="<strong>Komplain Garansi:</strong>"
+                        value="<span class='output_garansi_pservis'>{{ $row->garansi_pservis }}</span>" />
+                </div>
+                <div class="col-lg-6">
+                    <x-data-vertical label="<strong>Penerima Komplain:</strong>"
+                        value="<span class='output_users_id_garansi'>{{ ucfirst($row->usersIdGaransi->name) }}</span>" />
+                </div>
+            </div>
+
             <div class="row mb-3">
                 <div class="col-lg-12">
                     <div class="d-flex justify-content-end">
@@ -136,6 +163,10 @@
                         </button>
                         <button type="button" class="btn btn-primary me-2 btn-print-data">
                             <i class="fa-solid fa-print me-2"></i> Print Nota
+                        </button>
+                        <button type="button" class="btn btn-primary me-2 btn-complain hidden_garansi_pservis">
+                            <i class="fa-solid fa-paper-plane me-2"></i>
+                            Submit
                         </button>
                     </div>
                 </div>

@@ -160,7 +160,13 @@
         </li>
 
         @php
-            $activeRouteService = ['service/kendaraanServis'];
+            $activeRouteService = [
+                'service/kendaraanServis',
+                'service/berkala',
+                'service/garansi',
+                'service/dikerjakan',
+                'service/komplain',
+            ];
         @endphp
         <li
             class="menu-item {{ collect($activeRouteService)->contains(function ($route) {
@@ -178,13 +184,13 @@
                         <div data-i18n="Kendaraan Servis">Kendaraan Servis</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->is('service/kendaraanServis') ? 'active' : '' }}">
-                    <a href="{{ url('service/kendaraanServis') }}" class="menu-link">
+                <li class="menu-item {{ request()->is('service/berkala') ? 'active' : '' }}">
+                    <a href="{{ url('service/berkala') }}" class="menu-link">
                         <div data-i18n="Servis Berkala">Servis Berkala</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->is('service/kendaraanServis') ? 'active' : '' }}">
-                    <a href="{{ url('service/kendaraanServis') }}" class="menu-link">
+                <li class="menu-item {{ request()->is('service/garansi') ? 'active' : '' }}">
+                    <a href="{{ url('service/garansi') }}" class="menu-link">
                         <div data-i18n="Servis Garansi">Servis Garansi</div>
                     </a>
                 </li>

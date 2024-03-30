@@ -41,7 +41,7 @@ class PenerimaanServis extends Model
 
     public function transaksiServis($penerimaan_servis_id)
     {
-        $data = PenerimaanServis::with('kendaraan', 'kendaraan.customer', 'kategoriServis', 'pembayaranServis', 'users', 'pembayaranServis.kategoriPembayaran', 'pembayaranServis.subPembayaran', 'pembayaranServis.users', 'serviceHistory', 'orderServis', 'orderServis.usersMekanik', 'orderBarang', 'orderBarang.barang', 'customer', 'customer.saldoCustomer')
+        $data = PenerimaanServis::with('kendaraan', 'kendaraan.customer', 'kategoriServis', 'pembayaranServis', 'users', 'pembayaranServis.kategoriPembayaran', 'pembayaranServis.subPembayaran', 'pembayaranServis.users', 'serviceHistory', 'orderServis', 'orderServis.usersMekanik', 'orderBarang', 'orderBarang.barang', 'customer', 'customer.saldoCustomer', 'usersIdGaransi')
             ->where('cabang_id', session()->get('cabang_id'))
             ->find($penerimaan_servis_id);
         return $data;
@@ -65,5 +65,10 @@ class PenerimaanServis extends Model
     public function serviceHistory()
     {
         return $this->hasMany(ServiceHistory::class);
+    }
+
+    public function usersIdGaransi()
+    {
+        return $this->belongsTo(User::class, 'users_id_garansi', 'id');
     }
 }

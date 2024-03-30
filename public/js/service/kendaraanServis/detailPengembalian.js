@@ -1169,6 +1169,16 @@ const runDataPengembalian = () => {
                         $(".output_tipegaransi_pservis").html(
                             rowData.tipegaransi_pservis
                         );
+                        $(".output_servisgaransi_pservis").html(
+                            `
+                            <div class="form-group">
+                                <strong>Masa Berlaku Garansi: </strong> <br />
+                                ${formatDateIndonesia(
+                                    rowData.servisgaransi_pservis
+                                )}
+                            </div>
+                            `
+                        );
 
                         if (statusCancel.includes(rowData.status_pservis)) {
                             $(".if_status_cancel").removeClass("d-none");

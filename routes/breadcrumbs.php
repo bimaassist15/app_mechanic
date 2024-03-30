@@ -213,3 +213,15 @@ Breadcrumbs::for('detailKendaraanServis', function (BreadcrumbTrail $trail, $id)
     $trail->parent('kendaraanServis');
     $trail->push('Detail Kendaraan Servis', url('service/kendaraanServis/' . $id));
 });
+
+// Home > garansi
+Breadcrumbs::for('garansi', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Garansi', url('service/garansi/'));
+});
+
+// Home > garansiDetail
+Breadcrumbs::for('garansiDetail', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('garansi');
+    $trail->push('Detail Garansi', url('service/garansi/' . $id));
+});

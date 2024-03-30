@@ -4,6 +4,6 @@
 ])
 
 <div class="form-group">
-    <label for="">{{ $label }}</label> <br />
+    <label for="">{!! $label !!}</label> <br />
     <span>{!! $value !!}</span>
 </div>
