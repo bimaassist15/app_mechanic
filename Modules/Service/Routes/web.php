@@ -46,4 +46,18 @@ Route::prefix('service')->middleware('auth')->group(function () {
     Route::get('garansi', 'GaransiController@index')->name('garansi.index');
     Route::get('garansi/{id}', 'GaransiController@show')->name('garansi.show');
     Route::put('garansi/{id}/update', 'GaransiController@update')->name('garansi.update');
+
+    // service berkala
+    Route::get('berkala', 'BerkalaController@index')->name('berkala.index');
+    Route::get('berkala/{id}', 'BerkalaController@show')->name('berkala.show');
+    Route::put('berkala/{id}/update', 'BerkalaController@update')->name('berkala.update');
+    Route::put('berkala/setReminded/{id}/update', 'BerkalaController@setReminded')->name('berkala.setReminded');
+
+    // service mekanik
+    Route::get('mekanik', 'MekanikController@index')->name('mekanik.index');
+    Route::get('mekanik/{id}', 'MekanikController@show')->name('mekanik.show');
+
+    // service mekanik garansi
+    Route::get('mekanikGaransi', 'MekanikGaransiController@index')->name('mekanikGaransi.index');
+    Route::get('mekanikGaransi/{id}', 'MekanikGaransiController@show')->name('mekanikGaransi.show');
 });

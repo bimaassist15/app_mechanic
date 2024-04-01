@@ -198,7 +198,7 @@
         </li>
 
         @php
-            $activeRouteService = ['service/mekanik'];
+            $activeRouteService = ['service/mekanik', 'service/mekanikGaransi'];
         @endphp
         <li
             class="menu-item {{ collect($activeRouteService)->contains(function ($route) {
@@ -216,9 +216,9 @@
                         <div data-i18n="Servis Dikerjakan">Servis Dikerjakan</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->is('service/mekanik') ? 'active' : '' }}">
-                    <a href="{{ url('service/mekanik') }}" class="menu-link">
-                        <div data-i18n="Servis Garansi Komplain">Servis Garansi Komplain</div>
+                <li class="menu-item {{ request()->is('service/mekanikGaransi') ? 'active' : '' }}">
+                    <a href="{{ url('service/mekanikGaransi') }}" class="menu-link">
+                        <div data-i18n="Servis Mekanik Garansi">Servis Mekanik Garansi</div>
                     </a>
                 </li>
             </ul>
@@ -238,6 +238,8 @@
                 'master/hargaServis',
                 'master/kategoriPembayaran',
                 'master/subPembayaran',
+                'master/kategoriPendapatan',
+                'master/kategoriPengeluaran',
             ];
         @endphp
         <li class="menu-header small text-uppercase">
@@ -304,21 +306,44 @@
                         <div data-i18n="Sub Pembayaran">Sub Pembayaran</div>
                     </a>
                 </li>
+                <li class="menu-item {{ request()->is('master/kategoriPendapatan') ? 'active' : '' }}">
+                    <a href="{{ url('master/kategoriPendapatan') }}" class="menu-link">
+                        <div data-i18n="Kategori Pendapatan">Kategori Pendapatan</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('master/kategoriPengeluaran') ? 'active' : '' }}">
+                    <a href="{{ url('master/kategoriPengeluaran') }}" class="menu-link">
+                        <div data-i18n="Kategori Pengeluaran">Kategori Pengeluaran</div>
+                    </a>
+                </li>
             </ul>
         </li>
 
+        @php
+            $activeRoutesLaporan = ['report/pendapatan', 'report/pengeluaran'];
+        @endphp
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Laporan</span>
         </li>
-        <li class="menu-item">
+        <li
+            class="menu-item {{ collect($activeRoutesLaporan)->contains(function ($route) {
+                return request()->is($route) || str_starts_with(request()->url(), url($route));
+            })
+                ? 'active'
+                : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bxs-report"></i>
                 <div data-i18n="Laba Bersih">Laba Bersih</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item {{ request()->is('master/kategori') ? 'active' : '' }}">
-                    <a href="{{ url('master/kategori') }}" class="menu-link">
-                        <div data-i18n="Kategori">Kategori</div>
+                <li class="menu-item {{ request()->is('report/pendapatan') ? 'active' : '' }}">
+                    <a href="{{ url('report/pendapatan') }}" class="menu-link">
+                        <div data-i18n="Laporan Pendapatan">Laporan Pendapatan</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/pengeluaran') ? 'active' : '' }}">
+                    <a href="{{ url('report/pengeluaran') }}" class="menu-link">
+                        <div data-i18n="Laporan Pengeluaran">Laporan Pengeluaran</div>
                     </a>
                 </li>
             </ul>

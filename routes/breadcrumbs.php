@@ -225,3 +225,55 @@ Breadcrumbs::for('garansiDetail', function (BreadcrumbTrail $trail, $id) {
     $trail->parent('garansi');
     $trail->push('Detail Garansi', url('service/garansi/' . $id));
 });
+
+// Home > berkala
+Breadcrumbs::for('berkala', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Berkala', url('service/berkala/'));
+});
+
+// Home > berkalaDetail
+Breadcrumbs::for('berkalaDetail', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('berkala');
+    $trail->push('Detail berkala', url('service/berkala/' . $id));
+});
+
+// Home > mekanik
+Breadcrumbs::for('mekanik', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Mekanik', url('service/mekanik/'));
+});
+// Home > mekanikDetail
+Breadcrumbs::for('mekanikDetail', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('mekanik');
+    $trail->push('Detail Mekanik', url('service/mekanik/' . $id));
+});
+
+// Home > mekanikGaransi
+Breadcrumbs::for('mekanikGaransi', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Mekanik Garansi', url('service/mekanikGaransi/'));
+});
+// Home > mekanikGaransiDetail
+Breadcrumbs::for('mekanikGaransiDetail', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('mekanikGaransi');
+    $trail->push('Detail Mekanik Garansi', url('service/mekanikGaransi/' . $id));
+});
+
+
+// Home > kategoriPendapatan
+Breadcrumbs::for('kategoriPendapatan', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Kategori Pendapatan', url('service/kategoriPendapatan/'));
+});
+// Home > kategoriPengeluaran
+Breadcrumbs::for('kategoriPengeluaran', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Kategori Pengeluaran', url('service/kategoriPengeluaran/'));
+});
+
+// Home > pendapatan
+Breadcrumbs::for('pendapatan', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Pendapatan', url('service/pendapatan/'));
+});

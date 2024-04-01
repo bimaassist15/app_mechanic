@@ -25,7 +25,7 @@
                             <th>Tanggal Masuk</th>
                             <th>Status</th>
                             <th>Tanggal Ambil</th>
-                            <th>Garansi</th>
+                            <th>Masa Garansi</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>

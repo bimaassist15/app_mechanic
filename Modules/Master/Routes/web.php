@@ -26,4 +26,6 @@ Route::prefix('master')->middleware('auth')->group(function () {
     Route::resource('hargaServis', 'HargaServisController');
     Route::resource('kategoriPembayaran', 'KategoriPembayaranController');
     Route::resource('subPembayaran', 'SubPembayaranController');
+    Route::resource('kategoriPendapatan', 'KategoriPendapatanController');
+    Route::resource('kategoriPengeluaran', 'KategoriPengeluaranController');
 });

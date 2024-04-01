@@ -462,6 +462,8 @@ $(document).ready(function () {
     const handleButtonBayar = () => {
         let buttonDisabledTidakLangsung = false;
         let buttonDisabledLangsung = false;
+        let buttonDisabledDeposit = false;
+
         let buttonDisabled;
         let sumBayar = 0;
         let sumDeposit = 0;
@@ -482,7 +484,9 @@ $(document).ready(function () {
         metodePembayaran.map((value, index) => {
             if (
                 value.kategori_pembayaran_selected.nama_kpembayaran.toLowerCase() !==
-                "langsung"
+                    "langsung" &&
+                value.kategori_pembayaran_selected.nama_kpembayaran.toLowerCase() !==
+                    "deposit"
             ) {
                 if (
                     value.kategori_pembayaran_selected === undefined ||
@@ -498,16 +502,30 @@ $(document).ready(function () {
                 }
             } else {
                 if (
-                    value.kategori_pembayaran_selected === undefined ||
-                    value.sub_pembayaran_selected === undefined ||
-                    value.bayar === "" ||
-                    value.jumlah_deposit === "" ||
-                    value.user_selected === undefined ||
-                    value.dibayarkan_oleh === ""
+                    value.kategori_pembayaran_selected.nama_kpembayaran.toLowerCase() !==
+                    "deposit"
                 ) {
-                    buttonDisabledLangsung = true;
+                    if (
+                        value.kategori_pembayaran_selected === undefined ||
+                        value.sub_pembayaran_selected === undefined ||
+                        value.bayar === "" ||
+                        value.jumlah_deposit === "" ||
+                        value.user_selected === undefined ||
+                        value.dibayarkan_oleh === ""
+                    ) {
+                        buttonDisabledLangsung = true;
+                    } else {
+                        buttonDisabledLangsung = false;
+                    }
                 } else {
-                    buttonDisabledLangsung = false;
+                    if (
+                        value.kategori_pembayaran_selected === undefined ||
+                        value.bayar === ""
+                    ) {
+                        buttonDisabledDeposit = true;
+                    } else {
+                        buttonDisabledDeposit = false;
+                    }
                 }
             }
         });
@@ -515,8 +533,12 @@ $(document).ready(function () {
         if (sumBayar < sumDeposit) {
             buttonDisabledLangsung = true;
             buttonDisabledTidakLangsung = true;
+            buttonDisabledDeposit = true;
         }
-        buttonDisabled = buttonDisabledTidakLangsung || buttonDisabledLangsung;
+        buttonDisabled =
+            buttonDisabledTidakLangsung ||
+            buttonDisabledLangsung ||
+            buttonDisabledDeposit;
         $(".btn-bayar").attr("disabled", buttonDisabled);
     };
     // end benar

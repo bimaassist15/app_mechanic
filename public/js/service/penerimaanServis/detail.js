@@ -131,7 +131,7 @@ const refreshData = () => {
 
             // handle status cancel
             const getStatus = rowData.status_pservis;
-            const statusCancel = ["tidak bisa", "cancel"];
+            const statusCancel = ["tidak bisa", "cancel", "komplain garansi", "sudah diambil"];
             if (statusCancel.includes(getStatus)) {
                 $(".display_if_status_cancel").removeClass("d-none");
                 $(".hidden_if_status_cancel").addClass("d-none");
@@ -784,44 +784,72 @@ $(document).ready(function () {
             });
         }
 
-        $.ajax({
-            type: "post",
-            url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}?_method=put`,
-            data: payload,
-            dataType: "json",
-            beforeSend: function () {
-                clearError422();
-                $(".btn-submit-data").attr("disabled", true);
-                $(".btn-submit-data").html(disableButton);
-            },
-            success: function (data) {
-                runToast({
-                    title: "Successfully",
-                    description: data,
-                    type: "bg-success",
-                });
-                refreshData();
-                if (payload.status_pservis == "bisa diambil") {
-                    window.location.href = `${urlRoot}/service/pengembalianServis/${jsonPenerimaanServisId}`;
-                }
+        const submitAjaxData = () => {
+            $.ajax({
+                type: "post",
+                url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}?_method=put`,
+                data: payload,
+                dataType: "json",
+                beforeSend: function () {
+                    clearError422();
+                    $(".btn-submit-data").attr("disabled", true);
+                    $(".btn-submit-data").html(disableButton);
+                },
+                success: function (data) {
+                    runToast({
+                        title: "Successfully",
+                        description: data,
+                        type: "bg-success",
+                    });
+                    refreshData();
+                    if (payload.status_pservis == "bisa diambil") {
+                        window.location.href = `${urlRoot}/service/pengembalianServis/${jsonPenerimaanServisId}`;
+                    }
 
-                const statusCancel = ["tidak bisa", "cancel"];
-                if (statusCancel.includes(payload.status_pservis)) {
-                    window.location.href = `${urlRoot}/service/kendaraanServis/${jsonPenerimaanServisId}`;
+                    const statusCancel = ["tidak bisa", "cancel", "komplain garansi", "sudah diambil"];
+                    if (statusCancel.includes(payload.status_pservis)) {
+                        window.location.href = `${urlRoot}/service/kendaraanServis/${jsonPenerimaanServisId}`;
+                    }
+                },
+                error: function (jqXHR, exception) {
+                    $(".btn-submit-data").attr("disabled", false);
+                    $(".btn-submit-data").html(enableButton);
+                    if (jqXHR.status === 422) {
+                        showErrors422(jqXHR);
+                    }
+                },
+                complete: function () {
+                    $(".btn-submit-data").attr("disabled", false);
+                    $(".btn-submit-data").html(enableButton);
+                },
+            });
+        };
+
+        let booleanStatus = false;
+        if (getValueStatus == "bisa diambil") {
+            Swal.fire({
+                title: "Konfirmasi",
+                html: `Apakah anda yakin ingin konfirmasi bahwa servis sudah bisa diambil ? <br /><br /> 
+                <strong> Proses ini tidak dapat diedit kembali, 
+                jika terjadi kesalahan maka wajib menghapus dan buat dari awal</strong>`,
+                icon: "warning",
+                dangerMode: true,
+                showCancelButton: true,
+                confirmButtonText: "Ya, hapus",
+                cancelButtonText: "Tidak",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    booleanStatus = true;
+                    submitAjaxData();
                 }
-            },
-            error: function (jqXHR, exception) {
-                $(".btn-submit-data").attr("disabled", false);
-                $(".btn-submit-data").html(enableButton);
-                if (jqXHR.status === 422) {
-                    showErrors422(jqXHR);
-                }
-            },
-            complete: function () {
-                $(".btn-submit-data").attr("disabled", false);
-                $(".btn-submit-data").html(enableButton);
-            },
-        });
+            });
+        } else {
+            booleanStatus = true;
+        }
+
+        if (booleanStatus) {
+            submitAjaxData();
+        }
     });
 
     const renderPrintKasir = () => {

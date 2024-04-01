@@ -51,6 +51,8 @@
     <link rel="stylesheet"
         href="{{ asset('library/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min.css') }}">
     <link rel="stylesheet" href="{{ asset('library/sweetalert2/dist/sweetalert2.min.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('library/bootstrap-datepicker-master/dist/css/bootstrap-datepicker.min.css') }}">
     @stack('custom_css')
 
     <!-- Helpers -->
@@ -138,6 +140,7 @@
     <script src="{{ asset('library/autonumeric/dist/autoNumeric.min.js') }}"></script>
     <script src="{{ asset('library/jQuery-Plugin-To-Print-Any-Part-Of-Your-Page-Print/dist/jQuery.print.min.js') }}">
     </script>
+    <script src="{{ asset('library/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js') }}"></script>
 
     <script>
         $.ajaxSetup({

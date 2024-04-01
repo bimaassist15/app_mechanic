@@ -51,7 +51,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="">Pesan Whatsapp Servis Berkala: </label> <br />
-                    {{ $row->pesanwa_pservis }}
+                    {{ $row->pesanwa_pservis ?? 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami. ' }}
                 </div>
             </div>
         </div>

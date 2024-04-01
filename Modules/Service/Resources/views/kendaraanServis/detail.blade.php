@@ -105,7 +105,7 @@
                 $('.areaPenerimaanServis').hide();
                 $('.areaPengembalianServis').show();
             } else {
-                const statusCancel = ['tidak bisa', 'cancel'];
+                const statusCancel = ['tidak bisa', 'cancel', 'komplain garansi', 'sudah diambil'];
                 if (!statusCancel.includes(getGlobalRefresh)) {
                     runDataPenerimaan();
                     $('.areaPenerimaanServis').show();

@@ -246,6 +246,18 @@ class PengembalianServisController extends Controller
             'tanggalambil_pservis' => date('Y-m-d H:i:s'),
         ]);
 
+        if ($servisgaransi_pservis != null) {
+            $getPenerimaanServis = PenerimaanServis::find($id);
+            $getPenerimaanServis->status_pservis = 'sudah diambil';
+            $getPenerimaanServis->save();
+
+            ServiceHistory::create([
+                'penerimaan_servis_id' => $id,
+                'status_histori' => 'sudah diambil',
+                'cabang_id' => session()->get('cabang_id'),
+            ]);
+        }
+
         // saldo customer
         $saldo_customer = $request->input('saldo_customer');
         $customer_id = $saldo_customer['customer_id'];

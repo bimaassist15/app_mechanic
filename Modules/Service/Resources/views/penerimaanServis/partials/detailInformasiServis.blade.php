@@ -58,7 +58,8 @@
                 <x-form-input-vertical name="kondisiservis_pservis" label="Kondisi Kendaraan Servis"
                     placeholder="Kondisi kendaraan setelah servis" value="{{ $row->kondisiservis_pservis }}" />
                 <x-form-textarea-vertical label="Pesan Whatsapp Servis Berkala" name="pesanwa_pservis"
-                    placeholder="Pesan Whatsapp Servis Berkala..." value="{{ $row->pesanwa_pservis }}" />
+                    placeholder="Pesan Whatsapp Servis Berkala..."
+                    value="{{ $row->pesanwa_pservis ?? 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami. ' }}" />
             </div>
         </div>
         <div class="row mb-3 hidden_if_status_cancel">

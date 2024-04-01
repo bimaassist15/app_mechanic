@@ -536,3 +536,10 @@ const formatDateIndonesia = (dateString) => {
     const formattedDate = date.toLocaleDateString('id-ID', options);
     return formattedDate;
 };
+function datepickerDdMmYyyy() {
+    $(".datepicker").datepicker({
+        dateFormat: "dd/mm/yy",
+        todayButton: true,
+        highlight: true,
+    });
+}

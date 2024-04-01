@@ -11,6 +11,8 @@
 |
 */
 
-Route::prefix('report')->middleware('auth')->group(function() {
+Route::prefix('report')->middleware('auth')->group(function () {
     Route::get('/', 'ReportController@index');
+
+    Route::resource('pendapatan', 'PendapatanController');
 });

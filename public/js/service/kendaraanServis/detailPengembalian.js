@@ -827,7 +827,12 @@ const runDataPengembalian = () => {
                         getGlobalRefresh = true;
                         runGlobalRefresh();
                     } else {
-                        const statusCancel = ["tidak bisa", "cancel"];
+                        const statusCancel = [
+                            "tidak bisa",
+                            "cancel",
+                            "komplain garansi", 
+                            "sudah diambil"
+                        ];
 
                         if (!statusCancel.includes(rowData.status_pservis)) {
                             getGlobalRefresh = false;
@@ -953,7 +958,7 @@ const runDataPengembalian = () => {
                     // handle pembayaran servis
                     const tanggalambil_pservis = data.row.tanggalambil_pservis;
                     let outputPServis = "";
-                    const statusCancel = ["cancel", "tidak bisa"];
+                    const statusCancel = ["cancel", "tidak bisa", "komplain garansi", "sudah diambil"];
 
                     if (
                         tanggalambil_pservis != null ||
@@ -970,114 +975,115 @@ const runDataPengembalian = () => {
                                 "deposit"
                             ) {
                                 outputPServis += `
-                                <div class="row mb-3">
-                                    <div class="col-lg-4">
-                                        <div class="row">
-                                            <div class="col-lg-8">
-                                                <h5 class="m-0 p-0">Pembayaran Deposit:</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <div class="col-lg-8">
+                                                    <h5 class="m-0 p-0">Pembayaran Deposit:</h5>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                </div>
                                             </div>
-                                            <div class="col-lg-4">
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="">Saldo Deposit</label> <br />
+                                                <span>${formatUang(
+                                                    v.saldodeposit_pservis
+                                                )}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="">Bayar</label> <br />
+                                                ${formatUang(v.bayar_pservis)}
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label for="">Saldo Deposit</label> <br />
-                                            <span>${formatUang(
-                                                v.saldodeposit_pservis
-                                            )}</span>
+                                    <div class="row mb-3">
+                                        <div class="col-lg-4">
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="">Sisa Saldo</label> <br />
+                                                ${formatUang(v.deposit_pservis)}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="">Hutang</label> <br />
+                                                ${formatUang(v.hutang_pservis)}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label for="">Bayar</label> <br />
-                                            ${formatUang(v.bayar_pservis)}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-4">
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label for="">Sisa Saldo</label> <br />
-                                            ${formatUang(v.deposit_pservis)}
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label for="">Hutang</label> <br />
-                                            ${formatUang(v.hutang_pservis)}
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr style="color: #1381f0;" />
-                                `;
+                                    <hr style="color: #1381f0;" />
+                                    `;
                             }
                             if (
                                 v.kategori_pembayaran.nama_kpembayaran.toLowerCase() ===
                                 "langsung"
                             ) {
                                 outputPServis += `
-                                <div class="row mb-3">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <h5 class="m-0 p-0">${
-                                                v.kategori_pembayaran
-                                                    .nama_kpembayaran
-                                            }</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <h5 class="m-0 p-0">${
+                                                    v.kategori_pembayaran
+                                                        .nama_kpembayaran
+                                                }</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                          <h5 class="m-0 p-0">${
-                                              v.sub_pembayaran.nama_spembayaran
-                                          }</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                              <h5 class="m-0 p-0">${
+                                                  v.sub_pembayaran
+                                                      .nama_spembayaran
+                                              }</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="">Bayar</label><br />
+                                                ${formatUang(v.bayar_pservis)}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="">Dibayar Oleh</label> <br />
+                                                ${v.dibayaroleh_pservis}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label for="">Bayar</label><br />
-                                            ${formatUang(v.bayar_pservis)}
+                                    <div class="row mt-3">
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="">Akun</label> <br />
+                                               <span>${v.users.name}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="">Kembalian</label> <br />
+                                                <span>${formatUang(
+                                                    v.kembalian_pservis
+                                                )}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="">Hutang</label> <br />
+                                                <span>${formatUang(
+                                                    v.hutang_pservis
+                                                )}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label for="">Dibayar Oleh</label> <br />
-                                            ${v.dibayaroleh_pservis}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label for="">Akun</label> <br />
-                                           <span>${v.users.name}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label for="">Kembalian</label> <br />
-                                            <span>${formatUang(
-                                                v.kembalian_pservis
-                                            )}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label for="">Hutang</label> <br />
-                                            <span>${formatUang(
-                                                v.hutang_pservis
-                                            )}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr style="color: #1381f0;" />
-                                `;
+                                    <hr style="color: #1381f0;" />
+                                    `;
                             }
                             if (
                                 v.kategori_pembayaran.nama_kpembayaran.toLowerCase() !==
@@ -1086,35 +1092,35 @@ const runDataPengembalian = () => {
                                     "deposit"
                             ) {
                                 outputPServis += `
-                                <div class="row mt-3">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label>${v.kategori_pembayaran.nama_kpembayaran}</label>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>${v.kategori_pembayaran.nama_kpembayaran}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label>${v.sub_pembayaran.nama_spembayaran}</label>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label>${v.sub_pembayaran.nama_spembayaran}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="">Nomor Kartu</label> <br />
+                                                ${v.nomorkartu_pservis}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="">Nama Pemilik Kartu</label><br />
+                                                ${v.pemilikkartu_pservis}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label for="">Nomor Kartu</label> <br />
-                                            ${v.nomorkartu_pservis}
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label for="">Nama Pemilik Kartu</label><br />
-                                            ${v.pemilikkartu_pservis}
-                                        </div>
-                                    </div>
-                                </div>
-                                `;
+                                    `;
                             }
                         });
                         $(".output_metode_pembayaran").html(outputPServis);
@@ -1128,7 +1134,7 @@ const runDataPengembalian = () => {
                         $(".display_after_bisa_diambil").removeClass("d-none");
                         $(".hidden_tanggal_diambil").addClass("d-none");
                     } else {
-                        const statusCancel = ["cancel", "tidak bisa"];
+                        const statusCancel = ["cancel", "tidak bisa", "komplain garansi", "sudah diambil"];
                         if (statusCancel.includes(rowData.status_pservis)) {
                             $(".label_total_dppservis").closest(".row").hide();
                             $(".display_after_bisa_diambil").removeClass(
@@ -1161,7 +1167,7 @@ const runDataPengembalian = () => {
                             rowData.kondisiservis_pservis
                         );
                         $(".output_pesanwa_pservis").html(
-                            rowData.pesanwa_pservis
+                            rowData.pesanwa_pservis || `Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami. `
                         );
                         $(".output_nilaigaransi_pservis").html(
                             rowData.nilaigaransi_pservis
@@ -1171,13 +1177,13 @@ const runDataPengembalian = () => {
                         );
                         $(".output_servisgaransi_pservis").html(
                             `
-                            <div class="form-group">
-                                <strong>Masa Berlaku Garansi: </strong> <br />
-                                ${formatDateIndonesia(
-                                    rowData.servisgaransi_pservis
-                                )}
-                            </div>
-                            `
+                                <div class="form-group">
+                                    <strong>Masa Berlaku Garansi: </strong> <br />
+                                    ${formatDateIndonesia(
+                                        rowData.servisgaransi_pservis
+                                    )}
+                                </div>
+                                `
                         );
 
                         if (statusCancel.includes(rowData.status_pservis)) {
@@ -1195,9 +1201,24 @@ const runDataPengembalian = () => {
                     $(".loadOrderBarangKendaraan").html(
                         outputOrderBarangKendaraan
                     );
+
+                    // handle view servis penerimaan garansi
+                    const garansi_pservis = rowData.garansi_pservis;
+                    if (garansi_pservis != null) {
+                        $(".output_garansi_pservis").html(garansi_pservis);
+                        $(".output_users_id_garansi").html(
+                            capitalizeEachWord(rowData.users_id_garansi.name)
+                        );
+                        $(".display_garansi_pservis").removeClass("d-none");
+                        $(".hidden_garansi_pservis").addClass("d-none");
+                    } else {
+                        $(".display_garansi_pservis").addClass("d-none");
+                        $(".hidden_garansi_pservis").removeClass("d-none");
+                    }
                 },
             });
         };
+
         refreshData();
 
         const resetData = () => {
@@ -1523,6 +1544,7 @@ const runDataPengembalian = () => {
         };
 
         const validateForm = () => {
+            let error = false;
             const nilaigaransi_pservis = $(
                 'input[name="nilaigaransi_pservis"]'
             ).val();
@@ -1531,70 +1553,95 @@ const runDataPengembalian = () => {
             ).val();
 
             if (nilaigaransi_pservis === "" && tipegaransi_pservis !== "") {
-                return runToast({
+                runToast({
                     type: "bg-danger",
                     title: "Form Validation",
                     description:
                         "Jumlah servis berkala atau jenis harian wajib diisi",
                 });
+                error = true;
             }
             if (nilaigaransi_pservis !== "" && tipegaransi_pservis === "") {
-                return runToast({
+                runToast({
                     type: "bg-danger",
                     title: "Form Validation",
                     description:
                         "Jumlah servis berkala atau jenis harian wajib diisi",
                 });
+                error = true;
             }
             if (nilaigaransi_pservis === "" && tipegaransi_pservis === "") {
-                return runToast({
+                runToast({
                     type: "bg-danger",
                     title: "Form Validation",
                     description:
                         "Jumlah servis berkala atau jenis harian wajib diisi",
                 });
+                error = true;
             }
+
+            return error;
         };
 
         body.off("click", ".btn-submit-data");
         body.on("click", ".btn-submit-data", function (e) {
             e.preventDefault();
-            validateForm();
+            const getValidate = validateForm();
 
-            const payload = payloadPengembalian();
-            $.ajax({
-                type: "post",
-                url: `${urlRoot}/service/pengembalianServis/${jsonPenerimaanServisId}/update?_method=put`,
-                data: payload,
-                dataType: "json",
-                beforeSend: function () {
-                    clearError422();
-                    $(".btn-submit-data").attr("disabled", true);
-                    $(".btn-submit-data").html(disableButton);
-                },
-                success: function (data) {
-                    runToast({
-                        title: "Successfully",
-                        description: data.message,
-                        type: "bg-success",
+            if (!getValidate) {
+                const submitAjaxData = () => {
+                    const payload = payloadPengembalian();
+                    $.ajax({
+                        type: "post",
+                        url: `${urlRoot}/service/pengembalianServis/${jsonPenerimaanServisId}/update?_method=put`,
+                        data: payload,
+                        dataType: "json",
+                        beforeSend: function () {
+                            clearError422();
+                            $(".btn-submit-data").attr("disabled", true);
+                            $(".btn-submit-data").html(disableButton);
+                        },
+                        success: function (data) {
+                            runToast({
+                                title: "Successfully",
+                                description: data.message,
+                                type: "bg-success",
+                            });
+
+                            resetData();
+                            refreshData();
+                            refreshDataArea();
+                        },
+                        error: function (jqXHR, exception) {
+                            $(".btn-submit-data").attr("disabled", false);
+                            $(".btn-submit-data").html(enableButton);
+                            if (jqXHR.status === 422) {
+                                showErrors422(jqXHR);
+                            }
+                        },
+                        complete: function () {
+                            $(".btn-submit-data").attr("disabled", false);
+                            $(".btn-submit-data").html(enableButton);
+                        },
                     });
+                };
 
-                    resetData();
-                    refreshData();
-                    refreshDataArea();
-                },
-                error: function (jqXHR, exception) {
-                    $(".btn-submit-data").attr("disabled", false);
-                    $(".btn-submit-data").html(enableButton);
-                    if (jqXHR.status === 422) {
-                        showErrors422(jqXHR);
+                Swal.fire({
+                    title: "Konfirmasi",
+                    html: `Apakah anda yakin jika transaksi ini sudah benar ? <br /><br />
+                    <strong> Proses ini tidak dapat diedit kembali, 
+                    jika terjadi kesalahan maka wajib menghapus dan buat dari awal</strong>`,
+                    icon: "warning",
+                    dangerMode: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, hapus",
+                    cancelButtonText: "Tidak",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        submitAjaxData();
                     }
-                },
-                complete: function () {
-                    $(".btn-submit-data").attr("disabled", false);
-                    $(".btn-submit-data").html(enableButton);
-                },
-            });
+                });
+            }
         });
     });
 
