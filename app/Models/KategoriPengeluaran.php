@@ -16,4 +16,9 @@ class KategoriPengeluaran extends Model
     {
         return $query->where('cabang_id', session()->get('cabang_id'));
     }
+
+    public function transaksiPengeluaran()
+    {
+        return $this->hasMany(TransaksiPengeluaran::class);
+    }
 }

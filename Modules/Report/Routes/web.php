@@ -15,4 +15,7 @@ Route::prefix('report')->middleware('auth')->group(function () {
     Route::get('/', 'ReportController@index');
 
     Route::resource('pendapatan', 'PendapatanController');
+    Route::resource('pengeluaran', 'PengeluaranController');
+    Route::get('labaBersih', 'LabaBersihController@index')->name('labaBersih.index');
+    Route::get('labaBersih/print', 'LabaBersihController@print')->name('labaBersih.print');
 });

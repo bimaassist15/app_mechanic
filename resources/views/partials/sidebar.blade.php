@@ -320,7 +320,7 @@
         </li>
 
         @php
-            $activeRoutesLaporan = ['report/pendapatan', 'report/pengeluaran'];
+            $activeRoutesLaporan = ['report/pendapatan', 'report/pengeluaran', 'report/labaBersih'];
         @endphp
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Laporan</span>
@@ -338,12 +338,17 @@
             <ul class="menu-sub">
                 <li class="menu-item {{ request()->is('report/pendapatan') ? 'active' : '' }}">
                     <a href="{{ url('report/pendapatan') }}" class="menu-link">
-                        <div data-i18n="Laporan Pendapatan">Laporan Pendapatan</div>
+                        <div data-i18n="Pendapatan">Pendapatan</div>
                     </a>
                 </li>
                 <li class="menu-item {{ request()->is('report/pengeluaran') ? 'active' : '' }}">
                     <a href="{{ url('report/pengeluaran') }}" class="menu-link">
-                        <div data-i18n="Laporan Pengeluaran">Laporan Pengeluaran</div>
+                        <div data-i18n="Pengeluaran">Pengeluaran</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/labaBersih') ? 'active' : '' }}">
+                    <a href="{{ url('report/labaBersih') }}" class="menu-link">
+                        <div data-i18n="Laba Bersih">Laba Bersih</div>
                     </a>
                 </li>
             </ul>

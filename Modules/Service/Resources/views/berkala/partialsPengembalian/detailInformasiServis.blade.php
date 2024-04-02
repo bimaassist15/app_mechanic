@@ -159,8 +159,8 @@
             <div class="row mb-3">
                 <div class="col-lg-12">
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-danger me-2 if_status_cancel d-none">
-                            <i class="fa-solid fa-xmark me-2"></i> Transaksi Dibatalkan
+                        <button type="button" class="btn btn-dark me-2 if_status_cancel d-none">
+                            <i class="fa-solid fa-pen me-2"></i> {{ ucfirst($row->status_pservis) }}
                         </button>
                         <button type="button" class="btn btn-primary me-2 btn-print-data">
                             <i class="fa-solid fa-print me-2"></i> Print Nota

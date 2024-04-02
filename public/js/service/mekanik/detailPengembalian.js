@@ -954,6 +954,9 @@ const runDataPengembalian = () => {
                     $(".output_kembalian_pservis").html(
                         formatUang(rowData.kembalian_pservis)
                     );
+                    $(".if_status_cancel").html(
+                        `<i class="fa-solid fa-pen me-2"></i> ${capitalizeEachWord(rowData.status_pservis)}`
+                    );
 
                     // handle pembayaran servis
                     const tanggalambil_pservis = data.row.tanggalambil_pservis;

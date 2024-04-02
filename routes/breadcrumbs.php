@@ -277,3 +277,13 @@ Breadcrumbs::for('pendapatan', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Pendapatan', url('service/pendapatan/'));
 });
+// Home > pengeluaran
+Breadcrumbs::for('pengeluaran', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Pendapatan', url('service/pengeluaran/'));
+});
+// Home > labaBersih
+Breadcrumbs::for('labaBersih', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laba Bersih', url('service/labaBersih/'));
+});

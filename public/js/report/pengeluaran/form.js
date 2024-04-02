@@ -1,10 +1,11 @@
 select2Standard({
     parent: "#mediumModal",
-    selector: "select[name='kategori_pendapatan_id']",
+    selector: "select[name='kategori_pengeluaran_id']",
 });
-datepickerDdMmYyyy('input[name="tanggal_tpendapatan"]')
 
-var jumlahTPendapatan = new AutoNumeric("input[name='jumlah_tpendapatan']", {
+datepickerDdMmYyyy('input[name="tanggal_tpengeluaran"]')
+
+var jumlahTPendapatan = new AutoNumeric("input[name='jumlah_tpengeluaran']", {
     digitGroupSeparator: ",",
     decimalPlaces: 0,
     unformatOnSubmit: true,
@@ -17,13 +18,15 @@ formSubmit.addEventListener("submit", function (event) {
     submitData();
 });
 
+
+
 function submitData() {
-    const tanggalTpendapatan = $('input[name="tanggal_tpendapatan"]').val();
+    const tanggalTpengeluaran = $('input[name="tanggal_tpengeluaran"]').val();
 
     let formData = {};
-    formData.kategori_pendapatan_id = $('select[name="kategori_pendapatan_id"]').val();
-    formData.jumlah_tpendapatan = jumlahTPendapatan.getNumber();
-    formData.tanggal_tpendapatan = formatDateToDb(tanggalTpendapatan);
+    formData.kategori_pengeluaran_id = $('select[name="kategori_pengeluaran_id"]').val();
+    formData.jumlah_tpengeluaran = jumlahTPendapatan.getNumber();
+    formData.tanggal_tpengeluaran = formatDateToDb(tanggalTpengeluaran);
     
     $.ajax({
         type: "post",

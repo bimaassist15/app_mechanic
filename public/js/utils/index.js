@@ -540,7 +540,7 @@ const formatDateIndonesia = (dateString) => {
 
 const datepickerDdMmYyyy = (element) => {
     $(element).datepicker({
-        dateFormat: "dd/mm/yy",
+        format: 'dd/mm/yyyy',
         todayButton: true,
         highlight: true,
         autoclose: true, 

@@ -8,7 +8,7 @@ use App\Models\TransaksiPengeluaran;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Master\Http\Requests\FormKPengeluaranRequest;
+use Modules\Master\Http\Requests\FormPengeluaranRequest;
 use DataTables;
 use Illuminate\Support\Facades\Config;
 
@@ -31,24 +31,24 @@ class PengeluaranController extends Controller
             $transaksiPengeluaran = new TransaksiPengeluaran();
             $data = $transaksiPengeluaran->getPengeluaran();
             return DataTables::eloquent($data)
-                ->addColumn('jumlah_tpendapatan', function ($row) {
-                    return UtilsHelper::formatUang($row->jumlah_tpendapatan);
+                ->addColumn('jumlah_tpengeluaran', function ($row) {
+                    return UtilsHelper::formatUang($row->jumlah_tpengeluaran);
                 })
-                ->addColumn('tanggal_tpendapatan', function ($row) {
-                    return UtilsHelper::formatDate($row->tanggal_tpendapatan);
+                ->addColumn('tanggal_tpengeluaran', function ($row) {
+                    return UtilsHelper::formatDate($row->tanggal_tpengeluaran);
                 })
                 ->addColumn('action', function ($row) {
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="mediumModal"
-                    data-urlcreate="' . route('pendapatan.edit', $row->id) . '"
+                    data-urlcreate="' . route('pengeluaran.edit', $row->id) . '"
                     data-modalId="mediumModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
                     </a>
                     ';
                     $buttonDelete = '
-                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="' . url('report/pendapatan/' . $row->id) . '?_method=delete">
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="' . url('report/pengeluaran/' . $row->id) . '?_method=delete">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                     ';
@@ -64,7 +64,7 @@ class PengeluaranController extends Controller
                 ->rawColumns(['action'])
                 ->toJson();
         }
-        return view('report::pendapatan.index');
+        return view('report::pengeluaran.index');
     }
 
     /**
@@ -73,16 +73,16 @@ class PengeluaranController extends Controller
      */
     public function create()
     {
-        $action = route('pendapatan.store');
-        $kategoriPengeluaran = KategoriPengeluaran::dataTable()->where('status_kpendapatan', true)->get();
-        $array_kategori_pendapatan = [];
+        $action = route('pengeluaran.store');
+        $kategoriPengeluaran = KategoriPengeluaran::dataTable()->where('status_kpengeluaran', true)->get();
+        $array_kategori_pengeluaran = [];
         foreach ($kategoriPengeluaran as $key => $item) {
-            $array_kategori_pendapatan[] = [
+            $array_kategori_pengeluaran[] = [
                 'id' => $item->id,
-                'label' => $item->nama_kpendapatan,
+                'label' => $item->nama_kpengeluaran,
             ];
         }
-        return view('report::pendapatan.form', compact('action', 'array_kategori_pendapatan'));
+        return view('report::pengeluaran.form', compact('action', 'array_kategori_pengeluaran'));
     }
 
     /**
@@ -90,13 +90,13 @@ class PengeluaranController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(FormKPengeluaranRequest $request)
+    public function store(FormPengeluaranRequest $request)
     {
         //
         $data = [
-            'kategori_pendapatan_id' => $request->input('kategori_pendapatan_id'),
-            'jumlah_tpendapatan' => $request->input('jumlah_tpendapatan'),
-            'tanggal_tpendapatan' => $request->input('tanggal_tpendapatan'),
+            'kategori_pengeluaran_id' => $request->input('kategori_pengeluaran_id'),
+            'jumlah_tpengeluaran' => $request->input('jumlah_tpengeluaran'),
+            'tanggal_tpengeluaran' => $request->input('tanggal_tpengeluaran'),
             'cabang_id' => session()->get('cabang_id'),
         ];
         TransaksiPengeluaran::create($data);
@@ -120,17 +120,17 @@ class PengeluaranController extends Controller
      */
     public function edit($id)
     {
-        $action = url('report/pendapatan/' . $id . '?_method=put');
+        $action = url('report/pengeluaran/' . $id . '?_method=put');
         $row = TransaksiPengeluaran::find($id);
-        $kategoriPengeluaran = KategoriPengeluaran::dataTable()->where('status_kpendapatan', true)->get();
-        $array_kategori_pendapatan = [];
+        $kategoriPengeluaran = KategoriPengeluaran::dataTable()->where('status_kpengeluaran', true)->get();
+        $array_kategori_pengeluaran = [];
         foreach ($kategoriPengeluaran as $key => $item) {
-            $array_kategori_pendapatan[] = [
+            $array_kategori_pengeluaran[] = [
                 'id' => $item->id,
-                'label' => $item->nama_kpendapatan,
+                'label' => $item->nama_kpengeluaran,
             ];
         }
-        return view('report::pendapatan.form', compact('action', 'row', 'array_kategori_pendapatan'));
+        return view('report::pengeluaran.form', compact('action', 'row', 'array_kategori_pengeluaran'));
     }
 
     /**
@@ -139,13 +139,13 @@ class PengeluaranController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(FormKPengeluaranRequest $request, $id)
+    public function update(FormPengeluaranRequest $request, $id)
     {
         //
         $data = [
-            'kategori_pendapatan_id' => $request->input('kategori_pendapatan_id'),
-            'jumlah_tpendapatan' => $request->input('jumlah_tpendapatan'),
-            'tanggal_tpendapatan' => $request->input('tanggal_tpendapatan'),
+            'kategori_pengeluaran_id' => $request->input('kategori_pengeluaran_id'),
+            'jumlah_tpengeluaran' => $request->input('jumlah_tpengeluaran'),
+            'tanggal_tpengeluaran' => $request->input('tanggal_tpengeluaran'),
             'cabang_id' => session()->get('cabang_id'),
         ];
         TransaksiPengeluaran::find($id)->update($data);
