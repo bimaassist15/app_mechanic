@@ -3,16 +3,16 @@
 namespace Modules\Report\Http\Controllers;
 
 use App\Http\Helpers\UtilsHelper;
-use App\Models\KategoriPendapatan;
-use App\Models\TransaksiPendapatan;
+use App\Models\KategoriPengeluaran;
+use App\Models\TransaksiPengeluaran;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Master\Http\Requests\FormPendapatanRequest;
+use Modules\Master\Http\Requests\FormKPengeluaranRequest;
 use DataTables;
 use Illuminate\Support\Facades\Config;
 
-class PendapatanController extends Controller
+class PengeluaranController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,8 +28,8 @@ class PendapatanController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $transaksiPendapatan = new TransaksiPendapatan();
-            $data = $transaksiPendapatan->getPendapatan();
+            $transaksiPengeluaran = new TransaksiPengeluaran();
+            $data = $transaksiPengeluaran->getPengeluaran();
             return DataTables::eloquent($data)
                 ->addColumn('jumlah_tpendapatan', function ($row) {
                     return UtilsHelper::formatUang($row->jumlah_tpendapatan);
@@ -74,9 +74,9 @@ class PendapatanController extends Controller
     public function create()
     {
         $action = route('pendapatan.store');
-        $kategoriPendapatan = KategoriPendapatan::dataTable()->where('status_kpendapatan', true)->get();
+        $kategoriPengeluaran = KategoriPengeluaran::dataTable()->where('status_kpendapatan', true)->get();
         $array_kategori_pendapatan = [];
-        foreach ($kategoriPendapatan as $key => $item) {
+        foreach ($kategoriPengeluaran as $key => $item) {
             $array_kategori_pendapatan[] = [
                 'id' => $item->id,
                 'label' => $item->nama_kpendapatan,
@@ -90,7 +90,7 @@ class PendapatanController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(FormPendapatanRequest $request)
+    public function store(FormKPengeluaranRequest $request)
     {
         //
         $data = [
@@ -99,7 +99,7 @@ class PendapatanController extends Controller
             'tanggal_tpendapatan' => $request->input('tanggal_tpendapatan'),
             'cabang_id' => session()->get('cabang_id'),
         ];
-        TransaksiPendapatan::create($data);
+        TransaksiPengeluaran::create($data);
         return response()->json('Berhasil tambah data', 201);
     }
 
@@ -121,10 +121,10 @@ class PendapatanController extends Controller
     public function edit($id)
     {
         $action = url('report/pendapatan/' . $id . '?_method=put');
-        $row = TransaksiPendapatan::find($id);
-        $kategoriPendapatan = KategoriPendapatan::dataTable()->where('status_kpendapatan', true)->get();
+        $row = TransaksiPengeluaran::find($id);
+        $kategoriPengeluaran = KategoriPengeluaran::dataTable()->where('status_kpendapatan', true)->get();
         $array_kategori_pendapatan = [];
-        foreach ($kategoriPendapatan as $key => $item) {
+        foreach ($kategoriPengeluaran as $key => $item) {
             $array_kategori_pendapatan[] = [
                 'id' => $item->id,
                 'label' => $item->nama_kpendapatan,
@@ -139,7 +139,7 @@ class PendapatanController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(FormPendapatanRequest $request, $id)
+    public function update(FormKPengeluaranRequest $request, $id)
     {
         //
         $data = [
@@ -148,7 +148,7 @@ class PendapatanController extends Controller
             'tanggal_tpendapatan' => $request->input('tanggal_tpendapatan'),
             'cabang_id' => session()->get('cabang_id'),
         ];
-        TransaksiPendapatan::find($id)->update($data);
+        TransaksiPengeluaran::find($id)->update($data);
         return response()->json('Berhasil update data', 200);
     }
 
@@ -160,7 +160,7 @@ class PendapatanController extends Controller
     public function destroy($id)
     {
         //
-        TransaksiPendapatan::destroy($id);
+        TransaksiPengeluaran::destroy($id);
         return response()->json('Berhasil hapus data', 200);
     }
 }

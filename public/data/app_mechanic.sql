@@ -11,7 +11,7 @@
  Target Server Version : 100428 (10.4.28-MariaDB)
  File Encoding         : 65001
 
- Date: 02/04/2024 05:38:38
+ Date: 02/04/2024 07:33:40
 */
 
 SET NAMES utf8mb4;
@@ -1437,11 +1437,15 @@ CREATE TABLE `transaksi_pendapatan`  (
   INDEX `transaksi_pendapatan_cabang_id_foreign`(`cabang_id` ASC) USING BTREE,
   CONSTRAINT `transaksi_pendapatan_kategori_pendapatan_id_foreign` FOREIGN KEY (`kategori_pendapatan_id`) REFERENCES `kategori_pendapatan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `transaksi_pendapatan_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of transaksi_pendapatan
 -- ----------------------------
+INSERT INTO `transaksi_pendapatan` VALUES (1, 1, 200000, '2024-04-02 06:07:09', '2024-04-02 06:07:09', '2024-04-02', 1);
+INSERT INTO `transaksi_pendapatan` VALUES (2, 2, 100000, '2024-04-02 06:09:17', '2024-04-02 06:09:17', '2024-04-02', 1);
+INSERT INTO `transaksi_pendapatan` VALUES (3, 3, 250000, '2024-04-02 06:09:27', '2024-04-02 06:09:27', '2024-04-02', 1);
+INSERT INTO `transaksi_pendapatan` VALUES (4, 5, 100000, '2024-04-02 06:09:37', '2024-04-02 06:09:37', '2024-04-02', 1);
 
 -- ----------------------------
 -- Table structure for transaksi_pengeluaran

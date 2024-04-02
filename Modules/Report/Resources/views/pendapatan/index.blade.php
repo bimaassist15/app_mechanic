@@ -40,6 +40,6 @@
 
     @push('custom_js')
         <script class="url_datatable" data-url="{{ route('pendapatan.index') }}"></script>
-        <script src="{{ asset('js/master/pendapatan/index.js') }}"></script>
+        <script src="{{ asset('js/report/pendapatan/index.js') }}"></script>
     @endpush
 @endsection

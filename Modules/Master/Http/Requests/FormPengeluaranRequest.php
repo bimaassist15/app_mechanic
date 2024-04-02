@@ -4,7 +4,7 @@ namespace Modules\Master\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FormKPendapatanRequest extends FormRequest
+class FormPengeluaranRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,14 +14,18 @@ class FormKPendapatanRequest extends FormRequest
     public function rules()
     {
         return [
-            'nama_kpendapatan' => 'required',
+            'kategori_pendapatan_id' => 'required',
+            'jumlah_tpendapatan' => 'required',
+            'tanggal_tpendapatan' => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            'nama_kpendapatan.required' => 'Nama Kategori Pendapatan wajib diisi',
+            'kategori_pendapatan_id.required' => 'Kategori pendapatan wajib diisi',
+            'jumlah_tpendapatan.required' => 'Jumlah pendapatan wajib diisi',
+            'tanggal_tpendapatan.required' => 'Tanggal pendapatan wajib diisi',
         ];
     }
 
