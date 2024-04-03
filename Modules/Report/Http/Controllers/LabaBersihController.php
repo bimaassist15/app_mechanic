@@ -49,7 +49,7 @@ class LabaBersihController extends Controller
             $sumTotalTransaksiServis = $sumBayarServis - $sumKembalianServis;
 
             // biaya kategori pendapatan lainnya
-            $transaksiPendapatan = TransaksiPendapatan::dataTabel()->select('kategori_pendapatan_id', 'kategori_pendapatan.nama_kpendapatan', DB::raw('sum(jumlah_tpendapatan) as jumlah_tpendapatan'))
+            $transaksiPendapatan = TransaksiPendapatan::dataTable()->select('kategori_pendapatan_id', 'kategori_pendapatan.nama_kpendapatan', DB::raw('sum(jumlah_tpendapatan) as jumlah_tpendapatan'))
                 ->join('kategori_pendapatan', 'transaksi_pendapatan.kategori_pendapatan_id', '=', 'kategori_pendapatan.id')
                 ->groupBy('kategori_pendapatan_id', 'kategori_pendapatan.nama_kpendapatan');
 

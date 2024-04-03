@@ -14,7 +14,7 @@ class TransaksiPengeluaran extends Model
 
     public function scopeDataTable($query)
     {
-        return $query->where('cabang_id', session()->get('cabang_id'));
+        return $query->where('transaksi_pengeluaran.cabang_id', session()->get('cabang_id'));
     }
 
     public function kategoriPengeluaran()

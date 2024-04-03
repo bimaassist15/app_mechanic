@@ -39,7 +39,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ url('kategoriPembayaran.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('master/kategoriPembayaran') }}"></script>
         <script src="{{ asset('js/master/kategoriPembayaran/index.js') }}"></script>
     @endpush
 @endsection
