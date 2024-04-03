@@ -17,27 +17,27 @@ class SupplierController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             $data = Supplier::dataTable();
             return DataTables::eloquent($data)
-            ->addColumn('status_supplier', function ($row) {
-                $output = $row->status_supplier ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
-                return '<div class="text-center">
-                '.$output.'
+                ->addColumn('status_supplier', function ($row) {
+                    $output = $row->status_supplier ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+                    return '<div class="text-center">
+                ' . $output . '
                 </div>';
-            })
+                })
                 ->addColumn('action', function ($row) {
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="extraLargeModal"
-                    data-urlcreate="' . route('supplier.edit', $row->id) . '"
+                    data-urlcreate="' . url('master/supplier/' . $row->id . '/edit') . '"
                     data-modalId="extraLargeModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
                     </a>
                     ';
                     $buttonDelete = '
-                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('master/supplier/'.$row->id).'?_method=delete">
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="' . url('master/supplier/' . $row->id) . '?_method=delete">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                     ';
@@ -62,7 +62,7 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        $action = route('supplier.store');
+        $action = url('master/supplier');
         return view('master::supplier.form', compact('action'));
     }
 
@@ -103,9 +103,9 @@ class SupplierController extends Controller
      */
     public function edit($id)
     {
-        $action = url('master/supplier/'.$id.'?_method=put');
+        $action = url('master/supplier/' . $id . '?_method=put');
         $row = Supplier::find($id);
-        return view('master::supplier.form', compact('action','row'));
+        return view('master::supplier.form', compact('action', 'row'));
     }
 
     /**

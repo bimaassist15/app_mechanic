@@ -18,33 +18,34 @@ class KategoriPembayaranController extends Controller
      */
 
     public $datastatis;
-    public function __construct() {
+    public function __construct()
+    {
         $this->datastatis = Config::get('datastatis');
     }
 
     public function index(Request $request)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             $data = KategoriPembayaran::dataTable();
             return DataTables::eloquent($data)
-            ->addColumn('status_kpembayaran', function ($row) {
-                $output = $row->status_kpembayaran ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
-                return '<div class="text-center">
-                '.$output.'
+                ->addColumn('status_kpembayaran', function ($row) {
+                    $output = $row->status_kpembayaran ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+                    return '<div class="text-center">
+                ' . $output . '
                 </div>';
-            })
+                })
                 ->addColumn('action', function ($row) {
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="mediumModal"
-                    data-urlcreate="' . route('kategoriPembayaran.edit', $row->id) . '"
+                    data-urlcreate="' . url('master/kategoriPembayaran/' . $row->id . '/edit') . '"
                     data-modalId="mediumModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
                     </a>
                     ';
                     $buttonDelete = '
-                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('master/kategoriPembayaran/'.$row->id).'?_method=delete">
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="' . url('master/kategoriPembayaran/' . $row->id) . '?_method=delete">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                     ';
@@ -69,7 +70,7 @@ class KategoriPembayaranController extends Controller
      */
     public function create()
     {
-        $action = route('kategoriPembayaran.store');
+        $action = url('master/kategoriPembayaran');
         $array_tipe_pembayaran = [];
         foreach ($this->datastatis['tipe_pembayaran'] as $value => $item) {
             $array_tipe_pembayaran[] = [
@@ -115,7 +116,7 @@ class KategoriPembayaranController extends Controller
      */
     public function edit($id)
     {
-        $action = url('master/kategoriPembayaran/'.$id.'?_method=put');
+        $action = url('master/kategoriPembayaran/' . $id . '?_method=put');
         $array_tipe_pembayaran = [];
         foreach ($this->datastatis['tipe_pembayaran'] as $value => $item) {
             $array_tipe_pembayaran[] = [

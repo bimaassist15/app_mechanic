@@ -166,7 +166,7 @@ class PenerimaanServisController extends Controller
      */
     public function create(Request $request)
     {
-        $action = route('penerimaanServis.store');
+        $action = url('service/penerimaanServis');
         $kategoriServis = KategoriServis::dataTable()->get();
         $tipeServis = $this->datastatis['tipe_servis'];
         $kendaraanServis = Kendaraan::dataTable()->with('customer', 'cabang')->get();

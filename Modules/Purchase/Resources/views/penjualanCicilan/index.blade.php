@@ -18,7 +18,7 @@
                     $title = $penjualan->hutang_penjualan == 0 ? 'Lunas' : 'Tambah';
                 @endphp
                 <x-button-main :title="$title" className="btn-add" typeModal="extraLargeModal"
-                    urlCreate="{{ route('penjualanCicilan.create') }}" :disabled="$disabled" />
+                    urlCreate="{{ url('purchase/penjualanCicilan/create') }}" :disabled="$disabled" />
             </div>
         </div>
 

@@ -24,7 +24,7 @@ class RolesController extends Controller
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="mediumModal"
-                    data-urlcreate="' . route('roles.edit', $row->id) . '"
+                    data-urlcreate="' . url('setting/roles/'.$row->id.'/edit') . '"
                     data-modalId="mediumModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
@@ -56,7 +56,7 @@ class RolesController extends Controller
      */
     public function create()
     {
-        $action = route('roles.store');
+        $action = url('setting/roles');
         return view('setting::roles.form', compact('action'));
     }
 

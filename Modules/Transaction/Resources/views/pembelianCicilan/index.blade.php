@@ -18,7 +18,7 @@
                     $title = $pembelian->hutang_pembelian == 0 ? 'Lunas' : 'Tambah';
                 @endphp
                 <x-button-main :title="$title" className="btn-add" typeModal="extraLargeModal"
-                    urlCreate="{{ route('pembelianCicilan.create') }}" :disabled="$disabled" />
+                    urlCreate="{{ url('transaction/pembelianCicilan/create') }}" :disabled="$disabled" />
             </div>
         </div>
 

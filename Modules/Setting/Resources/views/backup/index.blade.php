@@ -20,7 +20,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('backup.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('setting/backup') }}"></script>
 
         <script src="{{ asset('js/setting/backup/index.js') }}"></script>
     @endpush

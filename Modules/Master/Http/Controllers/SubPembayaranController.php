@@ -19,37 +19,38 @@ class SubPembayaranController extends Controller
      */
 
     public $datastatis;
-    public function __construct() {
+    public function __construct()
+    {
         $this->datastatis = Config::get('datastatis');
     }
 
     public function index(Request $request)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             $kategori_pembayaran_id = $request->query('kategori_pembayaran_id');
             $data = SubPembayaran::dataTable()->with('kategoriPembayaran');
-            if($kategori_pembayaran_id !== '' && $kategori_pembayaran_id !== null){
+            if ($kategori_pembayaran_id !== '' && $kategori_pembayaran_id !== null) {
                 $data->where('kategori_pembayaran_id', $kategori_pembayaran_id);
             }
             return DataTables::eloquent($data)
-            ->addColumn('status_spembayaran', function ($row) {
-                $output = $row->status_spembayaran ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
-                return '<div class="text-center">
-                '.$output.'
+                ->addColumn('status_spembayaran', function ($row) {
+                    $output = $row->status_spembayaran ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+                    return '<div class="text-center">
+                ' . $output . '
                 </div>';
-            })
+                })
                 ->addColumn('action', function ($row) {
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="mediumModal"
-                    data-urlcreate="' . route('subPembayaran.edit', $row->id) . '"
+                    data-urlcreate="' . url('master/subPembayaran/' . $row->id . '/edit') . '"
                     data-modalId="mediumModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
                     </a>
                     ';
                     $buttonDelete = '
-                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('master/subPembayaran/'.$row->id).'?_method=delete">
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="' . url('master/subPembayaran/' . $row->id) . '?_method=delete">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                     ';
@@ -67,8 +68,8 @@ class SubPembayaranController extends Controller
         }
         $array_kategori_pembayaran = [];
         $kategoriPembayaran = KategoriPembayaran::dataTable()->where('status_kpembayaran', true)
-        ->whereNot('nama_kpembayaran', 'like', '%deposit%')
-        ->get();
+            ->whereNot('nama_kpembayaran', 'like', '%deposit%')
+            ->get();
         foreach ($kategoriPembayaran as $value => $item) {
             $array_kategori_pembayaran[] = [
                 'id' => $item->id,
@@ -84,7 +85,7 @@ class SubPembayaranController extends Controller
      */
     public function create()
     {
-        $action = route('subPembayaran.store');
+        $action = url('master/subPembayaran');
         $array_kategori_pembayaran = [];
         $kategoriPembayaran = KategoriPembayaran::dataTable()->where('status_kpembayaran', true)->whereNot('nama_kpembayaran', 'like', '%deposit%')->get();
         foreach ($kategoriPembayaran as $value => $item) {
@@ -131,7 +132,7 @@ class SubPembayaranController extends Controller
      */
     public function edit($id)
     {
-        $action = url('master/subPembayaran/'.$id.'?_method=put');
+        $action = url('master/subPembayaran/' . $id . '?_method=put');
         $array_kategori_pembayaran = [];
         $kategoriPembayaran = KategoriPembayaran::dataTable()->where('status_kpembayaran', true)->whereNot('nama_kpembayaran', 'like', '%deposit%')->get();
         foreach ($kategoriPembayaran as $value => $item) {

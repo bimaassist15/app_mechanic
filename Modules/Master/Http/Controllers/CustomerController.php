@@ -48,13 +48,13 @@ class CustomerController extends Controller
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a data-typemodal="extraLargeModal" href="' . route('customer.show', $row->id) . '"
+                            <a data-typemodal="extraLargeModal" href="' . url('master/customer/'.$row->id) . '"
                                 class="dropdown-item d-flex align-items-center btn-detail">
                                 <i class="fa-solid fa-eye"></i> &nbsp; Detail Customer
                             </a>
                         </li>
                         <li>
-                            <a data-typemodal="extraLargeModal" href="' . route('customer.edit', $row->id) . '"
+                            <a data-typemodal="extraLargeModal" href="' . url('master/customer/'.$row->id.'/edit') . '"
                                 class="dropdown-item d-flex align-items-center btn-edit">
                                 <i class="fa-solid fa-pencil"></i> &nbsp; Edit Data</a>
                         </li>
@@ -84,7 +84,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        $action = route('customer.store');
+        $action = url('master/customer');
         return view('master::customer.form', compact('action'));
     }
 

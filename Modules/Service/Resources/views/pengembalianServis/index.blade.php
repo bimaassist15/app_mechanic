@@ -40,7 +40,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('pengembalianServis.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('service/pengembalianServis') }}"></script>
         <script class="url_root" data-url="{{ url('/') }}"></script>
         <script class="public_path" data-value="{{ asset('/') }}"></script>
         <script src="{{ asset('js/service/pengembalianServis/index.js') }}"></script>

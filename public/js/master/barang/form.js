@@ -14,6 +14,7 @@ select2Standard({
     parent: "#extraLargeModal",
     selector: "select[name='status_barang']",
 });
+
 var hargaJualBarang = new AutoNumeric("input[name='hargajual_barang']", {
     digitGroupSeparator: ",",
     decimalPlaces: 0,

@@ -41,7 +41,7 @@ class PengeluaranController extends Controller
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="mediumModal"
-                    data-urlcreate="' . route('pengeluaran.edit', $row->id) . '"
+                    data-urlcreate="' . url('report/pengeluaran/' . $row->id . '/edit') . '"
                     data-modalId="mediumModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
@@ -73,7 +73,7 @@ class PengeluaranController extends Controller
      */
     public function create()
     {
-        $action = route('pengeluaran.store');
+        $action = url('report/pengeluaran');
         $kategoriPengeluaran = KategoriPengeluaran::dataTable()->where('status_kpengeluaran', true)->get();
         $array_kategori_pengeluaran = [];
         foreach ($kategoriPengeluaran as $key => $item) {

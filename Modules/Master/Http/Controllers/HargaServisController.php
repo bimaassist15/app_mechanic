@@ -19,31 +19,31 @@ class HargaServisController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             $data = HargaServis::dataTable()->with('kategoriServis');
             return DataTables::eloquent($data)
-            ->addColumn('status_hargaservis', function ($row) {
-                $output = $row->status_hargaservis ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
-                return '<div class="text-center">
-                '.$output.'
+                ->addColumn('status_hargaservis', function ($row) {
+                    $output = $row->status_hargaservis ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+                    return '<div class="text-center">
+                ' . $output . '
                 </div>';
-            })
-            ->addColumn('total_hargaservis', function ($row) {
-                $output = number_format($row->total_hargaservis,0,'.',',');
-                return $output;
-            })
+                })
+                ->addColumn('total_hargaservis', function ($row) {
+                    $output = number_format($row->total_hargaservis, 0, '.', ',');
+                    return $output;
+                })
                 ->addColumn('action', function ($row) {
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="extraLargeModal"
-                    data-urlcreate="' . route('hargaServis.edit', $row->id) . '"
+                    data-urlcreate="' . url('master/hargaServis/' . $row->id . '/edit') . '"
                     data-modalId="extraLargeModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
                     </a>
                     ';
                     $buttonDelete = '
-                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('master/hargaServis/'.$row->id).'?_method=delete">
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="' . url('master/hargaServis/' . $row->id) . '?_method=delete">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                     ';
@@ -68,7 +68,7 @@ class HargaServisController extends Controller
      */
     public function create()
     {
-        $kategoriServis = KategoriServis::dataTable()->where('status_kservis',true)->get();
+        $kategoriServis = KategoriServis::dataTable()->where('status_kservis', true)->get();
         $array_kategori_servis = [];
         foreach ($kategoriServis as $key => $value) {
             $array_kategori_servis[] = [
@@ -76,7 +76,7 @@ class HargaServisController extends Controller
                 'label' => $value->nama_kservis,
             ];
         }
-        $action = route('hargaServis.store');
+        $action = url('master/hargaServis');
         return view('master::hargaServis.form', compact('array_kategori_servis', 'action'));
     }
 
@@ -120,7 +120,7 @@ class HargaServisController extends Controller
      */
     public function edit($id)
     {
-        $kategoriServis = KategoriServis::dataTable()->where('status_kservis',true)->get();
+        $kategoriServis = KategoriServis::dataTable()->where('status_kservis', true)->get();
         $array_kategori_servis = [];
         foreach ($kategoriServis as $key => $value) {
             $array_kategori_servis[] = [
@@ -128,7 +128,7 @@ class HargaServisController extends Controller
                 'label' => $value->nama_kservis,
             ];
         }
-        $action = url('master/hargaServis/'.$id.'?_method=put');
+        $action = url('master/hargaServis/' . $id . '?_method=put');
         $row = HargaServis::with('kategoriServis')->find($id);
         return view('master::hargaServis.form', compact('array_kategori_servis', 'action', 'row'));
     }
@@ -167,6 +167,5 @@ class HargaServisController extends Controller
         //
         HargaServis::destroy($id);
         return response()->json('Berhasil hapus data', 200);
-
     }
 }

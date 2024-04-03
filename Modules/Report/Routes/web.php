@@ -20,5 +20,5 @@ Route::prefix('report')->middleware('auth')->group(function () {
     Route::get('labaBersih/print', 'LabaBersihController@print')->name('labaBersih.print');
 
     Route::get('kasir', 'KasirController@index')->name('kasir.index');
-    Route::get('kasir/getKasir', 'KasirController@getKasir')->name('kasir.getKasir');
+    Route::get('customer', 'CustomerController@index')->name('customer.index');
 });

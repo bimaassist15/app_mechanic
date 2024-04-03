@@ -37,7 +37,7 @@ class PenjualanController extends Controller
                     $buttonDetail = '
                     <a class="btn btn-info btn-detail btn-sm" 
                     data-typemodal="extraLargeModal"
-                    data-urlcreate="' . route('penjualan.show', $row->id) . '"
+                    data-urlcreate="' . url('purchase/penjualan/' . $row->id) . '"
                     data-modalId="extraLargeModal"
                     >
                         <i class="fa-solid fa-eye"></i>

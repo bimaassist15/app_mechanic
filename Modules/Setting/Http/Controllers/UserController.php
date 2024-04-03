@@ -45,7 +45,7 @@ class UserController extends Controller
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="extraLargeModal"
-                    data-urlcreate="' . route('user.edit', $row->id) . '"
+                    data-urlcreate="' . url('setting/user/'.$row->id.'/edit') . '"
                     data-modalId="extraLargeModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
@@ -101,7 +101,7 @@ class UserController extends Controller
                 'label' => $item->name,
             ];
         }
-        $action = route('user.store');
+        $action = url('setting/user');
         return view('setting::user.form', compact('array_cabang', 'array_role', 'action'));
     }
 

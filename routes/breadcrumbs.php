@@ -292,3 +292,8 @@ Breadcrumbs::for('reportKasir', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Laporan Kasir', url('report/kasir'));
 });
+// Home > reportCustomer
+Breadcrumbs::for('reportCustomer', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Customer', url('report/customer'));
+});

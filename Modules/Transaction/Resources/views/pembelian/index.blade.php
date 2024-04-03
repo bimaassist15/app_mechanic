@@ -35,7 +35,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('pembelian.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('transaction/pembelian') }}"></script>
         <script src="{{ asset('js/transaction/pembelian/index.js') }}"></script>
     @endpush
 @endsection

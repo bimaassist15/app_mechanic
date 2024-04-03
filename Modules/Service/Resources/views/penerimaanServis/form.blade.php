@@ -35,7 +35,7 @@
 <script class="json_data_user" data-json="{{ $dataUser }}"></script>
 <script class="json_default_user" data-json="{{ $defaultUser }}"></script>
 <script class="json_cabang_id" data-json="{{ $cabangId }}"></script>
-<script class="url_print_kasir" data-url="{{ route('pembelianCicilan.print') }}"></script>
+<script class="url_print_kasir" data-url="{{ url('transaction/pembelianCicilan/print/transaction') }}"></script>
 <script class="url_simpan_kasir" data-url="{{ url('service/penerimaanServis') }}"></script>
 <script class="isEdit" data-value="{{ $isEdit }}"></script>
 <script class="url_transaction_kasir" data-url="{{ url('service/penerimaanServis/create') }}"></script>

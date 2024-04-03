@@ -52,7 +52,7 @@ class PembelianCicilanController extends Controller
                     $buttonDetail = '
                     <a class="btn btn-info btn-detail btn-sm" 
                     data-typemodal="extraLargeModal"
-                    data-urlcreate="' . route('pembelianCicilan.show', $row->id) . '"
+                    data-urlcreate="' . url('transaction/pembelianCicilan/' . $row->id) . '"
                     data-modalId="extraLargeModal"
                     >
                         <i class="fa-solid fa-eye"></i>

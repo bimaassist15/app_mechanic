@@ -22,7 +22,7 @@
                         </div>
                         <div class="mt-2">
                             <x-button-main title="Tambah" className="btn-add" typeModal="mediumModal"
-                                urlCreate="{{ route('subPembayaran.create') }}" />
+                                urlCreate="{{ url('master/subPembayaran/create') }}" />
                         </div>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('subPembayaran.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('master/subPembayaran') }}"></script>
         <script src="{{ asset('js/master/subPembayaran/index.js') }}"></script>
     @endpush
 @endsection

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SelectSearchController;
 use Illuminate\Support\Facades\Route;
 use Modules\Auth\Http\Controllers\AuthController;
 
@@ -18,4 +19,13 @@ Route::group(['middleware' => ['guest']], function () {
     Route::get('/', [AuthController::class, 'index']);
     Route::get('/login', [AuthController::class, 'index'])->name('login');
     Route::post('/auth/login', [AuthController::class, 'store'])->name('auth.login');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('select/kasir', [SelectSearchController::class, 'kasir']);
+    Route::get('select/customer', [SelectSearchController::class, 'customer']);
+    Route::get('select/barang', [SelectSearchController::class, 'barang']);
+    Route::get('select/kategoriPembayaran', [SelectSearchController::class, 'kategoriPembayaran']);
+    Route::get('select/supplier', [SelectSearchController::class, 'supplier']);
+    Route::get('select/hargaServis', [SelectSearchController::class, 'hargaServis']);
 });

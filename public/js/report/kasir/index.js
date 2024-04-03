@@ -8,7 +8,7 @@ var datatable;
 select2Server({
     selector: "select[name=users_id]",
     parent: ".content-wrapper",
-    routing: `${urlRoot}/report/kasir/getKasir`,
+    routing: `${urlRoot}/select/kasir`,
     passData: {},
 });
 

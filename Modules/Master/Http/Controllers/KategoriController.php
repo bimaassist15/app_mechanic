@@ -30,7 +30,7 @@ class KategoriController extends Controller
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="mediumModal"
-                    data-urlcreate="' . route('kategori.edit', $row->id) . '"
+                    data-urlcreate="' . url('master/kategori/'.$row->id.'/edit'). '"
                     data-modalId="mediumModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
@@ -62,7 +62,7 @@ class KategoriController extends Controller
      */
     public function create()
     {
-        $action = route('kategori.store');
+        $action = url('master/kategori');
         return view('master::kategori.form', compact('action'));
     }
 

@@ -25,7 +25,7 @@ class KendaraanController extends Controller
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="extraLargeModal"
-                    data-urlcreate="' . route('kendaraan.edit', $row->id) . '"
+                    data-urlcreate="' . url(' master/kendaraan/' . $row->id . '/edit') . '"
                     data-modalId="extraLargeModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
@@ -57,7 +57,7 @@ class KendaraanController extends Controller
      */
     public function create()
     {
-        $action = route('kendaraan.store');
+        $action = url('master/kendaraan');
         $customer = Customer::dataTable()->get();
         $array_customer = [];
         foreach ($customer as $key => $value) {

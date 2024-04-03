@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Customer extends Model
 {
@@ -71,5 +72,70 @@ class Customer extends Model
     public function penerimaanServis()
     {
         return $this->hasMany(PenerimaanServis::class);
+    }
+
+    public function getReportCustomer($dari_tanggal, $sampai_tanggal)
+    {
+        return Customer::dataTable()
+            ->withCount([
+                'penjualan as total_pembelian' => function ($query) use ($dari_tanggal, $sampai_tanggal) {
+                    $query->select(DB::raw("SUM(bayar_penjualan) - SUM(kembalian_penjualan)"));
+                    if ($dari_tanggal != null) {
+                        $query = $query->whereDate('created_at', '>=', $dari_tanggal);
+                    }
+                    if ($sampai_tanggal != null) {
+                        $query = $query->whereDate('updated_at', '<=', $sampai_tanggal);
+                    }
+                },
+                'penjualan as jumlah_pembelian' => function ($query) use ($dari_tanggal, $sampai_tanggal) {
+                    $query->select(DB::raw("COUNT(*)"));
+                    if ($dari_tanggal != null) {
+                        $query = $query->whereDate('created_at', '>=', $dari_tanggal);
+                    }
+                    if ($sampai_tanggal != null) {
+                        $query = $query->whereDate('updated_at', '<=', $sampai_tanggal);
+                    }
+                },
+                'penjualan as hutang_pembelian' => function ($query) use ($dari_tanggal, $sampai_tanggal) {
+                    $query->select(DB::raw("SUM(hutang_penjualan)"));
+                    if ($dari_tanggal != null) {
+                        $query = $query->whereDate('created_at', '>=', $dari_tanggal);
+                    }
+                    if ($sampai_tanggal != null) {
+                        $query = $query->whereDate('updated_at', '<=', $sampai_tanggal);
+                    }
+                },
+
+                'penerimaanServis as total_servis' => function ($query) use ($dari_tanggal, $sampai_tanggal) {
+                    $query->select(DB::raw("SUM(bayar_pservis) - SUM(kembalian_pservis)"));
+                    if ($dari_tanggal != null) {
+                        $query = $query->whereDate('created_at', '>=', $dari_tanggal);
+                    }
+                    if ($sampai_tanggal != null) {
+                        $query = $query->whereDate('updated_at', '<=', $sampai_tanggal);
+                    }
+                },
+                'penerimaanServis as jumlah_servis' => function ($query) use ($dari_tanggal, $sampai_tanggal) {
+                    $query->select(DB::raw("COUNT(*)"));
+                    if ($dari_tanggal != null) {
+                        $query = $query->whereDate('created_at', '>=', $dari_tanggal);
+                    }
+                    if ($sampai_tanggal != null) {
+                        $query = $query->whereDate('updated_at', '<=', $sampai_tanggal);
+                    }
+                },
+                'penerimaanServis as hutang_servis' => function ($query) use ($dari_tanggal, $sampai_tanggal) {
+                    $query->select(DB::raw("SUM(hutang_pservis)"));
+                    if ($dari_tanggal != null) {
+                        $query = $query->whereDate('created_at', '>=', $dari_tanggal);
+                    }
+                    if ($sampai_tanggal != null) {
+                        $query = $query->whereDate('updated_at', '<=', $sampai_tanggal);
+                    }
+                },
+
+            ])
+            ->with('saldoCustomer')
+            ->where('status_customer', true);
     }
 }

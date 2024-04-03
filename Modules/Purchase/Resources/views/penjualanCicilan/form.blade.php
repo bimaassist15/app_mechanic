@@ -13,7 +13,7 @@
 <script class="json_data_user" data-json="{{ $dataUser }}"></script>
 <script class="json_default_user" data-json="{{ $defaultUser }}"></script>
 <script class="json_cabang_id" data-json="{{ $cabangId }}"></script>
-<script class="url_print_kasir" data-url="{{ route('penjualanCicilan.print') }}"></script>
+<script class="url_print_kasir" data-url="{{ url('purchase/penjualanCicilan/print/purchase') }}"></script>
 <script class="url_simpan_kasir" data-url="{{ url('purchase/penjualanCicilan?penjualan_id=' . $penjualan_id) }}">
 </script>
 <script class="isEdit" data-value="{{ $isEdit }}"></script>

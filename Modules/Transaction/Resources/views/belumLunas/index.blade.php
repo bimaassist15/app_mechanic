@@ -36,7 +36,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('belumLunas.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('transaction/belumLunas') }}"></script>
         <script src="{{ asset('js/transaction/belumLunas/index.js') }}"></script>
     @endpush
 @endsection

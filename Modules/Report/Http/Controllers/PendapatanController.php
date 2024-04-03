@@ -41,7 +41,7 @@ class PendapatanController extends Controller
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="mediumModal"
-                    data-urlcreate="' . route('pendapatan.edit', $row->id) . '"
+                    data-urlcreate="' . url('report/pendapatan/' . $row->id . '/edit') . '"
                     data-modalId="mediumModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
@@ -73,7 +73,7 @@ class PendapatanController extends Controller
      */
     public function create()
     {
-        $action = route('pendapatan.store');
+        $action = url('report/pendapatan');
         $kategoriPendapatan = KategoriPendapatan::dataTable()->where('status_kpendapatan', true)->get();
         $array_kategori_pendapatan = [];
         foreach ($kategoriPendapatan as $key => $item) {

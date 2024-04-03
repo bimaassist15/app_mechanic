@@ -20,28 +20,29 @@ class BarangController extends Controller
      * @return Renderable
      */
     public $datastatis;
-    public function __construct() {
+    public function __construct()
+    {
         $this->datastatis = Config::get('datastatis');
     }
 
     public function index(Request $request)
     {
-        if($request->ajax()){
-            $data = Barang::dataTable()->with('kategori','satuan');
+        if ($request->ajax()) {
+            $data = Barang::dataTable()->with('kategori', 'satuan');
             return DataTables::eloquent($data)
-            ->addColumn('hargajual_barang', function ($row) {
-                $output = number_format($row->hargajual_barang,'0',',','.');
-                return $output;
-            })
-            ->addColumn('stok_barang', function ($row) {
-                $output = number_format($row->stok_barang,'0',',','.');
-                return $output;
-            })
+                ->addColumn('hargajual_barang', function ($row) {
+                    $output = number_format($row->hargajual_barang, '0', ',', '.');
+                    return $output;
+                })
+                ->addColumn('stok_barang', function ($row) {
+                    $output = number_format($row->stok_barang, '0', ',', '.');
+                    return $output;
+                })
                 ->addColumn('action', function ($row) {
                     $buttonDetail = '
                     <a class="btn btn-info btn-detail btn-sm" 
                     data-typemodal="extraLargeModal"
-                    data-urlcreate="' . route('barang.show', $row->id) . '"
+                    data-urlcreate="' . url('master/barang/' . $row->id) . '"
                     data-modalId="extraLargeModal"
                     >
                         <i class="fa-solid fa-eye"></i>
@@ -67,7 +68,7 @@ class BarangController extends Controller
      */
     public function create()
     {
-        $action = route('barang.store');
+        $action = url('master/barang');
         $status_barang = $this->datastatis['status_barang'];
         $status_serial = $this->datastatis['status_serial'];
         $kategori = Kategori::dataTable()->where('status_kategori', true)->get();
@@ -78,7 +79,7 @@ class BarangController extends Controller
                 'label' => $item->nama_kategori,
             ];
         }
-        $satuan = Satuan::dataTable()->where('status_satuan',true)->get();
+        $satuan = Satuan::dataTable()->where('status_satuan', true)->get();
         $array_satuan = [];
         foreach ($satuan as $key => $item) {
             $array_satuan[] = [
@@ -136,7 +137,7 @@ class BarangController extends Controller
      */
     public function show($id)
     {
-        $row = Barang::with('kategori','satuan')->find($id);
+        $row = Barang::with('kategori', 'satuan')->find($id);
         return view('master::barang.detail', compact('row'));
     }
 
@@ -147,7 +148,7 @@ class BarangController extends Controller
      */
     public function edit($id)
     {
-        $action = url('master/barang/'.$id.'?_method=put');
+        $action = url('master/barang/' . $id . '?_method=put');
         $status_barang = $this->datastatis['status_barang'];
         $status_serial = $this->datastatis['status_serial'];
         $row = Barang::find($id);

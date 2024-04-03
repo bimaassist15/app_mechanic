@@ -17,32 +17,33 @@ class CabangController extends Controller
      * @return Renderable
      */
     public $datastatis;
-    public function __construct() {
+    public function __construct()
+    {
         $this->datastatis = Config::get('datastatis');
     }
     public function index(Request $request)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             $data = Cabang::query();
             return DataTables::eloquent($data)
-            ->addColumn('status_cabang', function ($row) {
-                $output = $row->status_cabang ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
-                return '<div class="text-center">
-                '.$output.'
+                ->addColumn('status_cabang', function ($row) {
+                    $output = $row->status_cabang ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+                    return '<div class="text-center">
+                ' . $output . '
                 </div>';
-            })
+                })
                 ->addColumn('action', function ($row) {
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="extraLargeModal"
-                    data-urlcreate="' . route('cabang.edit', $row->id) . '"
+                    data-urlcreate="' . url('setting/cabang/' . $row->id . '/edit') . '"
                     data-modalId="extraLargeModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
                     </a>
                     ';
                     $buttonDelete = '
-                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('setting/cabang/'.$row->id).'?_method=delete">
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="' . url('setting/cabang/' . $row->id) . '?_method=delete">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                     ';
@@ -67,14 +68,14 @@ class CabangController extends Controller
      */
     public function create()
     {
-        $action = route('cabang.store');
+        $action = url('setting/cabang');
         $array_tipe_print = [];
         $tipe_print = $this->datastatis['tipe_print'];
         foreach ($tipe_print as $value => $item) {
-           $array_tipe_print[] = [
-            'id' => $value,
-            'label' => $item,
-           ];
+            $array_tipe_print[] = [
+                'id' => $value,
+                'label' => $item,
+            ];
         }
         return view('setting::cabang.form', compact('action', 'array_tipe_print'));
     }
@@ -126,18 +127,17 @@ class CabangController extends Controller
      */
     public function edit($id)
     {
-        $action = url('setting/cabang/'.$id.'?_method=put');
+        $action = url('setting/cabang/' . $id . '?_method=put');
         $row = Cabang::find($id);
         $array_tipe_print = [];
         $tipe_print = $this->datastatis['tipe_print'];
         foreach ($tipe_print as $value => $item) {
-           $array_tipe_print[] = [
-            'id' => $value,
-            'label' => $item,
-           ];
+            $array_tipe_print[] = [
+                'id' => $value,
+                'label' => $item,
+            ];
         }
         return view('setting::cabang.form', compact('action', 'row', 'array_tipe_print'));
-
     }
 
     /**

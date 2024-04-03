@@ -9,7 +9,8 @@
                 <ul class="dropdown-menu">
                     <li>
                         <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center btn-edit"
-                            data-typemodal="extraLargeModal" data-urlcreate="{{ route('barang.edit', $row->id) }}">
+                            data-typemodal="extraLargeModal"
+                            data-urlcreate="{{ url('master/barang/' . $row->id . '/edit') }}">
                             <i class="bx bx-chevron-right scaleX-n1-rtl"></i>Edit</a>
                     </li>
                     <li>

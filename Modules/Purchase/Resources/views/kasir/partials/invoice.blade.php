@@ -28,7 +28,7 @@
                     <th>#</th>
                 </tr>
             </thead>
-            <tbody class="table-border-bottom-0" class="orderBarang">
+            <tbody class="table-border-bottom-0 orderBarang">
             </tbody>
             <tfoot>
                 <tr>
@@ -36,7 +36,7 @@
                         <div class="d-flex justify-content-center flex-wrap align-items-center">
                             <h4 class="fw-bold p-0 m-0">Total: Rp. <span class="total_harga_all" class="me-3">0</span>
                             </h4>
-                            <strong class="text-primary" style="cursor: pointer;"> PRINT</strong>
+                            {{-- <strong class="text-primary" style="cursor: pointer;"> PRINT</strong> --}}
                         </div>
                     </td>
                 </tr>

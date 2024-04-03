@@ -40,7 +40,7 @@ class MekanikController extends Controller
                     return  $row->tanggalambil_pservis == null ? '-' : UtilsHelper::tanggalBulanTahunKonversi($row->tanggalambil_pservis);
                 })
                 ->addColumn('action', function ($row) {
-                    $buttonAksi = '<a href="' . route('mekanik.show', $row->id) . '" class="btn btn-primary btn-sm" title="Detail Mekanik"><i class="fa-solid fa-pen-to-square"></i></a>';
+                    $buttonAksi = '<a href="' . url('service/mekanik/' . $row->id) . '" class="btn btn-primary btn-sm" title="Detail Mekanik"><i class="fa-solid fa-pen-to-square"></i></a>';
 
                     $button = '
                 <div class="text-center">

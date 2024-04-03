@@ -1,5 +1,6 @@
 // "use strict";
 var datatable;
+var urlRoot = $('.url_root').data('url');
 var jsonString = $(".json_customer").data("json");
 var jsonStringBarang = $(".json_barang").data("json");
 var jsonTipeDiskon = $(".json_tipe_diskon").data("json");
@@ -21,19 +22,27 @@ var totalHargaItems = 0;
 var customerId = "";
 
 $(document).ready(function () {
-    select2Standard({
+    
+    select2Server({
+        selector: "select[name=barang_id]",
         parent: ".content-wrapper",
-        selector: "select[name='barang_id']",
+        routing: `${urlRoot}/select/barang`,
+        passData: {
+            status_barang: 'dijual, dijual & untuk servis'
+        },
     });
 
-    select2Standard({
+    select2Server({
+        selector: "select[name=customer_id]",
         parent: ".content-wrapper",
-        selector: "select[name='customer_id']",
+        routing: `${urlRoot}/select/customer`,
+        passData: {},
     });
+    
 
     select2Standard({
+        selector: "select[name=kategori_pembayaran_id]",
         parent: ".content-wrapper",
-        selector: "select[name='kategori_pembayaran_id']",
     });
 
     const refreshDataSet = () => {
@@ -57,28 +66,6 @@ $(document).ready(function () {
                 jsonNoInvoice = data.noInvoice;
 
                 // refresh select 2 barang & customer
-                let select2Barang = [];
-                select2Barang.push({
-                    id: '',
-                    text: 'Pilih Barang'
-                })
-                data.array_barang.map((value, index) => {
-                    select2Barang.push({
-                        id: value.id,
-                        text: value.label,
-                    });
-                });
-                let select2Customer = [];
-                select2Customer.push({
-                    id: '',
-                    text: 'Pilih Customer'
-                })
-                data.array_customer.map((value, index) => {
-                    select2Customer.push({
-                        id: value.id,
-                        text: value.label,
-                    });
-                });
                 let select2KategoriPembayaran = [];
                 select2KategoriPembayaran.push({
                     id: '',
@@ -92,35 +79,6 @@ $(document).ready(function () {
                         });
                     }
                 );
-
-                var selectElementBarang = $("select[name='barang_id']");
-                selectElementBarang.empty();
-                $.each(select2Barang, function (index, option) {
-                    selectElementBarang.append(
-                        new Option(option.text, option.id, false, false)
-                    );
-                });
-                selectElementBarang.select2("destroy");
-
-                select2Standard({
-                    parent: ".content-wrapper",
-                    selector: "select[name='barang_id']",
-                    data: select2Barang,
-                });
-
-                var selectElementCustomer = $("select[name='customer_id']");
-                selectElementCustomer.empty();
-                $.each(select2Customer, function (index, option) {
-                    selectElementCustomer.append(
-                        new Option(option.text, option.id, false, false)
-                    );
-                });
-                selectElementCustomer.select2("destroy");
-                select2Standard({
-                    parent: ".content-wrapper",
-                    selector: "select[name='customer_id']",
-                    data: select2Customer,
-                });
 
                 var selectElementKategoriPembayaran = $(
                     "select[name='kategori_pembayaran_id']"

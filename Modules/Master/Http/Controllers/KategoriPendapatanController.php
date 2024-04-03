@@ -38,7 +38,7 @@ class KategoriPendapatanController extends Controller
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="mediumModal"
-                    data-urlcreate="' . route('kategoriPendapatan.edit', $row->id) . '"
+                    data-urlcreate="' . url('master/kategoriPendapatan/' . $row->id . '/edit') . '"
                     data-modalId="mediumModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
@@ -70,7 +70,7 @@ class KategoriPendapatanController extends Controller
      */
     public function create()
     {
-        $action = route('kategoriPendapatan.store');
+        $action = url('master/kategoriPendapatan');
         return view('master::kategoriPendapatan.form', compact('action'));
     }
 

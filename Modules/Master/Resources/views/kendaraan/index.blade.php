@@ -17,7 +17,7 @@
                     </div>
                     <div>
                         <x-button-main title="Tambah" className="btn-add" typeModal="extraLargeModal"
-                            urlCreate="{{ route('kendaraan.create') }}" />
+                            urlCreate="{{ url('master/kendaraan/create') }}" />
                     </div>
                 </div>
             </h5>
@@ -43,7 +43,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('kendaraan.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('master/kendaraan') }}"></script>
         <script src="{{ asset('js/master/kendaraan/index.js') }}"></script>
     @endpush
 @endsection

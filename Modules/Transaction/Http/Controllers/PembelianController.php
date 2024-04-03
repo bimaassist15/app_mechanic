@@ -37,7 +37,7 @@ class PembelianController extends Controller
                     $buttonDetail = '
                     <a class="btn btn-info btn-detail btn-sm" 
                     data-typemodal="extraLargeModal"
-                    data-urlcreate="' . route('pembelian.show', $row->id) . '"
+                    data-urlcreate="' . url('transaction/pembelian/' . $row->id) . '"
                     data-modalId="extraLargeModal"
                     >
                         <i class="fa-solid fa-eye"></i>

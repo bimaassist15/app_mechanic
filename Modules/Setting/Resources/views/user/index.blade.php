@@ -21,7 +21,7 @@
                         </div>
                         <div class="mt-4">
                             <x-button-main title="Tambah" className="btn-add" typeModal="extraLargeModal"
-                                urlCreate="{{ route('user.create') }}" />
+                                urlCreate="{{ url('setting/user/create') }}" />
                         </div>
 
                     </div>
@@ -51,7 +51,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('user.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('setting/user') }}"></script>
         <script src="{{ asset('js/setting/user/index.js') }}"></script>
     @endpush
 @endsection

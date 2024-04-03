@@ -71,7 +71,7 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li>
-                        <a target="_blank" href="{{ route('pembelianCicilan.print') }}"
+                        <a target="_blank" href="{{ url('transaction/pembelianCicilan/print/transaction') }}"
                             class="dropdown-item d-flex align-items-center btn-print"><i
                                 class="bx bx-chevron-right scaleX-n1-rtl"></i>Print</a>
                     </li>

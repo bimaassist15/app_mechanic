@@ -17,7 +17,7 @@
                     </div>
                     <div>
                         <x-button-main title="Tambah" className="btn-add" typeModal="mediumModal"
-                            urlCreate="{{ route('roles.create') }}" />
+                            urlCreate="{{ url('setting/roles/create') }}" />
                     </div>
                 </div>
             </h5>
@@ -41,7 +41,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('roles.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('setting/roles') }}"></script>
         <script src="{{ asset('js/setting/roles/index.js') }}"></script>
     @endpush
 @endsection

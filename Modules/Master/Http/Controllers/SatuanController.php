@@ -17,27 +17,27 @@ class SatuanController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             $data = Satuan::dataTable();
             return DataTables::eloquent($data)
-            ->addColumn('status_satuan', function ($row) {
-                $output = $row->status_satuan ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
-                return '<div class="text-center">
-                '.$output.'
+                ->addColumn('status_satuan', function ($row) {
+                    $output = $row->status_satuan ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-circle-xmark"></i>';
+                    return '<div class="text-center">
+                ' . $output . '
                 </div>';
-            })
+                })
                 ->addColumn('action', function ($row) {
                     $buttonUpdate = '
                     <a class="btn btn-warning btn-edit btn-sm" 
                     data-typemodal="mediumModal"
-                    data-urlcreate="' . route('satuan.edit', $row->id) . '"
+                    data-urlcreate="' . url('master/satuan/' . $row->id . '/edit') . '"
                     data-modalId="mediumModal"
                     >
                         <i class="fa-solid fa-pencil"></i>
                     </a>
                     ';
                     $buttonDelete = '
-                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="'.url('master/satuan/'.$row->id).'?_method=delete">
+                    <button type="button" class="btn-delete btn btn-danger btn-sm" data-url="' . url('master/satuan/' . $row->id) . '?_method=delete">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                     ';
@@ -62,7 +62,7 @@ class SatuanController extends Controller
      */
     public function create()
     {
-        $action = route('satuan.store');
+        $action = url('master/satuan');
         return view('master::satuan.form', compact('action'));
     }
 
@@ -100,9 +100,9 @@ class SatuanController extends Controller
      */
     public function edit($id)
     {
-        $action = url('master/satuan/'.$id.'?_method=put');
+        $action = url('master/satuan/' . $id . '?_method=put');
         $row = Satuan::find($id);
-        return view('master::satuan.form', compact('action','row'));
+        return view('master::satuan.form', compact('action', 'row'));
     }
 
     /**

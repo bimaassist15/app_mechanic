@@ -88,7 +88,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('stock.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('transferstock/stock') }}"></script>
         <script src="{{ asset('js/transferStock/stock/index.js') }}"></script>
     @endpush
 @endsection

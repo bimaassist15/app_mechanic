@@ -50,7 +50,8 @@
 
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('kasir.index') }}"></script>
+        <script class="url_root" data-url="{{ url('/') }}"></script>
+        <script class="url_datatable" data-url="{{ url('transaction/kasir') }}"></script>
         <script class="json_supplier" data-json="{{ $dataSupplier }}"></script>
         <script class="json_barang" data-json="{{ $dataBarang }}"></script>
         <script class="json_tipe_diskon" data-json="{{ $dataTipeDiskon }}"></script>
@@ -62,7 +63,7 @@
         <script class="json_default_user" data-json="{{ $defaultUser }}"></script>
         <script class="json_cabang_id" data-json="{{ $cabangId }}"></script>
         <script class="json_no_invoice" data-json="{{ $noInvoice }}"></script>
-        <script class="url_print_kasir" data-url="{{ route('pembelian.print') }}"></script>
+        <script class="url_print_kasir" data-url="{{ url('transaction/pembelian/print/transaction') }}"></script>
         <script class="url_simpan_kasir" data-url="{{ url('transaction/kasir') }}"></script>
         <script class="url_invoice_pembelian" data-url="{{ url('transaction/pembelian') }}"></script>
         <script class="isEdit" data-value="{{ $isEdit }}"></script>

@@ -31,7 +31,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ route('stokkeluar.index') }}"></script>
+        <script class="url_datatable" data-url="{{ url('transferstock/stokkeluar') }}"></script>
 
         <script src="{{ asset('js/master/stokkeluar/index.js') }}"></script>
     @endpush
