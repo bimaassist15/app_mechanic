@@ -162,31 +162,10 @@ function select2Server({
     routing = "",
     passData = {},
 }) {
-    function formatRepo(repo) {
-        if (repo.loading) {
-            return repo.text;
-        }
-
-        var $container = $(
-            "<div class='select2-result-repository clearfix'>" +
-                "<div class='select2-result-repository__meta'>" +
-                "<div class='select2-result-repository__title'></div>" +
-                "</div>" +
-                "</div>" +
-                "</div>"
-        );
-
-        $container.find(".select2-result-repository__title").text(repo.text);
-        return $container;
-    }
-
-    function formatRepoSelection(repo) {
-        return repo.text;
-    }
-
     $(`${selector}`).select2({
         dropdownParent: $(`${parent}`),
         closeOnSelect: true,
+        placeholder: '-- Pilih Data --',
         theme: "bootstrap-5",
         ajax: {
             url: `${routing}`,
@@ -212,8 +191,17 @@ function select2Server({
             },
             cache: true,
         },
-        templateResult: formatRepo,
-        templateSelection: formatRepoSelection,
+        templateResult: function (data) {
+            var $option = $("<span></span>");
+            $option.html(data.text);
+            return $option;
+        },
+        templateSelection: function (data) {
+            const splitText = data.text.split("<br />");
+            var $result = $("<span></span>");
+            $result.html(splitText[0]);
+            return $result;
+        },
     });
 }
 

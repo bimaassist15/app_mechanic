@@ -60,4 +60,10 @@ class Penjualan extends Model
             ->whereHas('penjualanCicilan');
         return $data;
     }
+
+    public function getReportPenjualan()
+    {
+        $data = Penjualan::dataTable()->with('customer', 'users', 'users.profile', 'penjualanProduct', 'penjualanProduct.barang', 'penjualanPembayaran', 'penjualanPembayaran.kategoriPembayaran', 'penjualanPembayaran.subPembayaran', 'penjualanPembayaran.users', 'penjualanPembayaran.users.profile',  'penjualanCicilan', 'penjualanCicilan.kategoriPembayaran', 'penjualanCicilan.subPembayaran', 'penjualanCicilan.users', 'penjualanCicilan.users.profile');
+        return $data;
+    }
 }

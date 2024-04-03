@@ -353,15 +353,23 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item">
+        @php
+            $activeRoutesLaporanToko = ['report/kasir'];
+        @endphp
+        <li
+            class="menu-item {{ collect($activeRoutesLaporanToko)->contains(function ($route) {
+                return request()->is($route) || str_starts_with(request()->url(), url($route));
+            })
+                ? 'active'
+                : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bxs-report"></i>
                 <div data-i18n="Laporan Toko">Laporan Toko</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item {{ request()->is('master/kategori') ? 'active' : '' }}">
-                    <a href="{{ url('master/kategori') }}" class="menu-link">
-                        <div data-i18n="Kategori">Kategori</div>
+                <li class="menu-item {{ request()->is('report/kasir') ? 'active' : '' }}">
+                    <a href="{{ url('report/kasir') }}" class="menu-link">
+                        <div data-i18n="Kasir">Kasir</div>
                     </a>
                 </li>
             </ul>

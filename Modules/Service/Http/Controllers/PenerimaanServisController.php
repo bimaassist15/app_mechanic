@@ -169,7 +169,7 @@ class PenerimaanServisController extends Controller
         $action = route('penerimaanServis.store');
         $kategoriServis = KategoriServis::dataTable()->get();
         $tipeServis = $this->datastatis['tipe_servis'];
-        $kendaraanServis = Kendaraan::with('customer', 'cabang')->get();
+        $kendaraanServis = Kendaraan::dataTable()->with('customer', 'cabang')->get();
         $array_kendaraan_servis = [];
         foreach ($kendaraanServis as $key => $item) {
             $array_kendaraan_servis[] = [

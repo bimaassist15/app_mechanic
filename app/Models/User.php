@@ -111,7 +111,7 @@ class User extends Authenticatable
 
     public function getUsersMekanik()
     {
-        return User::with('profile')->where('cabang_id', session()->get('cabang_id'))
+        return User::dataTable()->with('profile')
             ->whereHas('roles', function ($query) {
                 $query->where('name', 'like', '%mekanik%');
             })->get();
@@ -120,5 +120,10 @@ class User extends Authenticatable
     public function orderBarang()
     {
         return $this->hasMany(OrderBarang::class);
+    }
+
+    public function getUsersKasir()
+    {
+        return User::dataTable()->with('profile');
     }
 }

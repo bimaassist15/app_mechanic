@@ -55,7 +55,6 @@ class KasirController extends Controller
                 <strong>[' . $item->barcode_barang . '] ' . $item->nama_barang . '</strong> <br />
                 <span>Stok: ' . $item->stok_barang . '</span>
                 '
-
             ];
         }
 

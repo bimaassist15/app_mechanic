@@ -5,6 +5,7 @@ namespace Modules\Setting\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
@@ -75,5 +76,11 @@ class SettingController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/login');
     }
 }

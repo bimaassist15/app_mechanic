@@ -12,6 +12,11 @@ class OrderServis extends Model
     protected $guarded = [];
     public $timestamps = true;
 
+    public function scopeDataTable($query)
+    {
+        return $query->where('cabang_id', session()->get('cabang_id'));
+    }
+
     public function users()
     {
         return $this->belongsTo(User::class);
@@ -34,6 +39,6 @@ class OrderServis extends Model
 
     public function getOrderServis()
     {
-        return OrderServis::with('users', 'hargaServis', 'hargaServis.kategoriServis', 'penerimaanServis', 'usersMekanik');
+        return OrderServis::dataTable()->with('users', 'hargaServis', 'hargaServis.kategoriServis', 'penerimaanServis', 'usersMekanik');
     }
 }

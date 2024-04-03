@@ -49,7 +49,7 @@ class LabaBersihController extends Controller
             $sumTotalTransaksiServis = $sumBayarServis - $sumKembalianServis;
 
             // biaya kategori pendapatan lainnya
-            $transaksiPendapatan = TransaksiPendapatan::select('kategori_pendapatan_id', 'kategori_pendapatan.nama_kpendapatan', DB::raw('sum(jumlah_tpendapatan) as jumlah_tpendapatan'))
+            $transaksiPendapatan = TransaksiPendapatan::dataTabel()->select('kategori_pendapatan_id', 'kategori_pendapatan.nama_kpendapatan', DB::raw('sum(jumlah_tpendapatan) as jumlah_tpendapatan'))
                 ->join('kategori_pendapatan', 'transaksi_pendapatan.kategori_pendapatan_id', '=', 'kategori_pendapatan.id')
                 ->groupBy('kategori_pendapatan_id', 'kategori_pendapatan.nama_kpendapatan');
 
@@ -84,7 +84,7 @@ class LabaBersihController extends Controller
             // end laba / rugi koto
 
             // biaya kategori pendapatan lainnya
-            $transaksiPengeluaran = TransaksiPengeluaran::select('kategori_pengeluaran_id', 'kategori_pengeluaran.nama_kpengeluaran', DB::raw('sum(jumlah_tpengeluaran) as jumlah_tpengeluaran'))
+            $transaksiPengeluaran = TransaksiPengeluaran::dataTable()->select('kategori_pengeluaran_id', 'kategori_pengeluaran.nama_kpengeluaran', DB::raw('sum(jumlah_tpengeluaran) as jumlah_tpengeluaran'))
                 ->join('kategori_pengeluaran', 'transaksi_pengeluaran.kategori_pengeluaran_id', '=', 'kategori_pengeluaran.id')
                 ->groupBy('kategori_pengeluaran_id', 'kategori_pengeluaran.nama_kpengeluaran');
 
@@ -165,7 +165,7 @@ class LabaBersihController extends Controller
         $sumTotalTransaksiServis = $sumBayarServis - $sumKembalianServis;
 
         // biaya kategori pendapatan lainnya
-        $transaksiPendapatan = TransaksiPendapatan::select('kategori_pendapatan_id', 'kategori_pendapatan.nama_kpendapatan', DB::raw('sum(jumlah_tpendapatan) as jumlah_tpendapatan'))
+        $transaksiPendapatan = TransaksiPendapatan::dataTable()->select('kategori_pendapatan_id', 'kategori_pendapatan.nama_kpendapatan', DB::raw('sum(jumlah_tpendapatan) as jumlah_tpendapatan'))
             ->join('kategori_pendapatan', 'transaksi_pendapatan.kategori_pendapatan_id', '=', 'kategori_pendapatan.id')
             ->groupBy('kategori_pendapatan_id', 'kategori_pendapatan.nama_kpendapatan');
 
@@ -200,7 +200,7 @@ class LabaBersihController extends Controller
         // end laba / rugi koto
 
         // biaya kategori pendapatan lainnya
-        $transaksiPengeluaran = TransaksiPengeluaran::select('kategori_pengeluaran_id', 'kategori_pengeluaran.nama_kpengeluaran', DB::raw('sum(jumlah_tpengeluaran) as jumlah_tpengeluaran'))
+        $transaksiPengeluaran = TransaksiPengeluaran::dataTable()->select('kategori_pengeluaran_id', 'kategori_pengeluaran.nama_kpengeluaran', DB::raw('sum(jumlah_tpengeluaran) as jumlah_tpengeluaran'))
             ->join('kategori_pengeluaran', 'transaksi_pengeluaran.kategori_pengeluaran_id', '=', 'kategori_pengeluaran.id')
             ->groupBy('kategori_pengeluaran_id', 'kategori_pengeluaran.nama_kpengeluaran');
 

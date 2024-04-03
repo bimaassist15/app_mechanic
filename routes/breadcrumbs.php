@@ -264,26 +264,31 @@ Breadcrumbs::for('mekanikGaransiDetail', function (BreadcrumbTrail $trail, $id) 
 // Home > kategoriPendapatan
 Breadcrumbs::for('kategoriPendapatan', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Kategori Pendapatan', url('service/kategoriPendapatan/'));
+    $trail->push('Kategori Pendapatan', url('master/kategoriPendapatan/'));
 });
 // Home > kategoriPengeluaran
 Breadcrumbs::for('kategoriPengeluaran', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Kategori Pengeluaran', url('service/kategoriPengeluaran/'));
+    $trail->push('Kategori Pengeluaran', url('master/kategoriPengeluaran/'));
 });
 
 // Home > pendapatan
 Breadcrumbs::for('pendapatan', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Pendapatan', url('service/pendapatan/'));
+    $trail->push('Pendapatan', url('report/pendapatan/'));
 });
 // Home > pengeluaran
 Breadcrumbs::for('pengeluaran', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Pendapatan', url('service/pengeluaran/'));
+    $trail->push('Pendapatan', url('report/pengeluaran/'));
 });
 // Home > labaBersih
 Breadcrumbs::for('labaBersih', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Laba Bersih', url('service/labaBersih/'));
+    $trail->push('Laba Bersih', url('report/labaBersih/'));
+});
+// Home > reportKasir
+Breadcrumbs::for('reportKasir', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Kasir', url('report/kasir'));
 });

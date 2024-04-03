@@ -17,7 +17,6 @@ $(document).ready(function () {
         }
 
 
-        var url = $(this).data('url');
         var data = {
             dari_tanggal: dari_tanggal,
             sampai_tanggal: sampai_tanggal

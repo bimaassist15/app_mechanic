@@ -179,7 +179,7 @@ class PembelianCicilanController extends Controller
         $payloadIsEdit = $request->input('payload_is_edit');
         if ($payloadIsEdit['isEdit'] == true) {
             $pembelian_id = $payloadIsEdit['pembelian_id'];
-            $pembelianCicilan = PembelianCicilan::where('pembelian_id', $pembelian_id)
+            $pembelianCicilan = PembelianCicilan::dataTableCabang()->where('pembelian_id', $pembelian_id)
                 ->orderBy('id', 'desc')->get();
             foreach ($pembelianCicilan as $key => $item) {
                 $id = $item->id;
