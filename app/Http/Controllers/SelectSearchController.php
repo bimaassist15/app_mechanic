@@ -108,7 +108,10 @@ class SelectSearchController extends Controller
             })
             ->paginate(10, ['*'], 'page', $page);
 
-        $output = [];
+        $output[] = [
+            'id' => '-',
+            'text' => 'Pilih Semua',
+        ];
         foreach ($getBarang as $key => $item) {
             $output[] = [
                 'id' => $item->id,
@@ -173,7 +176,10 @@ class SelectSearchController extends Controller
             ->orWhere('nowa_supplier', 'like', '%' . $search . '%')
             ->paginate(10, ['*'], 'page', $page);
 
-        $output = [];
+        $output[] = [
+            'id' => '-',
+            'text' => 'Pilih Semua',
+        ];
         foreach ($getSupplier as $key => $item) {
             $output[] = [
                 'id' => $item->id,

@@ -297,3 +297,13 @@ Breadcrumbs::for('reportCustomer', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Laporan Customer', url('report/customer'));
 });
+// Home > reportPeriode
+Breadcrumbs::for('reportPeriode', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Periode', url('report/periode'));
+});
+// Home > reportProduk
+Breadcrumbs::for('reportProduk', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Produk', url('report/produk'));
+});

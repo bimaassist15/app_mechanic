@@ -14,7 +14,7 @@ class Barang extends Model
 
     public function scopeDataTable($query)
     {
-        return $query->where('cabang_id', session()->get('cabang_id'));
+        return $query->where('barang.cabang_id', session()->get('cabang_id'));
     }
 
     public function cabang()
@@ -50,5 +50,10 @@ class Barang extends Model
     public function orderBarang()
     {
         return $this->hasMany(OrderBarang::class);
+    }
+
+    public function getReportBarang()
+    {
+        return Barang::dataTable()->with('penjualanProduct', 'orderBarang');
     }
 }

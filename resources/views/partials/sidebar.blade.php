@@ -354,7 +354,7 @@
             </ul>
         </li>
         @php
-            $activeRoutesLaporanToko = ['report/kasir', 'report/customer'];
+            $activeRoutesLaporanToko = ['report/kasir', 'report/customer', 'report/periode', 'report/produk'];
         @endphp
         <li
             class="menu-item {{ collect($activeRoutesLaporanToko)->contains(function ($route) {
@@ -375,6 +375,16 @@
                 <li class="menu-item {{ request()->is('report/customer') ? 'active' : '' }}">
                     <a href="{{ url('report/customer') }}" class="menu-link">
                         <div data-i18n="Customer">Customer</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/periode') ? 'active' : '' }}">
+                    <a href="{{ url('report/periode') }}" class="menu-link">
+                        <div data-i18n="Periode">Periode</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/produk') ? 'active' : '' }}">
+                    <a href="{{ url('report/produk') }}" class="menu-link">
+                        <div data-i18n="Produk">Produk</div>
                     </a>
                 </li>
             </ul>

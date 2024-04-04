@@ -32,6 +32,13 @@ class Pembelian extends Model
         return $data;
     }
 
+    public function getReportPembelian()
+    {
+        $data = Pembelian::with('supplier', 'users', 'users.profile', 'pembelianProduct', 'pembelianProduct.barang', 'pembelianPembayaran', 'pembelianPembayaran.kategoriPembayaran', 'pembelianPembayaran.subPembayaran', 'pembelianPembayaran.users', 'pembelianPembayaran.users.profile',  'pembelianCicilan', 'pembelianCicilan.kategoriPembayaran', 'pembelianCicilan.subPembayaran', 'pembelianCicilan.users', 'pembelianCicilan.users.profile')
+            ->where('cabang_id', session()->get('cabang_id'));
+        return $data;
+    }
+
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);

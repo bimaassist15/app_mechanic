@@ -21,4 +21,7 @@ Route::prefix('report')->middleware('auth')->group(function () {
 
     Route::get('kasir', 'KasirController@index')->name('kasir.index');
     Route::get('customer', 'CustomerController@index')->name('customer.index');
+    Route::get('periode', 'PeriodeController@index')->name('periode.index');
+    Route::get('produk', 'ProdukController@index')->name('produk.index');
+    Route::get('supplier', 'SupplierController@index')->name('supplier.index');   
 });

@@ -14,7 +14,7 @@ class Penjualan extends Model
 
     public function scopeDataTable($query)
     {
-        return $query->where('cabang_id', session()->get('cabang_id'));
+        return $query->where('penjualan.cabang_id', session()->get('cabang_id'));
     }
 
     public function penjualanProduct()
