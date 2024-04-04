@@ -29,7 +29,7 @@ class ProdukController extends Controller
                 ->withSum('orderBarang as orderBarang_sum', 'qty_orderbarang');
 
             if ($dari_tanggal != null) {
-                $dataBarang = $dataBarang->whereDate('barang.created_at', '>=', $dari_tanggal);
+                $dataBarang = $dataBarang->whereDate('barang.updated_at', '>=', $dari_tanggal);
             }
             if ($sampai_tanggal != null) {
                 $dataBarang = $dataBarang->whereDate('barang.updated_at', '<=', $sampai_tanggal);
