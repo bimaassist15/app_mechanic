@@ -332,3 +332,28 @@ Breadcrumbs::for('reportStokTerkecil', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Laporan Stok Terkecil', url('report/stokTerkecil'));
 });
+// Home > reportProfitPribadi
+Breadcrumbs::for('reportProfitPribadi', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Profit Pribadi', url('report/profitPribadi'));
+});
+// Home > reportMekanik
+Breadcrumbs::for('reportMekanik', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Mekanik', url('report/mekanik'));
+});
+// Home > reportServisPeriode
+Breadcrumbs::for('reportServisPeriode', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Servis Per Periode', url('report/servisPeriode'));
+});
+// Home > reportStatusServis
+Breadcrumbs::for('reportStatusServis', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Status Servis', url('report/statusServis'));
+});
+// Home > reportStatusServisPeriode
+Breadcrumbs::for('reportStatusServisPeriode', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Status Servis Periode', url('report/statusServisPeriode'));
+});

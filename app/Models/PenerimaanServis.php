@@ -47,6 +47,13 @@ class PenerimaanServis extends Model
         return $data;
     }
 
+    public function getReportServis()
+    {
+        $data = PenerimaanServis::with('kendaraan', 'kendaraan.customer', 'kategoriServis', 'pembayaranServis', 'users', 'pembayaranServis.kategoriPembayaran', 'pembayaranServis.subPembayaran', 'pembayaranServis.users', 'serviceHistory', 'orderServis', 'orderServis.usersMekanik', 'orderBarang', 'orderBarang.barang', 'customer', 'customer.saldoCustomer', 'usersIdGaransi')
+            ->where('penerimaan_servis.cabang_id', session()->get('cabang_id'));
+        return $data;
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);
@@ -70,5 +77,10 @@ class PenerimaanServis extends Model
     public function usersIdGaransi()
     {
         return $this->belongsTo(User::class, 'users_id_garansi', 'id');
+    }
+
+    public function getDaysDifferenceAttribute()
+    {
+        return $this->updated_at->diffInDays($this->created_at);
     }
 }

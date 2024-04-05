@@ -8,6 +8,7 @@ use App\Models\PenerimaanServis;
 use App\Models\Penjualan;
 use App\Models\User;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use File;
 use Illuminate\Support\Facades\Auth;
@@ -169,6 +170,12 @@ class UtilsHelper
         $tanggal = Carbon::parse($dateNow);
         $formattedDate = $tanggal->format('j F Y');
         return $formattedDate;
+    }
+    public static function formatDateV2($tanggal_transaction)
+    {
+        $date = DateTime::createFromFormat('d/m/Y', $tanggal_transaction);
+        $tanggal = $date->format('Y-m-d');
+        return UtilsHelper::formatDate($tanggal);
     }
 
     public static function formatDateLaporan($tanggal_transaction)

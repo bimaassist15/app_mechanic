@@ -28,4 +28,9 @@ Route::prefix('report')->middleware('auth')->group(function () {
     Route::get('periodePembelian', 'PeriodePembelianController@index')->name('periodePembelian.index');
     Route::get('barangTerlaris', 'BarangTerlarisController@index')->name('barangTerlaris.index');
     Route::get('stokTerkecil', 'StokTerkecilController@index')->name('stokTerkecil.index');
+    Route::get('profitPribadi', 'ProfitPribadiController@index')->name('profitPribadi.index');
+    Route::get('mekanik', 'MekanikController@index')->name('mekanik.index');
+    Route::get('servisPeriode', 'ServisPeriodeController@index')->name('servisPeriode.index');
+    Route::get('statusServis', 'StatusServisController@index')->name('statusServis.index');
+    Route::get('statusServisPeriode', 'StatusServisPeriodeController@index')->name('statusServisPeriode.index');
 });

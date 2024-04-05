@@ -360,6 +360,10 @@
                 'report/periode',
                 'report/produk',
                 'report/supplier',
+                'report/pembelianProduk',
+                'report/periodePembelian',
+                'report/barangTerlaris',
+                'report/stokTerkecil',
             ];
         @endphp
         <li
@@ -410,7 +414,7 @@
                 </li>
                 <li class="menu-item {{ request()->is('report/barangTerlaris') ? 'active' : '' }}">
                     <a href="{{ url('report/barangTerlaris') }}" class="menu-link">
-                        <div data-i18n="Barang Terlaris">Barang Terlaris</div>
+                        <div data-i18n="B   arang Terlaris">Barang Terlaris</div>
                     </a>
                 </li>
                 <li class="menu-item {{ request()->is('report/stokTerkecil') ? 'active' : '' }}">
@@ -420,15 +424,49 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item">
+        @php
+            $activeRoutesLaporanServis = [
+                'report/profitPribadi',
+                'report/mekanik',
+                'report/servisPeriode',
+                'report/statusServis',
+                'report/statusServisPeriode',
+            ];
+        @endphp
+        <li
+            class="menu-item {{ collect($activeRoutesLaporanServis)->contains(function ($route) {
+                return request()->is($route) || str_starts_with(request()->url(), url($route));
+            })
+                ? 'active'
+                : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bxs-report"></i>
                 <div data-i18n="Laporan Servis">Laporan Servis</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item {{ request()->is('master/kategori') ? 'active' : '' }}">
-                    <a href="{{ url('master/kategori') }}" class="menu-link">
-                        <div data-i18n="Kategori">Kategori</div>
+                <li class="menu-item {{ request()->is('report/profitPribadi') ? 'active' : '' }}">
+                    <a href="{{ url('report/profitPribadi') }}" class="menu-link">
+                        <div data-i18n="Profit">Profit</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/mekanik') ? 'active' : '' }}">
+                    <a href="{{ url('report/mekanik') }}" class="menu-link">
+                        <div data-i18n="Mekanik">Mekanik</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/servisPeriode') ? 'active' : '' }}">
+                    <a href="{{ url('report/servisPeriode') }}" class="menu-link">
+                        <div data-i18n="Servis Periode">Profit Servis Periode</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/statusServis') ? 'active' : '' }}">
+                    <a href="{{ url('report/statusServis') }}" class="menu-link">
+                        <div data-i18n="Status Servis">Status Servis</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/statusServisPeriode') ? 'active' : '' }}">
+                    <a href="{{ url('report/statusServisPeriode') }}" class="menu-link">
+                        <div data-i18n="Status Servis">Status Periode</div>
                     </a>
                 </li>
             </ul>

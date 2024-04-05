@@ -29,7 +29,7 @@ class UserController extends Controller
             ->join('roles','roles.id','=','users.roles_id')
             ->with('profile');
             if($cabang_id != '' && $cabang_id != null){
-                $data->where('cabang_id', $cabang_id);
+                $data->where('users.cabang_id', $cabang_id);
             }
             $data = $data
             ->select('users.*','roles.id as roles_id', 'roles.name as roles_name', 'roles.guard_name as roles_guard');

@@ -235,4 +235,53 @@ class SelectSearchController extends Controller
             'count_filtered' => $countFiltered,
         ]);
     }
+
+    public function users(Request $request)
+    {
+        $search = $request->input('search');
+        $page = $request->input('page');
+        $role = $request->input('role');
+
+        $getUsers = User::dataTable()->with('profile')
+            ->whereHas('roles', function ($query) use ($role) {
+                $query->where('name', 'like', '%' . $role . '%');
+            })
+            ->whereHas('profile', function ($query) use ($search) {
+                $query->where('nama_profile', 'like', '%' . $search . '%')
+                    ->orWhere('nohp_profile', 'like', '%' . $search . '%');
+            })
+            ->where('status_users', true)
+            ->paginate(10, ['*'], 'page', $page);
+
+        $output[] = [
+            'id' => '-',
+            'text' => 'Pilih Semua',
+        ];
+        foreach ($getUsers as $key => $item) {
+            $output[] = [
+                'id' => $item->id,
+                'text' => '
+                    <strong>Nama Mekanik: ' . $item->profile->nama_profile . '</strong><br />
+                    <span>No. Telepon: ' . $item->profile->nohp_profile . '</span>
+                ',
+            ];
+        }
+
+        // count filtered
+        $countFiltered = User::dataTable()
+            ->whereHas('roles', function ($query) use ($role) {
+                $query->where('name', 'like', '%' . $role . '%');
+            })
+            ->whereHas('profile', function ($query) use ($search) {
+                $query->where('nama_profile', 'like', '%' . $search . '%')
+                    ->orWhere('nohp_profile', 'like', '%' . $search . '%');
+            })
+            ->where('status_users', true)
+            ->count();
+
+        return response()->json([
+            'results' => $output,
+            'count_filtered' => $countFiltered,
+        ]);
+    }
 }

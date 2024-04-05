@@ -28,4 +28,5 @@ Route::middleware('auth')->group(function () {
     Route::get('select/kategoriPembayaran', [SelectSearchController::class, 'kategoriPembayaran']);
     Route::get('select/supplier', [SelectSearchController::class, 'supplier']);
     Route::get('select/hargaServis', [SelectSearchController::class, 'hargaServis']);
+    Route::get('select/users', [SelectSearchController::class, 'users']);
 });
