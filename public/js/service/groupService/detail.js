@@ -92,58 +92,6 @@ const refreshData = () => {
             jsonCabangId = data.cabangId;
             jsonServiceHistory = data.row.service_history;
 
-            let select2HargaServis = [];
-            select2HargaServis.push({
-                id: "",
-                text: "Pilih Harga Servis",
-            });
-            data.array_harga_servis.map((value, index) => {
-                select2HargaServis.push({
-                    id: value.id,
-                    text: value.label,
-                });
-            });
-
-            let select2Barang = [];
-            select2Barang.push({
-                id: "",
-                text: "Pilih Barang",
-            });
-            data.array_barang.map((value, index) => {
-                select2Barang.push({
-                    id: value.id,
-                    text: value.label,
-                });
-            });
-
-            var selectElementHargaServis = $("select[name='harga_servis_id']");
-            selectElementHargaServis.empty();
-            $.each(select2HargaServis, function (index, option) {
-                selectElementHargaServis.append(
-                    new Option(option.text, option.id, false, false)
-                );
-            });
-            selectElementHargaServis.select2("destroy");
-
-            select2Standard({
-                parent: ".content-wrapper",
-                selector: "select[name='harga_servis_id']",
-                data: select2HargaServis,
-            });
-
-            var selectElementBarang = $("select[name='barang_id']");
-            selectElementBarang.empty();
-            $.each(select2Barang, function (index, option) {
-                selectElementBarang.append(
-                    new Option(option.text, option.id, false, false)
-                );
-            });
-            selectElementBarang.select2("destroy");
-            select2Standard({
-                parent: ".content-wrapper",
-                selector: "select[name='barang_id']",
-                data: select2Barang,
-            });
 
             // output servis history
             const rowData = data.row;
@@ -320,14 +268,22 @@ renderListBarang = (data, isOnlyTotalHarga = false) => {
 
 const runDataPenerimaan = () => {
     $(document).ready(function () {
-        select2Standard({
+        select2Server({
+            selector: "select[name=harga_servis_id]",
             parent: ".content-wrapper",
-            selector: "select[name='harga_servis_id']",
+            routing: `${urlRoot}/select/hargaServis`,
+            passData: {},
         });
-        select2Standard({
+    
+        select2Server({
+            selector: "select[name=barang_id]",
             parent: ".content-wrapper",
-            selector: "select[name='barang_id']",
+            routing: `${urlRoot}/select/barang`,
+            passData: {
+                status_barang: 'dijual & untuk servis, khusus servis'
+            },
         });
+
         select2Standard({
             parent: ".content-wrapper",
             selector: "select[name='status_pservis']",
