@@ -23,5 +23,9 @@ Route::prefix('report')->middleware('auth')->group(function () {
     Route::get('customer', 'CustomerController@index')->name('customer.index');
     Route::get('periode', 'PeriodeController@index')->name('periode.index');
     Route::get('produk', 'ProdukController@index')->name('produk.index');
-    Route::get('supplier', 'SupplierController@index')->name('supplier.index');   
+    Route::get('supplier', 'SupplierController@index')->name('supplier.index');
+    Route::get('pembelianProduk', 'PembelianProdukController@index')->name('pembelianProduk.index');
+    Route::get('periodePembelian', 'PeriodePembelianController@index')->name('periodePembelian.index');
+    Route::get('barangTerlaris', 'BarangTerlarisController@index')->name('barangTerlaris.index');
+    Route::get('stokTerkecil', 'StokTerkecilController@index')->name('stokTerkecil.index');
 });

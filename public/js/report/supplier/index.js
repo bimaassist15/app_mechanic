@@ -6,12 +6,9 @@ var body = $("body");
 var datatable;
 
 select2Server({
-    selector: "select[name=barang_id]",
+    selector: "select[name=supplier_id]",
     parent: ".content-wrapper",
-    routing: `${urlRoot}/select/barang`,
-    passData: {
-        status_barang: 'dijual,dijual & untuk servis,khusus servis'
-    },
+    routing: `${urlRoot}/select/supplier`,
 });
 
 $(document).ready(function () { 
@@ -28,12 +25,12 @@ $(document).ready(function () {
     function initDatatable({
             dari_tanggal = dari_tanggal,
             sampai_tanggal = sampai_tanggal,
-            barang_id = $("select[name=barang_id]").val(),
+            supplier_id = $("select[name=supplier_id]").val(),
         }) {
 
         datatable = basicDatatable({
             tableId: $("#dataTable"),
-            ajaxUrl: `${urlRoot}/report/produk`,
+            ajaxUrl: `${urlRoot}/report/supplier`,
             columns: [
                 {
                     data: null,
@@ -42,28 +39,34 @@ $(document).ready(function () {
                     className: "text-center",
                 },
                 {
-                    data: "transaksi_penjualanproduct",
-                    name: "transaksi_penjualanproduct",
-                    searchable: false,
-                    orderable: true,
-                },
-                {
-                    data: "nama_barang",
-                    name: "nama_barang",
+                    data: "invoice_pembelian",
+                    name: "invoice_pembelian",
                     searchable: true,
                     orderable: true,
                 },
                 {
-                    data: "total_sum",
-                    name: "total_sum",
-                    searchable: false,
+                    data: "transaksi_pembelian",
+                    name: "transaksi_pembelian",
+                    searchable: true,
                     orderable: true,
+                },
+                {
+                    data: "supplier.nama_supplier",
+                    name: "supplier.nama_supplier",
+                    searchable: true,
+                    orderable: true,
+                },
+                {
+                    data: "total_pembayaran",
+                    name: "total_pembayaran",
+                    searchable: false,
+                    orderable: false,
                 },
             ],
             dataAjaxUrl: {
                 dari_tanggal,
                 sampai_tanggal,
-                barang_id,
+                supplier_id,
             },
         });
     }
@@ -71,7 +74,7 @@ $(document).ready(function () {
         {
             dari_tanggal,
             sampai_tanggal,
-            barang_id: $("select[name=barang_id]").val()
+            supplier_id: $("select[name=supplier_id]").val()
         }
     );
 
@@ -94,7 +97,7 @@ $(document).ready(function () {
         initDatatable({
             dari_tanggal,
             sampai_tanggal,
-            barang_id: $("select[name=barang_id]").val()
+            supplier_id: $("select[name=supplier_id]").val()
         });
     });
 });

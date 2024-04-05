@@ -5,14 +5,6 @@ var urlRoot = $('.url_root').data('value');
 var body = $("body");
 var datatable;
 
-select2Server({
-    selector: "select[name=barang_id]",
-    parent: ".content-wrapper",
-    routing: `${urlRoot}/select/barang`,
-    passData: {
-        status_barang: 'dijual,dijual & untuk servis,khusus servis'
-    },
-});
 
 $(document).ready(function () { 
     let dari_tanggal = $("input[name=dari_tanggal]").val();
@@ -28,12 +20,11 @@ $(document).ready(function () {
     function initDatatable({
             dari_tanggal = dari_tanggal,
             sampai_tanggal = sampai_tanggal,
-            barang_id = $("select[name=barang_id]").val(),
         }) {
 
         datatable = basicDatatable({
             tableId: $("#dataTable"),
-            ajaxUrl: `${urlRoot}/report/produk`,
+            ajaxUrl: `${urlRoot}/report/periodePembelian`,
             columns: [
                 {
                     data: null,
@@ -42,28 +33,30 @@ $(document).ready(function () {
                     className: "text-center",
                 },
                 {
-                    data: "transaksi_penjualanproduct",
-                    name: "transaksi_penjualanproduct",
-                    searchable: false,
-                    orderable: true,
-                },
-                {
-                    data: "nama_barang",
-                    name: "nama_barang",
+                    data: "invoice_pembelian",
+                    name: "invoice_pembelian",
                     searchable: true,
-                    orderable: true,
                 },
                 {
-                    data: "total_sum",
-                    name: "total_sum",
+                    data: "transaksi_pembelian",
+                    name: "transaksi_pembelian",
+                    searchable: true,
+                },
+                {
+                    data: "supplier.nama_supplier",
+                    name: "supplier.nama_supplier",
+                    searchable: true,
+                },
+                {
+                    data: "total_pembelian",
+                    name: "total_pembelian",
                     searchable: false,
-                    orderable: true,
+                    orderable: false,
                 },
             ],
             dataAjaxUrl: {
                 dari_tanggal,
                 sampai_tanggal,
-                barang_id,
             },
         });
     }
@@ -71,7 +64,6 @@ $(document).ready(function () {
         {
             dari_tanggal,
             sampai_tanggal,
-            barang_id: $("select[name=barang_id]").val()
         }
     );
 
@@ -94,7 +86,6 @@ $(document).ready(function () {
         initDatatable({
             dari_tanggal,
             sampai_tanggal,
-            barang_id: $("select[name=barang_id]").val()
         });
     });
 });

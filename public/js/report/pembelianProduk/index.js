@@ -33,7 +33,7 @@ $(document).ready(function () {
 
         datatable = basicDatatable({
             tableId: $("#dataTable"),
-            ajaxUrl: `${urlRoot}/report/produk`,
+            ajaxUrl: `${urlRoot}/report/pembelianProduk`,
             columns: [
                 {
                     data: null,
@@ -42,8 +42,8 @@ $(document).ready(function () {
                     className: "text-center",
                 },
                 {
-                    data: "transaksi_penjualanproduct",
-                    name: "transaksi_penjualanproduct",
+                    data: "transaksi_pembelianproduct",
+                    name: "transaksi_pembelianproduct",
                     searchable: false,
                     orderable: true,
                 },

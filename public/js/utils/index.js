@@ -45,11 +45,13 @@ function basicDatatable({
     ajaxUrl = "",
     columns = "",
     dataAjaxUrl = {},
+    order = [],
 }) {
     return tableId.DataTable({
         serverSide: true,
         processing: true,
         searching: true,
+        order: order,
         ajax: {
             url: ajaxUrl,
             type: "get",

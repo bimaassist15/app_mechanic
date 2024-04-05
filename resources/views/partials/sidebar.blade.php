@@ -354,7 +354,13 @@
             </ul>
         </li>
         @php
-            $activeRoutesLaporanToko = ['report/kasir', 'report/customer', 'report/periode', 'report/produk'];
+            $activeRoutesLaporanToko = [
+                'report/kasir',
+                'report/customer',
+                'report/periode',
+                'report/produk',
+                'report/supplier',
+            ];
         @endphp
         <li
             class="menu-item {{ collect($activeRoutesLaporanToko)->contains(function ($route) {
@@ -385,6 +391,31 @@
                 <li class="menu-item {{ request()->is('report/produk') ? 'active' : '' }}">
                     <a href="{{ url('report/produk') }}" class="menu-link">
                         <div data-i18n="Produk">Produk</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/supplier') ? 'active' : '' }}">
+                    <a href="{{ url('report/supplier') }}" class="menu-link">
+                        <div data-i18n="Supplier">Supplier</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/pembelianProduk') ? 'active' : '' }}">
+                    <a href="{{ url('report/pembelianProduk') }}" class="menu-link">
+                        <div data-i18n="Pembelian Produk">Pembelian Produk</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/periodePembelian') ? 'active' : '' }}">
+                    <a href="{{ url('report/periodePembelian') }}" class="menu-link">
+                        <div data-i18n="Periode Pembelian">Periode Pembelian</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/barangTerlaris') ? 'active' : '' }}">
+                    <a href="{{ url('report/barangTerlaris') }}" class="menu-link">
+                        <div data-i18n="Barang Terlaris">Barang Terlaris</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('report/stokTerkecil') ? 'active' : '' }}">
+                    <a href="{{ url('report/stokTerkecil') }}" class="menu-link">
+                        <div data-i18n="Stok Terkecil">Stok Terkecil</div>
                     </a>
                 </li>
             </ul>

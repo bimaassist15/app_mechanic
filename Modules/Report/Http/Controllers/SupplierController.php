@@ -13,16 +13,6 @@ class SupplierController extends Controller
 {
     public function index(Request $request)
     {
-        $getPembelian = new Pembelian();
-        $dataPembelian = $getPembelian->getReportPembelian()
-            ->withCount([
-                'pembelianPembayaran as total_pembelian_transaksi' => function ($query) {
-                    $query->select(DB::raw("SUM(bayar_pbpembayaran) - SUM(kembalian_pbpembayaran)"));
-                },
-            ])
-            ->get();
-        dd($dataPembelian);
-
         if ($request->ajax()) {
             $dari_tanggal = $request->input('dari_tanggal');
             $sampai_tanggal = $request->input('sampai_tanggal');
@@ -33,11 +23,11 @@ class SupplierController extends Controller
 
             $getPembelian = new Pembelian();
             $dataPembelian = $getPembelian->getReportPembelian()
-                ->withSum('pembelianPembayaran as total_bayar_pembayaran', 'bayar_pembayaran')
-                ->withSum('pembelianPembayaran as total_kembalian_pembayaran', 'kembalian_pembayaran');
+                ->withSum('pembelianPembayaran as total_bayar_pembayaran', 'bayar_pbpembayaran')
+                ->withSum('pembelianPembayaran as total_kembalian_pembayaran', 'kembalian_pbpembayaran');
 
             if ($dari_tanggal != null) {
-                $dataPembelian = $dataPembelian->whereDate('pembelian.created_at', '>=', $dari_tanggal);
+                $dataPembelian = $dataPembelian->whereDate('pembelian.transaksi_pembelian', '>=', $dari_tanggal);
             }
             if ($sampai_tanggal != null) {
                 $dataPembelian = $dataPembelian->whereDate('pembelian.updated_at', '<=', $sampai_tanggal);
@@ -45,10 +35,17 @@ class SupplierController extends Controller
             if ($supplier_id != null) {
                 $dataPembelian = $dataPembelian->where('supplier_id', $supplier_id);
             }
+            $dataPembelian = $dataPembelian->get()->map(function ($item) {
+                $item->total_pembayaran = $item->total_bayar_pembayaran - $item->total_kembalian_pembayaran;
+                return $item;
+            });
 
-            return DataTables::eloquent($dataPembelian)
+            return DataTables::of($dataPembelian)
                 ->addColumn('transaksi_pembelian', function ($row) {
-                    return UtilsHelper::formatDate($row->transaksi_pembelian);
+                    return UtilsHelper::tanggalBulanTahunKonversi($row->transaksi_pembelian);
+                })
+                ->addColumn('total_pembayaran', function ($row) {
+                    return UtilsHelper::formatUang($row->total_pembayaran);
                 })
                 ->rawColumns(['transaksi_pembelian'])
                 ->toJson();

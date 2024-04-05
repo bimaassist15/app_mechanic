@@ -307,3 +307,28 @@ Breadcrumbs::for('reportProduk', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Laporan Produk', url('report/produk'));
 });
+// Home > reportSupplier
+Breadcrumbs::for('reportSupplier', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Supplier', url('report/supplier'));
+});
+// Home > reportPembelianProduk
+Breadcrumbs::for('reportPembelianProduk', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Pembelian Produk', url('report/pembelianProduk'));
+});
+// Home > reportPeriodePembelian
+Breadcrumbs::for('reportPeriodePembelian', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Periode Pembelian', url('report/periodePembelian'));
+});
+// Home > reportBarangTerlaris
+Breadcrumbs::for('reportBarangTerlaris', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Barang Terlaris', url('report/barangTerlaris'));
+});
+// Home > reportStokTerkecil
+Breadcrumbs::for('reportStokTerkecil', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Laporan Stok Terkecil', url('report/stokTerkecil'));
+});

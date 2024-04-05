@@ -4,13 +4,12 @@ namespace Modules\Report\Http\Controllers;
 
 use App\Http\Helpers\UtilsHelper;
 use App\Models\Barang;
-use App\Models\Penjualan;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use DataTables;
 use Illuminate\Support\Facades\DB;
 
-class ProdukController extends Controller
+class PembelianProdukController extends Controller
 {
     public function index(Request $request)
     {
@@ -24,25 +23,25 @@ class ProdukController extends Controller
 
             $getBarang = new Barang();
             $dataBarang = $getBarang->getReportBarang()
-                ->join('penjualan_product', 'penjualan_product.barang_id', '=', 'barang.id', 'left')
+                ->join('pembelian_product', 'pembelian_product.barang_id', '=', 'barang.id', 'left')
                 ->join('order_barang', 'order_barang.barang_id', '=', 'barang.id', 'left')
                 ->select(
                     'barang.*',
-                    'penjualan_product.transaksi_penjualanproduct',
+                    'pembelian_product.transaksi_pembelianproduct',
                     'order_barang.updated_at as tanggal_orderbarang',
-                    DB::raw('SUM(penjualan_product.jumlah_penjualanproduct) as jumlah_penjualanproduct'),
+                    DB::raw('SUM(pembelian_product.jumlah_pembelianproduct) as jumlah_pembelianproduct'),
                     DB::raw('SUM(order_barang.qty_orderbarang) as qty_orderbarang'),
                 )
                 ->groupBy('barang.id');
 
             $dataBarang = $dataBarang->where(function ($query) use ($dari_tanggal, $sampai_tanggal) {
                 if ($dari_tanggal != null) {
-                    $query->whereDate('penjualan_product.transaksi_penjualanproduct', '>=', $dari_tanggal);
+                    $query->whereDate('pembelian_product.transaksi_pembelianproduct', '>=', $dari_tanggal);
                 }
                 if ($sampai_tanggal != null) {
-                    $query->whereDate('penjualan_product.transaksi_penjualanproduct', '<=', $sampai_tanggal);
+                    $query->whereDate('pembelian_product.transaksi_pembelianproduct', '<=', $sampai_tanggal);
                 }
-                $query->orWhere('penjualan_product.transaksi_penjualanproduct', null);
+                $query->orWhere('pembelian_product.transaksi_pembelianproduct', null);
             })->where(function ($query) use ($dari_tanggal, $sampai_tanggal) {
                 if ($dari_tanggal != null) {
                     $query->whereDate('order_barang.updated_at', '>=', $dari_tanggal);
@@ -59,13 +58,13 @@ class ProdukController extends Controller
             }
             $dataBarang = $dataBarang->get();
             $dataBarang = $dataBarang->map(function ($item) {
-                $item->total_sum = $item->jumlah_penjualanproduct + $item->qty_orderbarang;
+                $item->total_sum = $item->jumlah_pembelianproduct + $item->qty_orderbarang;
                 return $item;
             });
 
             return DataTables::of($dataBarang)
-                ->addColumn('transaksi_penjualanproduct', function ($row) {
-                    return $row->transaksi_penjualanproduct == null ? $row->tanggal_orderbarang == null ? '-' : UtilsHelper::tanggalBulanTahunKonversi($row->tanggal_orderbarang) : UtilsHelper::tanggalBulanTahunKonversi($row->transaksi_penjualanproduct);
+                ->addColumn('transaksi_pembelianproduct', function ($row) {
+                    return $row->transaksi_pembelianproduct == null ? $row->tanggal_orderbarang == null ? '-' : UtilsHelper::tanggalBulanTahunKonversi($row->tanggal_orderbarang) : UtilsHelper::tanggalBulanTahunKonversi($row->transaksi_pembelianproduct);
                 })
                 ->addColumn('total_sum', function ($row) {
                     return UtilsHelper::formatUang($row->total_sum);
@@ -80,6 +79,6 @@ class ProdukController extends Controller
             'dari_tanggal' => $dari_tanggal,
             'sampai_tanggal' => $sampai_tanggal,
         ];
-        return view('report::produk.index', $data);
+        return view('report::pembelianProduk.index', $data);
     }
 }
