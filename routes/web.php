@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\SelectSearchController;
 use Illuminate\Support\Facades\Route;
 use Modules\Auth\Http\Controllers\AuthController;
@@ -22,6 +23,10 @@ Route::group(['middleware' => ['guest']], function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/myProfile', [MyProfileController::class, 'index'])->name('myProfile.index');
+    Route::put('/myProfile/{id}/update', [MyProfileController::class, 'update'])->name('myProfile.update');
+
+
     Route::get('select/kasir', [SelectSearchController::class, 'kasir']);
     Route::get('select/customer', [SelectSearchController::class, 'customer']);
     Route::get('select/barang', [SelectSearchController::class, 'barang']);
