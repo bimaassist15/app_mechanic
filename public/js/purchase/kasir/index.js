@@ -1,6 +1,6 @@
 // "use strict";
 var datatable;
-var urlRoot = $('.url_root').data('url');
+var urlRoot = $(".url_root").data("url");
 var jsonString = $(".json_customer").data("json");
 var jsonStringBarang = $(".json_barang").data("json");
 var jsonTipeDiskon = $(".json_tipe_diskon").data("json");
@@ -22,13 +22,12 @@ var totalHargaItems = 0;
 var customerId = "";
 
 $(document).ready(function () {
-    
     select2Server({
         selector: "select[name=barang_id]",
         parent: ".content-wrapper",
         routing: `${urlRoot}/select/barang`,
         passData: {
-            status_barang: 'dijual, dijual & untuk servis'
+            status_barang: "dijual, dijual & untuk servis",
         },
     });
 
@@ -38,7 +37,6 @@ $(document).ready(function () {
         routing: `${urlRoot}/select/customer`,
         passData: {},
     });
-    
 
     select2Standard({
         selector: "select[name=kategori_pembayaran_id]",
@@ -68,9 +66,9 @@ $(document).ready(function () {
                 // refresh select 2 barang & customer
                 let select2KategoriPembayaran = [];
                 select2KategoriPembayaran.push({
-                    id: '',
-                    text: 'Pilih Kategori Pembayaran'
-                })
+                    id: "",
+                    text: "Pilih Kategori Pembayaran",
+                });
                 JSON.parse(data.array_kategori_pembayaran).map(
                     (value, index) => {
                         select2KategoriPembayaran.push({
@@ -495,14 +493,16 @@ $(document).ready(function () {
     };
 
     const handleAnotherMethodLangsung = () => {
-        metodePembayaran.map((v,index) => {
+        metodePembayaran.map((v, index) => {
             const getMetodePembayaran = metodePembayaran[index];
             if (
                 getMetodePembayaran.kategori_pembayaran_selected.nama_kpembayaran.toLowerCase() !==
                 "langsung"
             ) {
                 if (index === 0) {
-                    if (parseFloat(getMetodePembayaran.bayar) > totalHargaItems) {
+                    if (
+                        parseFloat(getMetodePembayaran.bayar) > totalHargaItems
+                    ) {
                         metodePembayaran[index].bayar = totalHargaItems;
                     }
                 }
@@ -516,8 +516,7 @@ $(document).ready(function () {
                     }
                 }
             }
-        })
-      
+        });
     };
 
     const handleDisplayInput = () => {
@@ -929,7 +928,9 @@ $(document).ready(function () {
     };
     body.on("change", 'select[name="barang_id"]', function (e) {
         const value = $(this).val();
-        renderBarang(value);
+        if (value != "" && value != null && value != "-") {
+            renderBarang(value);
+        }
     });
 
     body.on("input", 'input[name="qty"]', function () {

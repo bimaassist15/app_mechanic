@@ -8,7 +8,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use DataTables;
-
+use Illuminate\Support\Facades\Config;
+use Modules\Purchase\Http\Requests\FormJatuhTempoRequest;
 
 class BelumLunasController extends Controller
 {
@@ -16,8 +17,15 @@ class BelumLunasController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+
+    public $datastatis;
+    public function __construct()
+    {
+        $this->datastatis = Config::get('datastatis');
+    }
     public function index(Request $request)
     {
+
         if ($request->ajax()) {
             $data = Penjualan::dataTable()->with('customer', 'users', 'users.profile')
                 ->where('tipe_penjualan', 'hutang');
@@ -86,7 +94,36 @@ class BelumLunasController extends Controller
     {
         $penjualan = new Penjualan();
         $row = $penjualan->invoicePenjualan($id);
-        return view('purchase::belumLunas.detail', compact('row'));
+        $pesanwa_hutang = $this->datastatis['pesanwa_hutang'];
+        return view('purchase::belumLunas.detail', compact('row', 'pesanwa_hutang'));
+    }
+
+    public function jatuhTempo($id)
+    {
+        $penjualan = new Penjualan();
+        $row = $penjualan->invoicePenjualan($id);
+        $action = url('purchase/belumLunas/' . $id . '/jatuhTempo?_method=put');
+        return view('purchase::belumLunas.jatuhTempo', compact('row', 'action'));
+    }
+
+    public function updateJatuhTempo(FormJatuhTempoRequest $request, $id)
+    {
+        $penjualan = Penjualan::find($id);
+        $penjualan->jatuhtempo_penjualan = $request->input('jatuhtempo_penjualan');
+        $penjualan->keteranganjtempo_penjualan = $request->input('keteranganjtempo_penjualan');
+        $penjualan->isinfojtempo_penjualan = false;
+        $penjualan->save();
+
+        return response()->json('Berhasil update jatuh tempo');
+    }
+
+    public function updateRemember($id)
+    {
+        $penjualan = Penjualan::find($id);
+        $penjualan->isinfojtempo_penjualan = true;
+        $penjualan->save();
+
+        return response()->json('Customer Telah berhasil diingatkan');
     }
 
     public function print()

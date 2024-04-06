@@ -1,6 +1,6 @@
 // "use strict";
 var datatable;
-var urlRoot = $('.url_root').data('url');
+var urlRoot = $(".url_root").data("url");
 
 var jsonString = $(".json_supplier").data("json");
 var jsonStringBarang = $(".json_barang").data("json");
@@ -28,7 +28,7 @@ $(document).ready(function () {
         parent: ".content-wrapper",
         routing: `${urlRoot}/select/barang`,
         passData: {
-            status_barang: 'dijual, dijual & untuk servis'
+            status_barang: "dijual, dijual & untuk servis",
         },
     });
 
@@ -67,9 +67,9 @@ $(document).ready(function () {
                 // refresh select 2 barang & supplier
                 let select2KategoriPembayaran = [];
                 select2KategoriPembayaran.push({
-                    id: '',
-                    text: 'Pilih Kategori Pembayaran'
-                })
+                    id: "",
+                    text: "Pilih Kategori Pembayaran",
+                });
                 JSON.parse(data.array_kategori_pembayaran).map(
                     (value, index) => {
                         select2KategoriPembayaran.push({
@@ -79,7 +79,6 @@ $(document).ready(function () {
                     }
                 );
 
-          
                 var selectElementKategoriPembayaran = $(
                     "select[name='kategori_pembayaran_id']"
                 );
@@ -188,9 +187,6 @@ $(document).ready(function () {
         const getJumlahDiskon = $(`.jumlahDiskon[data-id="${id}"]`).val();
         if (searchOrderItems !== -1) {
             orderItems[searchOrderItems].qty = qty;
-            if (orderItems[searchOrderItems].stok_barang < qty) {
-                orderItems[searchOrderItems].qty = "0";
-            }
             orderItems[searchOrderItems].totalHarga =
                 orderItems[searchOrderItems].qty *
                 orderItems[searchOrderItems].hargajual_barang;
@@ -502,7 +498,9 @@ $(document).ready(function () {
                 "langsung"
             ) {
                 if (index === 0) {
-                    if (parseFloat(getMetodePembayaran.bayar) > totalHargaItems) {
+                    if (
+                        parseFloat(getMetodePembayaran.bayar) > totalHargaItems
+                    ) {
                         metodePembayaran[index].bayar = totalHargaItems;
                     }
                 }
@@ -516,7 +514,7 @@ $(document).ready(function () {
                     }
                 }
             }
-        })
+        });
     };
 
     const handleDisplayInput = () => {
@@ -830,7 +828,8 @@ $(document).ready(function () {
 
                         metodePembayaran[index].supplier = pembelian.supplier;
 
-                        metodePembayaran[index].bayar = value.bayar_pbpembayaran;
+                        metodePembayaran[index].bayar =
+                            value.bayar_pbpembayaran;
 
                         metodePembayaran[index].dibayarkan_oleh =
                             value.dibayaroleh_pbpembayaran;
@@ -928,7 +927,9 @@ $(document).ready(function () {
     };
     body.on("change", 'select[name="barang_id"]', function (e) {
         const value = $(this).val();
-        renderBarang(value);
+        if (value != "-" && value != null && value != "") {
+            renderBarang(value);
+        }
     });
 
     body.on("input", 'input[name="qty"]', function () {

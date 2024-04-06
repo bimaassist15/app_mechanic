@@ -829,6 +829,12 @@ $(document).ready(function () {
         });
 
         const kendaraan_id = $('select[name="kendaraan_id"]').val();
+        let isdp_pservis = 0;
+        if ($('input[name="isdp_pservis"]').is(":checked")) {
+            isdp_pservis = 1;
+        } else {
+            isdp_pservis = 0;
+        }
         const payloadPenerimaanServis = {
             kendaraan_id: kendaraan_id,
             kategori_servis_id: $('select[name="kategori_servis_id"]').val(),
@@ -837,8 +843,7 @@ $(document).ready(function () {
             kondisi_pservis: $('input[name="kondisi_pservis"]').val(),
             kmsekarang_pservis: $('input[name="kmsekarang_pservis"]').val(),
             tipe_pservis: $('select[name="tipe_pservis"]').val(),
-            isdp_pservis:
-                $('input[name="isdp_pservis"]').val() === "on" ? 1 : 0,
+            isdp_pservis,
             total_dppservis: sumDeposit,
             bayar_pservis: sumDeposit,
             cabang_id: jsonCabangId,

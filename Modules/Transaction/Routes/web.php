@@ -18,6 +18,10 @@ Route::prefix('transaction')->middleware('auth')->group(function () {
     Route::get('pembelian/print/transaction', 'PembelianController@print')->name('pembelian.print');
     Route::get('belumLunas', 'BelumLunasController@index')->name('belumLunas.index');
     Route::get('belumLunas/{id}/show', 'BelumLunasController@show')->name('belumLunas.show');
+    Route::get('belumLunas/{id}/jatuhTempo', 'BelumLunasController@jatuhTempo')->name('belumLunas.jatuhTempo');
+    Route::put('belumLunas/{id}/jatuhTempo', 'BelumLunasController@updateJatuhTempo')->name('belumLunas.updateJatuhTempo');
+    Route::put('belumLunas/{id}/remember', 'BelumLunasController@updateRemember')->name('belumLunas.updateRemember');
+
     Route::get('lunas', 'LunasController@index')->name('lunas.index');
     Route::get('lunas/{id}/show', 'LunasController@show')->name('lunas.show');
     

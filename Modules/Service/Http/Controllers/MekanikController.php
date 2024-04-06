@@ -179,8 +179,9 @@ class MekanikController extends Controller
         $penerimaanServis = new PenerimaanServis();
         $penerimaanServis = $penerimaanServis->transaksiServis($penerimaanServisId);
         $dataHutang = $penerimaanServis->pembayaranServis;
-        $totalHutang = 0;
-        $totalHutang = 0;
+
+        $getPembayaranServis = UtilsHelper::paymentStatisPenerimaanServis($penerimaanServisId);
+        $totalHutang = $getPembayaranServis['hutang'];
         if (count($dataHutang) > 0) {
             $getPembayaranServis = UtilsHelper::paymentStatisPenerimaanServis($penerimaanServisId);
             $totalHutang = $getPembayaranServis['hutang'];
@@ -189,6 +190,7 @@ class MekanikController extends Controller
         $totalHutang = $totalHutang;
         // end pembayaran
 
+        $pesanwa_berkala = $this->datastatis['pesanwa_berkala'];
         $data = [
             'row' => $row,
             'jsonRow' => json_encode($row),
@@ -213,6 +215,7 @@ class MekanikController extends Controller
             'totalHutang' => $totalHutang,
             'is_deposit' => $row->isdp_pservis,
             'getPembayaranServis' => json_encode(UtilsHelper::paymentStatisPenerimaanServis($penerimaanServisId)),
+            'pesanwa_berkala' => $pesanwa_berkala
         ];
         if ($request->ajax()) {
             $refresh = $request->input('refresh');

@@ -176,7 +176,7 @@
                 : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-list-ul"></i>
-                <div data-i18n="Data Kendaraan Servis">Data Kendaraan Servis</div>
+                <div data-i18n="Kendaraan Servis">Kendaraan Servis</div>
             </a>
             <ul class="menu-sub">
                 <li class="menu-item {{ request()->is('service/kendaraanServis') ? 'active' : '' }}">

@@ -168,11 +168,28 @@ class KasirController extends Controller
             Penjualan::destroy($penjualanId);
         }
 
-        $penjualan = Penjualan::create($request->input('penjualan'));
+        $dataPenjualan = $request->input('penjualan');
+        $dateNow = date('Y-m-d');
+        if ($dataPenjualan['tipe_penjualan'] == 'hutang') {
+            $dataPenjualan = array_merge($dataPenjualan, [
+                'jatuhtempo_penjualan' => date('Y-m-d', strtotime($dateNow . ' + 1 month')),
+                'keteranganjtempo_penjualan' => $this->datastatis['pesanwa_hutang'],
+                'isinfojtempo_penjualan' => 0,
+            ]);
+        }
+
+        $penjualan = Penjualan::create($dataPenjualan);
         $penjualanProduct = $request->input('penjualan_product');
         $arrayPenjualanProduct = [];
         foreach ($penjualanProduct as $key => $item) {
-            $arrayPenjualanProduct[] = array_merge($item, ['penjualan_id' => $penjualan->id]);
+            $arrayPenjualanProduct[] = array_merge(
+                $item,
+                [
+                    'penjualan_id' => $penjualan->id,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]
+            );
         }
         PenjualanProduct::insert($arrayPenjualanProduct);
 

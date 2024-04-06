@@ -46,6 +46,7 @@ function basicDatatable({
     columns = "",
     dataAjaxUrl = {},
     order = [],
+    tableInfo = "",
 }) {
     return tableId.DataTable({
         serverSide: true,
@@ -60,13 +61,24 @@ function basicDatatable({
         },
         columns: columns,
         drawCallback: function () {
-            var info = datatable.page.info();
-            datatable
-                .column(0, { search: "applied", order: "applied" })
-                .nodes()
-                .each(function (cell, i) {
-                    cell.innerHTML = info.start + i + 1;
-                });
+            if (tableInfo !== "") {
+                var info = $(`${tableInfo}`).DataTable().page.info();
+                $(`${tableInfo}`)
+                    .DataTable()
+                    .column(0, { search: "applied", order: "applied" })
+                    .nodes()
+                    .each(function (cell, i) {
+                        cell.innerHTML = info.start + i + 1;
+                    });
+            } else {
+                var info = datatable.page.info();
+                datatable
+                    .column(0, { search: "applied", order: "applied" })
+                    .nodes()
+                    .each(function (cell, i) {
+                        cell.innerHTML = info.start + i + 1;
+                    });
+            }
         },
     });
 }
@@ -167,7 +179,7 @@ function select2Server({
     $(`${selector}`).select2({
         dropdownParent: $(`${parent}`),
         closeOnSelect: true,
-        placeholder: '-- Pilih Data --',
+        placeholder: "-- Pilih Data --",
         theme: "bootstrap-5",
         ajax: {
             url: `${routing}`,
@@ -519,26 +531,24 @@ const playAudioSequentially = (audioUrls) => {
     });
 };
 
-
 const formatDateIndonesia = (dateString) => {
     const date = new Date(dateString);
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-    const formattedDate = date.toLocaleDateString('id-ID', options);
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    const formattedDate = date.toLocaleDateString("id-ID", options);
     return formattedDate;
 };
 
-
 const datepickerDdMmYyyy = (element) => {
     $(element).datepicker({
-        format: 'dd/mm/yyyy',
+        format: "dd/mm/yyyy",
         todayButton: true,
         highlight: true,
-        autoclose: true, 
+        autoclose: true,
     });
-}
+};
 
 const formatDateToDb = (dateString) => {
     var dateParts = dateString.split("/");
     var formattedDate = dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
     return formattedDate;
-}
+};

@@ -8,7 +8,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use DataTables;
-
+use Illuminate\Support\Facades\Config;
+use Modules\Transaction\Http\Requests\FormJatuhTempoRequest;
 
 class BelumLunasController extends Controller
 {
@@ -16,6 +17,12 @@ class BelumLunasController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+    public $datastatis;
+    public function __construct()
+    {
+        $this->datastatis = Config::get('datastatis');
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -86,7 +93,36 @@ class BelumLunasController extends Controller
     {
         $pembelian = new Pembelian();
         $row = $pembelian->invoicePembelian($id);
-        return view('transaction::belumLunas.detail', compact('row'));
+        $pesanwa_hutangsupplier = $this->datastatis['pesanwa_hutangsupplier'];
+        return view('transaction::belumLunas.detail', compact('row', 'pesanwa_hutangsupplier'));
+    }
+
+    public function jatuhTempo($id)
+    {
+        $penjualan = new Pembelian();
+        $row = $penjualan->invoicePembelian($id);
+        $action = url('transaction/belumLunas/' . $id . '/jatuhTempo?_method=put');
+        return view('transaction::belumLunas.jatuhTempo', compact('row', 'action'));
+    }
+
+    public function updateJatuhTempo(FormJatuhTempoRequest $request, $id)
+    {
+        $pembelian = Pembelian::find($id);
+        $pembelian->jatuhtempo_pembelian = $request->input('jatuhtempo_pembelian');
+        $pembelian->keteranganjtempo_pembelian = $request->input('keteranganjtempo_pembelian');
+        $pembelian->isinfojtempo_pembelian = false;
+        $pembelian->save();
+
+        return response()->json('Berhasil update jatuh tempo');
+    }
+
+    public function updateRemember($id)
+    {
+        $pembelian = Pembelian::find($id);
+        $pembelian->isinfojtempo_pembelian = true;
+        $pembelian->save();
+
+        return response()->json('Supplier Telah berhasil diingatkan');
     }
 
     public function print()

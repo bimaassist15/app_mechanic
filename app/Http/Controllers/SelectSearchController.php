@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\UtilsHelper;
 use App\Models\Barang;
 use App\Models\Customer;
 use App\Models\HargaServis;
@@ -116,7 +117,7 @@ class SelectSearchController extends Controller
             $output[] = [
                 'id' => $item->id,
                 'text' => '<strong>[' . $item->barcode_barang . '] ' . $item->nama_barang . '</strong><br />
-                <span>Stok Barang: ' . $item->stok_barang . '</span>',
+                <span>Stok Barang: ' . UtilsHelper::formatUang($item->stok_barang) . '</span>',
             ];
         }
 
@@ -219,7 +220,7 @@ class SelectSearchController extends Controller
                 'id' => $item->id,
                 'text' => '
                     <strong>Nama Servis: ' . $item->nama_hargaservis . '</strong><br />
-                    <span>Harga Servis: ' . $item->total_hargaservis . '</span>
+                    <span>Harga Servis: ' . UtilsHelper::formatUang($item->total_hargaservis) . '</span>
                 ',
             ];
         }

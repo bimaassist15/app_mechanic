@@ -137,6 +137,7 @@ class PenerimaanServisController extends Controller
             ];
         }
 
+        $pesanwa_berkala = $this->datastatis['pesanwa_berkala'];
         $data = [
             'row' => $row,
             'array_harga_servis' => $array_harga_servis,
@@ -149,6 +150,7 @@ class PenerimaanServisController extends Controller
             'statusKendaraanServis' => $array_status_kendaraan,
             'serviceBerkala' => $array_service_berkala,
             'cabangId' => $cabangId,
+            'pesanwa_berkala' => $pesanwa_berkala,
         ];
         if ($request->ajax()) {
             $refresh = $request->input('refresh');
@@ -234,20 +236,6 @@ class PenerimaanServisController extends Controller
         $isEdit = $request->query('isEdit');
         $penerimaanServis = new PenerimaanServis();
 
-        // $dataHutang = $penerimaanServis->pembayaranServis;
-
-        // $totalHutang = 0;
-        // $totalBayar = 0;
-        // $totalKembalian = 0;
-        // if (count($dataHutang) > 0) {
-        //     foreach ($dataHutang as $key => $item) {
-        //         $totalBayar += $item->bayar_pbcicilan;
-        //         $totalKembalian += $item->kembalian_pbcicilan;
-        //     }
-        //     $totalHutang = $totalKembalian > 0 ?  $totalBayar - $totalKembalian : $dataHutang[0]->bayar_pbcicilan + $dataHutang[0]->hutang_pbcicilan;
-        // }
-
-        // $totalHutang = $isEdit == true ? $totalHutang : $penerimaanServis->hutang_penerimaanServis;
         $totalHutang = 0;
         $data = [
             'array_kategori_pembayaran' => $array_kategori_pembayaran,
@@ -352,8 +340,8 @@ class PenerimaanServisController extends Controller
                 $merge = array_merge($value, ['penerimaan_servis_id' => $penerimaan_servis_id]);
                 $newPayloadPembayaranServis[] = $merge;
             }
+            PembayaranServis::insert($newPayloadPembayaranServis);
         }
-        PembayaranServis::insert($newPayloadPembayaranServis);
         return response()->json([
             'message' => "Berhasil tambah penerimaan serivs",
         ], 200);

@@ -940,13 +940,20 @@ $(document).ready(function () {
                     formatUang(rowData.kembalian_pservis)
                 );
                 $(".if_status_cancel").html(
-                    `<i class="fa-solid fa-pen me-2"></i> ${capitalizeEachWord(rowData.status_pservis)}`
+                    `<i class="fa-solid fa-pen me-2"></i> ${capitalizeEachWord(
+                        rowData.status_pservis
+                    )}`
                 );
 
                 // handle pembayaran servis
                 const tanggalambil_pservis = data.row.tanggalambil_pservis;
                 let outputPServis = "";
-                const statusCancel = ["cancel", "tidak bisa", "komplain garansi", "sudah diambil"];
+                const statusCancel = [
+                    "cancel",
+                    "tidak bisa",
+                    "komplain garansi",
+                    "sudah diambil",
+                ];
 
                 if (
                     tanggalambil_pservis != null ||
@@ -1121,7 +1128,12 @@ $(document).ready(function () {
                     $(".display_after_bisa_diambil").removeClass("d-none");
                     $(".hidden_tanggal_diambil").addClass("d-none");
                 } else {
-                    const statusCancel = ["cancel", "tidak bisa", "komplain garansi", "sudah diambil"];
+                    const statusCancel = [
+                        "cancel",
+                        "tidak bisa",
+                        "komplain garansi",
+                        "sudah diambil",
+                    ];
                     if (statusCancel.includes(rowData.status_pservis)) {
                         $(".label_total_dppservis").closest(".row").hide();
                         $(".display_after_bisa_diambil").removeClass("d-none");
@@ -1152,8 +1164,7 @@ $(document).ready(function () {
                         rowData.kondisiservis_pservis
                     );
                     $(".output_pesanwa_pservis").html(
-                        rowData.pesanwa_pservis ||
-                            `Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami. `
+                        rowData.pesanwa_pservis || rowData.pesanwa_berkala
                     );
                     $(".output_nilaigaransi_pservis").html(
                         rowData.nilaigaransi_pservis

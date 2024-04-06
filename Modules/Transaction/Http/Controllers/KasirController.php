@@ -173,7 +173,17 @@ class KasirController extends Controller
             Pembelian::destroy($pembelianId);
         }
 
-        $pembelian = Pembelian::create($request->input('pembelian'));
+        $dataPembelian = $request->input('pembelian');
+        $dateNow = date('Y-m-d');
+        if ($dataPembelian['tipe_pembelian'] == 'hutang') {
+            $dataPembelian = array_merge($dataPembelian, [
+                'jatuhtempo_pembelian' => date('Y-m-d', strtotime($dateNow . ' + 1 month')),
+                'keteranganjtempo_pembelian' => $this->datastatis['pesanwa_hutangsupplier'],
+                'isinfojtempo_pembelian' => 0,
+            ]);
+        }
+
+        $pembelian = Pembelian::create($dataPembelian);
         $pembelianProduct = $request->input('pembelian_product');
         $arrayPembelianProduct = [];
         foreach ($pembelianProduct as $key => $item) {

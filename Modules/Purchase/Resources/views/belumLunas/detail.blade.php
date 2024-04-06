@@ -64,7 +64,45 @@
                 </table>
             </div>
             <div class="col-lg-6 text-end">
-                <h6>Tanggal: {{ UtilsHelp::tanggalBulanTahunKonversi($row->transaksi_penjualan) }}</h6>
+                <h6 class="m-2 p-0">Tanggal: {{ UtilsHelp::tanggalBulanTahunKonversi($row->transaksi_penjualan) }}</h6>
+                @if ($row->jatuhtempo_penjualan)
+                    @php
+                        $nama_customer = $row->customer->nama_customer ?? 'Umum';
+                        $nowa_customer = $row->customer->nowa_customer ?? '0';
+                        $message = $row->keteranganjtempo_penjualan ?? $pesanwa_hutang;
+                        $created_at = UtilsHelp::tanggalBulanTahunKonversi($row->transaksi_penjualan);
+                        $createdApp = UtilsHelp::createdApp();
+                    @endphp
+                    <h6 class="m-2 p-0" style="cursor: pointer;" style="font-weight: 800;">
+                        <strong class="btn-jatuh-tempo text-danger" data-id="{{ $row->id }}"
+                            data-modalid="mediumModal"> JATUH TEMPO:
+                            {{ UtilsHelp::formatDate($row->jatuhtempo_penjualan) }} </strong> <br />
+
+                        {!! $row->isinfojtempo_penjualan == 1
+                            ? '<strong class="text-primary"> Sudah diingatkan </strong>'
+                            : '<strong class="text-primary btn-remember-customer" data-id="' .
+                                $row->id .
+                                '">
+                                                                                <a target="_blank" href="https://wa.me/' .
+                                $nowa_customer .
+                                '?text=' .
+                                urlencode(
+                                    "Kepada Yth: \nCustomer: " .
+                                        $nama_customer .
+                                        "\n" .
+                                        $message .
+                                        "\nterhitung semenjak transaksi dari tanggal " .
+                                        $created_at .
+                                        ".\nTerimakasih,\nSalam dari " .
+                                        $createdApp,
+                                ) .
+                                '" class="badge bg-success">
+                                                                                    <i class="fa-brands fa-whatsapp me-1"></i> Ingatkan
+                                                                                </a>
+                                                                                                    </strong>' !!}
+                        <strong class="text-primary output_isinfojtempo_penjualan d-none"> Sudah diingatkan </strong>
+                    </h6>
+                @endif
                 <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false">
                     <i class="bx bx-menu me-1"></i> Aksi
@@ -174,4 +212,5 @@
 </div>
 
 <script class="penjualan_id" data-value="{{ $row->id }}"></script>
+<script class="url_root" data-value="{{ url('/') }}"></script>
 <script src="{{ asset('js/purchase/belumLunas/detail.js') }}"></script>

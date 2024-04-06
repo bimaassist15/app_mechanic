@@ -78,7 +78,12 @@ const refreshData = () => {
 
             // handle status cancel
             const getStatus = rowData.status_pservis;
-            const statusCancel = ["tidak bisa", "cancel", "komplain garansi", "sudah diambil"];
+            const statusCancel = [
+                "tidak bisa",
+                "cancel",
+                "komplain garansi",
+                "sudah diambil",
+            ];
             if (statusCancel.includes(getStatus)) {
                 $(".display_if_status_cancel").removeClass("d-none");
                 $(".hidden_if_status_cancel").addClass("d-none");
@@ -249,7 +254,7 @@ $(document).ready(function () {
         parent: ".content-wrapper",
         routing: `${urlRoot}/select/barang`,
         passData: {
-            status_barang: 'dijual & untuk servis, khusus servis'
+            status_barang: "dijual & untuk servis, khusus servis",
         },
     });
 
@@ -383,7 +388,7 @@ $(document).ready(function () {
 
     body.on("change", "select[name='barang_id']", function () {
         const value = $(this).val();
-        if (value === "") {
+        if (value === "" || value === "-") {
             return runToast({
                 type: "bg-danger",
                 description: "Barang wajib diisi",
@@ -438,7 +443,6 @@ $(document).ready(function () {
             subtotal_orderbarang: getFindData.hargajual_barang,
             cabang_id: jsonCabangId,
         };
-
 
         $.ajax({
             url: `${urlRoot}/service/orderBarang`,
@@ -763,7 +767,12 @@ $(document).ready(function () {
                         window.location.href = `${urlRoot}/service/pengembalianServis/${jsonPenerimaanServisId}`;
                     }
 
-                    const statusCancel = ["tidak bisa", "cancel", "komplain garansi", "sudah diambil"];
+                    const statusCancel = [
+                        "tidak bisa",
+                        "cancel",
+                        "komplain garansi",
+                        "sudah diambil",
+                    ];
                     if (statusCancel.includes(payload.status_pservis)) {
                         window.location.href = `${urlRoot}/service/kendaraanServis/${jsonPenerimaanServisId}`;
                     }

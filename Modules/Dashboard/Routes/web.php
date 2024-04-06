@@ -13,4 +13,6 @@
 
 Route::prefix('dashboard')->middleware('auth')->group(function() {
     Route::get('/', 'DashboardController@index');
+    Route::get('/piutangPenjualan', 'DashboardController@piutangPenjualan');
+    Route::get('/piutangPembelian', 'DashboardController@piutangPembelian');
 });

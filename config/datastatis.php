@@ -59,5 +59,8 @@ return [
         'hari' => 'Hari',
         'bulan' => 'Bulan',
         'tahun' => 'Tahun',
-    ]
+    ],
+    'pesanwa_berkala' => 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami. Terimakasih',
+    'pesanwa_hutang' => 'Transaksi anda sudah melebihi batas waktu pembayaran. Silahkan segera melakukan pembayaran.',
+    'pesanwa_hutangsupplier' => 'Transaksi saya yang sebelumnya belum lunas, akan segera kami lunasi sebelum jatuh tempo.',
 ];

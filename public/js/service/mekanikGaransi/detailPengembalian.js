@@ -830,8 +830,8 @@ const runDataPengembalian = () => {
                         const statusCancel = [
                             "tidak bisa",
                             "cancel",
-                            "komplain garansi", 
-                            "sudah diambil"
+                            "komplain garansi",
+                            "sudah diambil",
                         ];
 
                         if (!statusCancel.includes(rowData.status_pservis)) {
@@ -955,13 +955,20 @@ const runDataPengembalian = () => {
                         formatUang(rowData.kembalian_pservis)
                     );
                     $(".if_status_cancel").html(
-                        `<i class="fa-solid fa-pen me-2"></i> ${capitalizeEachWord(rowData.status_pservis)}`
+                        `<i class="fa-solid fa-pen me-2"></i> ${capitalizeEachWord(
+                            rowData.status_pservis
+                        )}`
                     );
 
                     // handle pembayaran servis
                     const tanggalambil_pservis = data.row.tanggalambil_pservis;
                     let outputPServis = "";
-                    const statusCancel = ["cancel", "tidak bisa", "komplain garansi", "sudah diambil"];
+                    const statusCancel = [
+                        "cancel",
+                        "tidak bisa",
+                        "komplain garansi",
+                        "sudah diambil",
+                    ];
 
                     if (
                         tanggalambil_pservis != null ||
@@ -1137,7 +1144,12 @@ const runDataPengembalian = () => {
                         $(".display_after_bisa_diambil").removeClass("d-none");
                         $(".hidden_tanggal_diambil").addClass("d-none");
                     } else {
-                        const statusCancel = ["cancel", "tidak bisa", "komplain garansi", "sudah diambil"];
+                        const statusCancel = [
+                            "cancel",
+                            "tidak bisa",
+                            "komplain garansi",
+                            "sudah diambil",
+                        ];
                         if (statusCancel.includes(rowData.status_pservis)) {
                             $(".label_total_dppservis").closest(".row").hide();
                             $(".display_after_bisa_diambil").removeClass(
@@ -1170,7 +1182,7 @@ const runDataPengembalian = () => {
                             rowData.kondisiservis_pservis
                         );
                         $(".output_pesanwa_pservis").html(
-                            rowData.pesanwa_pservis || `Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami. `
+                            rowData.pesanwa_pservis || rowData.pesanwa_berkala
                         );
                         $(".output_nilaigaransi_pservis").html(
                             rowData.nilaigaransi_pservis
@@ -1207,7 +1219,7 @@ const runDataPengembalian = () => {
 
                     // handle view servis penerimaan garansi
                     const garansi_pservis = rowData.garansi_pservis;
-                    
+
                     if (garansi_pservis != null) {
                         $(".output_garansi_pservis").html(garansi_pservis);
                         $(".output_users_id_garansi").html(

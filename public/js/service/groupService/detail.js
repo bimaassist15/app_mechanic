@@ -59,8 +59,8 @@ const refreshDataArea = () => {
                 const statusCancel = [
                     "tidak bisa",
                     "cancel",
-                    "komplain garansi", 
-                    "sudah diambil"
+                    "komplain garansi",
+                    "sudah diambil",
                 ];
 
                 if (!statusCancel.includes(rowData.status_pservis)) {
@@ -91,7 +91,6 @@ const refreshData = () => {
             jsonTipeDiskon = JSON.parse(data.tipeDiskon);
             jsonCabangId = data.cabangId;
             jsonServiceHistory = data.row.service_history;
-
 
             // output servis history
             const rowData = data.row;
@@ -274,13 +273,13 @@ const runDataPenerimaan = () => {
             routing: `${urlRoot}/select/hargaServis`,
             passData: {},
         });
-    
+
         select2Server({
             selector: "select[name=barang_id]",
             parent: ".content-wrapper",
             routing: `${urlRoot}/select/barang`,
             passData: {
-                status_barang: 'dijual & untuk servis, khusus servis'
+                status_barang: "dijual & untuk servis, khusus servis",
             },
         });
 
@@ -428,7 +427,7 @@ const runDataPenerimaan = () => {
         body.off("change", 'select[name="barang_id"]');
         body.on("change", "select[name='barang_id']", function () {
             const value = $(this).val();
-            if (value === "") {
+            if (value === "" || value === "-") {
                 return runToast({
                     type: "bg-danger",
                     description: "Barang wajib diisi",

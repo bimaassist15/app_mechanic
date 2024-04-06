@@ -1153,7 +1153,7 @@ $(document).ready(function () {
                     );
                     $(".output_pesanwa_pservis").html(
                         rowData.pesanwa_pservis ||
-                            `Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami. `
+                            rowData.pesanwa_berkala
                     );
                     $(".output_nilaigaransi_pservis").html(
                         rowData.nilaigaransi_pservis

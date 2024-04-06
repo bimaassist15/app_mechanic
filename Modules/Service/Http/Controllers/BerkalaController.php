@@ -36,6 +36,8 @@ class BerkalaController extends Controller
             $data = PenerimaanServis::dataTable()
                 ->where('servisberkala_pservis', '!=', null)
                 ->orderBy('id', 'desc');
+            $pesanwa_berkala = $this->datastatis['pesanwa_berkala'];
+
             return DataTables::eloquent($data)
                 ->addColumn('created_at', function ($row) {
                     return UtilsHelper::tanggalBulanTahunKonversi($row->created_at);
@@ -49,12 +51,12 @@ class BerkalaController extends Controller
                 ->addColumn('is_reminded', function ($row) {
                     return  $row->is_reminded ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-xmark"></i>';
                 })
-                ->addColumn('action', function ($row) {
+                ->addColumn('action', function ($row) use ($pesanwa_berkala) {
                     $nowa_customer = $row->customer->nowa_customer;
                     $nama_customer = $row->customer->nama_customer;
                     $created_at = UtilsHelper::formatDate($row->created_at);
                     $createdApp = UtilsHelper::createdApp();
-                    $message = $row->pesanwa_pservis ?? "Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.";
+                    $message = $row->pesanwa_pservis ?? $pesanwa_berkala;
 
                     $buttonAction = '
                     <div class="text-center">
@@ -174,8 +176,9 @@ class BerkalaController extends Controller
         $penerimaanServis = new PenerimaanServis();
         $penerimaanServis = $penerimaanServis->transaksiServis($penerimaanServisId);
         $dataHutang = $penerimaanServis->pembayaranServis;
-        $totalHutang = 0;
-        $totalHutang = 0;
+
+        $getPembayaranServis = UtilsHelper::paymentStatisPenerimaanServis($penerimaanServisId);
+        $totalHutang = $getPembayaranServis['hutang'];
         if (count($dataHutang) > 0) {
             $getPembayaranServis = UtilsHelper::paymentStatisPenerimaanServis($penerimaanServisId);
             $totalHutang = $getPembayaranServis['hutang'];

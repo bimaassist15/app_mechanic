@@ -59,8 +59,8 @@ const refreshDataArea = () => {
                 const statusCancel = [
                     "tidak bisa",
                     "cancel",
-                    "komplain garansi", 
-                    "sudah diambil"
+                    "komplain garansi",
+                    "sudah diambil",
                 ];
 
                 if (!statusCancel.includes(rowData.status_pservis)) {
@@ -472,7 +472,7 @@ const runDataPenerimaan = () => {
         body.off("change", 'select[name="barang_id"]');
         body.on("change", "select[name='barang_id']", function () {
             const value = $(this).val();
-            if (value === "") {
+            if (value === "" || value === "-") {
                 return runToast({
                     type: "bg-danger",
                     description: "Barang wajib diisi",
