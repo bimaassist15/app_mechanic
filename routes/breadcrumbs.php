@@ -138,7 +138,7 @@ Breadcrumbs::for('lunasTransaction', function (BreadcrumbTrail $trail) {
 // Home > transferStock
 Breadcrumbs::for('transferStock', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Transfer Stok', url('transferstock/stock'));
+    $trail->push('Transfer Stok', url('transferStock/stock'));
 });
 // Home > stokmasuk
 Breadcrumbs::for('stokmasuk', function (BreadcrumbTrail $trail) {

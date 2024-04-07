@@ -3,6 +3,7 @@
 namespace Modules\Setting\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateUserUpdateRequest extends FormRequest
 {
@@ -13,10 +14,21 @@ class CreateUserUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        $cabang_id = $this->cabang_id;
         return [
             'name' => 'required',
-            'email' => 'required|unique:users,email,' . request()->segment(3),
-            'username' => 'required|unique:users,username,' . request()->segment(3),
+            'email' => [
+                'required',
+                Rule::unique('users', 'email')->ignore(request()->segment(3))->where(function ($query) use ($cabang_id) {
+                    return $query->where('cabang_id', $cabang_id);
+                }),
+            ],
+            'username' => [
+                'required',
+                Rule::unique('users', 'username')->ignore(request()->segment(3))->where(function ($query) use ($cabang_id) {
+                    return $query->where('cabang_id', $cabang_id);
+                }),
+            ],
             'cabang_id' => 'required',
             'roles_id' => 'required',
             'nohp_profile' => 'required',

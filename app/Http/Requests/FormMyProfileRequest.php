@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Setting\Http\Requests;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CreateUserRequest extends FormRequest
+class FormMyProfileRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,23 +14,21 @@ class CreateUserRequest extends FormRequest
      */
     public function rules()
     {
+        $cabang_id = session()->get('cabang_id');
         return [
             'name' => 'required',
             'email' => [
                 'required',
-                Rule::unique('users', 'email')->where(function ($query) {
-                    return $query->where('cabang_id', $this->cabang_id);
+                Rule::unique('users', 'email')->ignore(request()->segment(2))->where(function ($query) use ($cabang_id) {
+                    return $query->where('cabang_id', $cabang_id);
                 }),
             ],
             'username' => [
                 'required',
-                Rule::unique('users', 'username')->where(function ($query) {
-                    return $query->where('cabang_id', $this->cabang_id);
+                Rule::unique('users', 'username')->ignore(request()->segment(2))->where(function ($query) use ($cabang_id) {
+                    return $query->where('cabang_id', $cabang_id);
                 }),
             ],
-            'password' => 'required|confirmed',
-            'cabang_id' => 'required',
-            'roles_id' => 'required',
             'nohp_profile' => 'required',
             'jeniskelamin_profile' => 'required',
         ];
@@ -44,12 +42,8 @@ class CreateUserRequest extends FormRequest
             'email.unique' => 'Email harus unik',
             'username.required' => 'Username wajib diisi',
             'username.unique' => 'Username harus unik',
-            'cabang_id.required' => 'Cabang wajib diisi',
-            'roles_id.required' => 'Roles wajib diisi',
             'nohp_profile.required' => 'No. handphone wajib diisi',
             'jeniskelamin_profile.required' => 'Jenis kelamin wajib diisi',
-            'password.required' => 'Password wajib diisi',
-            'password.confirmed' => 'Konfirmasi password wajib diisi',
         ];
     }
 

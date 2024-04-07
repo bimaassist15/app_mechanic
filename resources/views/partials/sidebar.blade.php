@@ -129,6 +129,38 @@
             </ul>
         </li>
 
+        @php
+            $activeRouteTransfer = ['transferStock/transaksi', 'transferStock/masuk', 'transferStock/keluar'];
+        @endphp
+        <li
+            class="menu-item {{ collect($activeRouteTransfer)->contains(function ($route) {
+                return request()->is($route) || str_starts_with(request()->url(), url($route));
+            })
+                ? 'active'
+                : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class='menu-icon bx bx-repeat'></i>
+                <div data-i18n="Transfer Stock">Transfer Stock</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->is('transferStock/transaksi') ? 'active' : '' }}">
+                    <a href="{{ url('transferStock/transaksi') }}" class="menu-link">
+                        <div data-i18n="Transaksi">Transaksi</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('transferStock/masuk') ? 'active' : '' }}">
+                    <a href="{{ url('transferStock/masuk') }}" class="menu-link">
+                        <div data-i18n="Masuk">Masuk</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('transferStock/keluar') ? 'active' : '' }}">
+                    <a href="{{ url('transferStock/keluar') }}" class="menu-link">
+                        <div data-i18n="Keluar">Keluar</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Servis</span>
         </li>

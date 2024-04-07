@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChangeCabangController;
 use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\SelectSearchController;
 use Illuminate\Support\Facades\Route;
@@ -24,7 +25,14 @@ Route::group(['middleware' => ['guest']], function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/myProfile', [MyProfileController::class, 'index'])->name('myProfile.index');
-    Route::put('/myProfile/{id}/update', [MyProfileController::class, 'update'])->name('myProfile.update');
+    Route::get('/myProfile/{id}/edit', [MyProfileController::class, 'edit'])->name('myProfile.edit');
+    Route::put('/myProfile/{id}', [MyProfileController::class, 'update'])->name('myProfile.update');
+
+    Route::get('/changeCabang', [ChangeCabangController::class, 'index'])->name('changeCabang.index');
+    Route::get('/changeCabang/checkBarang', [ChangeCabangController::class, 'checkBarang'])->name('changeCabang.checkBarang');
+    Route::put('/changeCabang', [ChangeCabangController::class, 'update'])->name('changeCabang.update');
+    Route::post('/changeCabang/transferBarang', [ChangeCabangController::class, 'transferBarang'])->name('changeCabang.transferBarang');
+
 
 
     Route::get('select/kasir', [SelectSearchController::class, 'kasir']);

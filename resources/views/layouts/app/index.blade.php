@@ -149,6 +149,18 @@
             }
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            $('.btn-change-cabang').on('click', function() {
+                showModal({
+                    url: $(this).data("urlcreate"),
+                    modalId: $(this).data("typemodal"),
+                    title: "Form Ganti Cabang",
+                    type: "get",
+                });
+            });
+        });
+    </script>
     @stack('custom_js')
 </body>
 

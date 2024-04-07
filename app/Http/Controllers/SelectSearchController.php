@@ -94,19 +94,33 @@ class SelectSearchController extends Controller
     {
         $search = $request->input('search');
         $page = $request->input('page');
+        $cabang_id = $request->input('cabang_id');
+        if ($cabang_id == null) {
+            $cabang_id = session()->get('cabang_id');
+        }
+
         $status_barang = explode(',', $request->input('status_barang'));
+
         $new_status_barang = [];
-        foreach ($status_barang as $key => $item) {
-            $new_status_barang[] = trim($item);
+        if ($status_barang[0] != '') {
+            foreach ($status_barang as $key => $item) {
+                $new_status_barang[] = trim($item);
+            }
         }
 
 
-        $getBarang = Barang::dataTable()
-            ->whereIn('status_barang', $new_status_barang)
-            ->where(function ($query) use ($search) {
-                $query->where('barcode_barang', 'like', '%' . $search . '%')
-                    ->orWhere('nama_barang', 'like', '%' . $search . '%');
-            })
+        $getBarang = Barang::where('cabang_id', $cabang_id);
+        if (count($new_status_barang) > 0) {
+            $getBarang = $getBarang->whereIn('status_barang', $new_status_barang);
+        }
+        if ($cabang_id != null) {
+            $getBarang = $getBarang->where('cabang_id', $cabang_id);
+        }
+
+        $getBarang = $getBarang->where(function ($query) use ($search) {
+            $query->where('barcode_barang', 'like', '%' . $search . '%')
+                ->orWhere('nama_barang', 'like', '%' . $search . '%');
+        })
             ->paginate(10, ['*'], 'page', $page);
 
         $output[] = [
@@ -122,12 +136,17 @@ class SelectSearchController extends Controller
         }
 
         // count filtered
-        $countFiltered = Barang::dataTable()
-            ->whereIn('status_barang', $new_status_barang)
-            ->where(function ($query) use ($search) {
-                $query->where('barcode_barang', 'like', '%' . $search . '%')
-                    ->orWhere('nama_barang', 'like', '%' . $search . '%');
-            })
+        $countFiltered = Barang::where('cabang_id', $cabang_id);
+        if (count($new_status_barang) > 0) {
+            $countFiltered = $countFiltered->whereIn('status_barang', $new_status_barang);
+        }
+        if ($cabang_id != null) {
+            $countFiltered = $countFiltered->where('cabang_id', $cabang_id);
+        }
+        $countFiltered = $countFiltered->where(function ($query) use ($search) {
+            $query->where('barcode_barang', 'like', '%' . $search . '%')
+                ->orWhere('nama_barang', 'like', '%' . $search . '%');
+        })
             ->count();
 
         return response()->json([

@@ -6,6 +6,7 @@ use App\Models\Cabang;
 use App\Models\Pembelian;
 use App\Models\PenerimaanServis;
 use App\Models\Penjualan;
+use App\Models\TransferStock;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
@@ -499,5 +500,13 @@ class UtilsHelper
         }
 
         return $tanggal_service_berkala;
+    }
+
+    public static function generateKodeTStock()
+    {
+        $count = TransferStock::count();
+        $count = $count + 1;
+        $kode_tstock = date("Ymd") . $count;
+        return $kode_tstock;
     }
 }

@@ -7,5 +7,6 @@
     "Purchase": true,
     "TransferStock": true,
     "Service": true,
-    "Dashboard": true
+    "Dashboard": true,
+    "Transfer": true
 }

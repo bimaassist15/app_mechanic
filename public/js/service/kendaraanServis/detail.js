@@ -295,7 +295,7 @@ renderListBarang = (data, isOnlyTotalHarga = false) => {
                 v.id
             }?_method=delete" data-id="${v.id}"
              class="btn btn-danger delete-order-barang btn-small"
-             title="Delete Order Servis">
+             title="Delete Order Barang">
              <i class="fa-solid fa-trash"></i>
          </a>
      </td>
@@ -490,13 +490,15 @@ const runDataPenerimaan = () => {
                 let jumlahDataBarang = parseFloat(
                     getDataBarang.qty_orderbarang
                 );
-                const jumlahDataBarangPlus = ++jumlahDataBarang;
+                let jumlahDataBarangPlus = ++jumlahDataBarang;
                 const stokDataBarang = getDataBarang.stok_barang;
 
                 if (jumlahDataBarangPlus < 0) {
+                    jumlahDataBarangPlus = 0;
                     getDataBarang.qty_orderbarang = 0;
                 }
                 if (jumlahDataBarangPlus > stokDataBarang) {
+                    jumlahDataBarangPlus = jumlahDataBarang;
                     getDataBarang.qty_orderbarang = jumlahDataBarang;
                     runToast({
                         type: "bg-danger",

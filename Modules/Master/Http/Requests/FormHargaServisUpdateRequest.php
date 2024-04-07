@@ -3,6 +3,7 @@
 namespace Modules\Master\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class FormHargaServisUpdateRequest extends FormRequest
 {
@@ -13,8 +14,14 @@ class FormHargaServisUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        $cabang_id = session()->get('cabang_id');
         return [
-            'kode_hargaservis' => 'required|unique:harga_servis,kode_hargaservis,' . request()->segment(3) ,
+            'kode_hargaservis' => [
+                'required',
+                Rule::unique('harga_servis', 'kode_hargaservis')->ignore(request()->segment(3))->where(function ($query) use ($cabang_id) {
+                    return $query->where('cabang_id', $cabang_id);
+                }),
+            ],
             'nama_hargaservis' => 'required',
             'jasa_hargaservis' => 'required',
             'profit_hargaservis' => 'required',

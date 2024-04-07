@@ -4,8 +4,12 @@
     Halaman Dashboard
 @endsection
 
+@php
+    $myCabang = UtilsHelp::myCabang();
+@endphp
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
+        <h3>Dashboard {{ $myCabang->nama_cabang }} - {{ $myCabang->alamat_cabang }}</h3>
         @include('dashboard::partials.invoice')
         @include('dashboard::partials.infoItem')
         @include('dashboard::partials.doing')

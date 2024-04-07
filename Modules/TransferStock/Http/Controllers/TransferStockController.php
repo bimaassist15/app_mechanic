@@ -2,9 +2,13 @@
 
 namespace Modules\TransferStock\Http\Controllers;
 
+use App\Http\Helpers\UtilsHelper;
+use App\Models\Barang;
+use App\Models\Cabang;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class TransferStockController extends Controller
 {
@@ -14,7 +18,23 @@ class TransferStockController extends Controller
      */
     public function index()
     {
-        return view('transferstock::index');
+        $cabang = Cabang::all();
+        $array_cabang = [];
+        foreach ($cabang as $key => $item) {
+            $array_cabang[] = [
+                'id' => $item->id,
+                'label' => '<strong>Nama Cabang: ' . $item->nama_cabang . '</strong><br />
+                <span>No. Wa: ' . $item->nowa_cabang . '</span>
+                '
+            ];
+        }
+
+        $kodeTStock = UtilsHelper::generateKodeTStock();
+        $cabang_id = session()->get('cabang_id');
+        $users_id = Auth::id();
+        $barang = Barang::dataTable()->get();
+
+        return view('transferstock::index', compact('array_cabang', 'kodeTStock', 'cabang_id', 'users_id', 'barang'));
     }
 
     /**

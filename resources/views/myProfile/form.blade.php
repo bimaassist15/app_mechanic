@@ -18,13 +18,8 @@
                     <x-form-radio-horizontal label="Jenis Kelamin" name="jeniskelamin_profile"
                         value="{{ isset($row) ? ($row->profile->jeniskelamin_profile === 'Laki-laki' ? 'L' : 'P' ?? '') : '' }}" />
 
-                    <x-form-select-horizontal label="Cabang" name="cabang_id"
-                        value="{{ isset($row) ? $row->cabang_id ?? '' : '' }}" :data="$array_cabang" />
                 </div>
                 <div class="col-lg-6">
-                    <x-form-select-horizontal label="Level" name="roles_id" :data="$array_role"
-                        value="{{ isset($row) ? $row->roles_id ?? '' : '' }}" />
-
                     <x-form-input-horizontal label="Email" name="email" placeholder="Email..."
                         value="{{ isset($row) ? $row->email ?? '' : '' }}" />
 
@@ -36,8 +31,6 @@
                     <x-form-input-horizontal label="Password Confirmation" name="password_confirmation"
                         placeholder="Password Confirmation..." value="" type="password" />
 
-                    <x-form-checkbox-horizontal label="Status Aktif" name="status_users" labelInput="Aktif"
-                        checked="{{ isset($row) ? ($row->status_users == true ? 'checked' : '') : 'checked' }}" />
                 </div>
             </div>
         </div>
@@ -54,4 +47,4 @@
 </div>
 
 
-<script src="{{ asset('js/setting/user/form.js') }}"></script>
+<script src="{{ asset('js/myProfile/form.js') }}"></script>
