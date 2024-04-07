@@ -29,9 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/myProfile/{id}', [MyProfileController::class, 'update'])->name('myProfile.update');
 
     Route::get('/changeCabang', [ChangeCabangController::class, 'index'])->name('changeCabang.index');
-    Route::get('/changeCabang/checkBarang', [ChangeCabangController::class, 'checkBarang'])->name('changeCabang.checkBarang');
     Route::put('/changeCabang', [ChangeCabangController::class, 'update'])->name('changeCabang.update');
-    Route::post('/changeCabang/transferBarang', [ChangeCabangController::class, 'transferBarang'])->name('changeCabang.transferBarang');
 
 
 

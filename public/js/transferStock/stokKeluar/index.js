@@ -1,5 +1,7 @@
 var datatable;
-var urlRoot = $("url_root").data("value");
+var urlRoot = $(".url_root").data("value");
+var body = $("body");
+
 $(document).ready(function () {
     function initDatatable() {
         datatable = basicDatatable({
@@ -23,13 +25,13 @@ $(document).ready(function () {
                     searchable: true,
                 },
                 {
-                    data: "cabang_id_awal",
-                    name: "cabang_id_awal",
+                    data: "cabang_pemberi.nama_cabang",
+                    name: "cabang_pemberi.nama_cabang",
                     searchable: true,
                 },
                 {
-                    data: "cabang_id_penerima",
-                    name: "cabang_id_penerima",
+                    data: "cabang_penerima.nama_cabang",
+                    name: "cabang_penerima.nama_cabang",
                     searchable: true,
                 },
                 {
@@ -48,4 +50,83 @@ $(document).ready(function () {
         });
     }
     initDatatable();
+
+    body.on("click", ".btn-detail", function (e) {
+        e.preventDefault();
+
+        showModal({
+            url: $(this).data("urlcreate"),
+            modalId: $(this).data("typemodal"),
+            title: "Form Transfer Stok Barang",
+            type: "get",
+        });
+    });
+
+    const renderPrint = (id) => {
+        var output = "";
+        $.ajax({
+            url: `${urlRoot}/transferStock/keluar/${id}/print`,
+            type: "get",
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                output = data;
+            },
+        });
+        return output;
+    };
+
+    const printOutput = (output) => {
+        var printWindow = window.open("", "_blank");
+        printWindow.document.write(output);
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.close();
+    };
+
+    body.on("click", ".btn-print", function (e) {
+        e.preventDefault();
+        const id = $(this).data("id");
+        const output = renderPrint(id);
+        printOutput(output);
+    });
+
+    const checkStatusTransfer = (payload) => {
+        var output = false;
+        $.ajax({
+            url: `${urlRoot}/transferStock/keluar/checkStatus/validation`,
+            type: "get",
+            dataType: "json",
+            data: payload,
+            async: false,
+            success: function (data) {
+                output = data;
+            },
+        });
+        return output;
+    };
+
+    body.on("click", ".btn-delete", function (e) {
+        e.preventDefault();
+        myModal.hide();
+
+        const id = $(this).data("id");
+        const outputCheckStatus = checkStatusTransfer({
+            id: id,
+        });
+
+        if (!outputCheckStatus.result) {
+            return runToast({
+                title: "Form Validation",
+                description: outputCheckStatus.message,
+                type: "bg-danger",
+            });
+        }
+
+        basicDeleteConfirmDatatable({
+            urlDelete: `${urlRoot}/transferStock/keluar/${id}/destroy?_method=DELETE`,
+            data: {},
+            text: "Apakah anda yakin ingin menghapus item ini?",
+        });
+    });
 });

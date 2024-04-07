@@ -77,6 +77,10 @@ var refreshData = () => {
             usersId = data.users_id;
             kodeTstock = data.kodeTStock;
             getBarang = data.barang;
+
+            $(".output_kodeTStock").html(`
+            Ref: ${kodeTstock}
+            `);
         },
     });
 };
@@ -155,7 +159,7 @@ $(document).ready(function () {
     const checkBarangCabang = (payload) => {
         var output = false;
         $.ajax({
-            url: `${urlRoot}/changeCabang/checkBarang`,
+            url: `${urlRoot}/transferStock/transaksi/checkBarang`,
             type: "get",
             data: payload,
             dataType: "json",
@@ -371,6 +375,8 @@ $(document).ready(function () {
             users_id: usersId,
             keterangan_tstock: $('textarea[name="keterangan_tstock"]').val(),
             status_tstock: "proses kirim",
+            tanggalkirim_tstock: formatDatePayload(),
+            tanggalditerima_tstock: "",
         };
 
         const payloadDetail = [];
@@ -416,8 +422,9 @@ $(document).ready(function () {
 
         // next proses
         const payload = payloadSubmit();
+
         $.ajax({
-            url: `${urlRoot}/changeCabang/transferBarang`,
+            url: `${urlRoot}/transferStock/transaksi/transferBarang`,
             type: "post",
             data: payload,
             dataType: "json",

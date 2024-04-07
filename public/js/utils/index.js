@@ -552,3 +552,16 @@ const formatDateToDb = (dateString) => {
     var formattedDate = dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
     return formattedDate;
 };
+
+const formatDatePayload = () => {
+    const date = new Date();
+    const localDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000
+    );
+    const formattedDate = localDate
+        .toISOString()
+        .replace("T", " ")
+        .substring(0, 19);
+
+    return formattedDate;
+};

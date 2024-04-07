@@ -1,7 +1,7 @@
 <h5 class="card-header">
     <div class="row">
         <div class="col-lg-6">
-            <h4>Ref: {{ $kodeTStock }}</h4>
+            <h4 class="output_kodeTStock">Ref: {{ $kodeTStock }}</h4>
         </div>
         <div class="col-lg-6">
             <div style="width: 100%;">

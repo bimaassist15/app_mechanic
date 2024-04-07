@@ -43,8 +43,13 @@ class TransferStock extends Model
         return $this->belongsTo(Cabang::class, 'cabang_id_awal', 'id');
     }
 
+    public function usersPenerima()
+    {
+        return $this->belongsTo(User::class, 'users_id_diterima', 'id');
+    }
+
     public function getTransferStock()
     {
-        return TransferStock::dataTable()->with('transferDetail', 'transferDetail.barang', 'users', 'cabang', 'cabangPenerima', 'cabangPemberi');
+        return TransferStock::dataTable()->with('transferDetail', 'transferDetail.barang', 'users', 'cabang', 'cabangPenerima', 'cabangPemberi', 'usersPenerima');
     }
 }
