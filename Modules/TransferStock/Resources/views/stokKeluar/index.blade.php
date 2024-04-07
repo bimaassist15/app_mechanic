@@ -1,5 +1,8 @@
 @extends('layouts.app.index')
 
+@section('title')
+    Halaman Stok Keluar
+@endsection
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         {{ Breadcrumbs::render('stokkeluar') }}
@@ -31,8 +34,8 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ url('transferstock/stokkeluar') }}"></script>
-
-        <script src="{{ asset('js/master/stokkeluar/index.js') }}"></script>
+        <script class="url_datatable" data-url="{{ url('transferStock/keluar') }}"></script>
+        <script class="url_root" data-value="{{ url('/') }}"></script>
+        <script src="{{ asset('js/transferStock/stokKeluar/index.js') }}"></script>
     @endpush
 @endsection

@@ -16,7 +16,7 @@ class TransferStockController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         $cabang = Cabang::all();
         $array_cabang = [];
@@ -34,7 +34,22 @@ class TransferStockController extends Controller
         $users_id = Auth::id();
         $barang = Barang::dataTable()->get();
 
-        return view('transferstock::index', compact('array_cabang', 'kodeTStock', 'cabang_id', 'users_id', 'barang'));
+        $data = [
+            'array_cabang' => $array_cabang,
+            'kodeTStock' => $kodeTStock,
+            'cabang_id' => $cabang_id,
+            'users_id' => $users_id,
+            'barang' => $barang,
+        ];
+
+        if ($request->ajax()) {
+            if ($request->input('refresh')) {
+                return response()->json($data);
+            }
+        }
+
+
+        return view('transferstock::index', $data);
     }
 
     /**

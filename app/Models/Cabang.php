@@ -120,4 +120,14 @@ class Cabang extends Model
     {
         return $this->hasMany(PembelianProduct::class);
     }
+
+    public function transferStock()
+    {
+        return $this->hasMany(TransferStock::class);
+    }
+
+    public function transferDetail()
+    {
+        return $this->hasMany(TransferDetail::class);
+    }
 }

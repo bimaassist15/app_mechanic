@@ -11,4 +11,19 @@ class TransferDetail extends Model
     protected $table = 'transfer_detail';
     protected $guarded = [];
     public $timestamps = true;
+
+    public function transferStock()
+    {
+        return $this->belongsTo(TransferStock::class);
+    }
+
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class);
+    }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
 }

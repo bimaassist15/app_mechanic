@@ -126,4 +126,9 @@ class User extends Authenticatable
     {
         return User::dataTable()->with('profile');
     }
+
+    public function transferStock()
+    {
+        return $this->hasMany(TransferStock::class);
+    }
 }

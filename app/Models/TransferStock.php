@@ -11,4 +11,40 @@ class TransferStock extends Model
     protected $table = 'transfer_stock';
     protected $guarded = [];
     public $timestamps = true;
+
+
+    public function scopeDataTable($query)
+    {
+        return $query->where('transfer_stock.cabang_id', session()->get('cabang_id'));
+    }
+
+    public function transferDetail()
+    {
+        return $this->hasMany(TransferDetail::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
+
+    public function cabangPenerima()
+    {
+        return $this->belongsTo(Cabang::class, 'cabang_id_penerima', 'id');
+    }
+
+    public function cabangPemberi()
+    {
+        return $this->belongsTo(Cabang::class, 'cabang_id_awal', 'id');
+    }
+
+    public function getTransferStock()
+    {
+        return TransferStock::dataTable()->with('transferDetail', 'transferDetail.barang', 'users', 'cabang', 'cabangPenerima', 'cabangPemberi');
+    }
 }

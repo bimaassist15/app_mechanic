@@ -64,6 +64,23 @@ var renderListBarang = (data, isOnlyTotalHarga = false) => {
     }
 };
 
+var refreshData = () => {
+    $.ajax({
+        url: `${urlRoot}/transferStock/transaksi`,
+        type: "get",
+        data: {
+            refresh: true,
+        },
+        dataType: "json",
+        success: function (data) {
+            cabangId = data.cabang_id;
+            usersId = data.users_id;
+            kodeTstock = data.kodeTStock;
+            getBarang = data.barang;
+        },
+    });
+};
+
 $(document).ready(function () {
     var body = $("body");
     select2Standard({
@@ -150,6 +167,8 @@ $(document).ready(function () {
         });
         return output;
     };
+
+    refreshData();
 
     body.on("change", "select[name='barang_id']", function () {
         const value = $(this).val();
@@ -413,6 +432,7 @@ $(document).ready(function () {
                     type: "bg-success",
                 });
                 resetForm();
+                refreshData();
             },
             complete: function () {
                 $(".btn-submit").attr("disabled", false);

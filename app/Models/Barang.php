@@ -56,4 +56,9 @@ class Barang extends Model
     {
         return Barang::dataTable()->with('penjualanProduct', 'orderBarang', 'kategori', 'satuan');
     }
+
+    public function transferDetail()
+    {
+        return $this->hasMany(TransferDetail::class);
+    }
 }

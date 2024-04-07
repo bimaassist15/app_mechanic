@@ -2,9 +2,11 @@
 
 namespace Modules\TransferStock\Http\Controllers;
 
+use App\Models\TransferStock;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use DataTables;
 
 class StockKeluarController extends Controller
 {
@@ -12,9 +14,36 @@ class StockKeluarController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('transferstock::stockkeluar.index');
+        if ($request->ajax()) {
+            $transferKeluar = new TransferStock();
+            $data = $transferKeluar->getTransferStock()
+                ->where('cabang_id_awal', session()->get('cabang_id'));
+
+            return DataTables::eloquent($data)
+                ->addColumn('action', function ($row) {
+                    $buttonDetail = '
+                    <a class="btn btn-info btn-detail btn-sm" 
+                    data-typemodal="extraLargeModal"
+                    data-urlcreate="' . url('master/barang/' . $row->id) . '"
+                    data-modalId="extraLargeModal"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    ';
+
+                    $button = '
+                <div class="text-center">
+                    ' . $buttonDetail . '
+                </div>
+                ';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->toJson();
+        }
+        return view('transferstock::stokKeluar.index');
     }
 
     /**
@@ -23,7 +52,7 @@ class StockKeluarController extends Controller
      */
     public function create()
     {
-        return view('stockkeluar::create');
+        return view('stokKeluar::create');
     }
 
     /**
@@ -43,7 +72,7 @@ class StockKeluarController extends Controller
      */
     public function show($id)
     {
-        return view('stockkeluar::show');
+        return view('stokKeluar::show');
     }
 
     /**
@@ -53,7 +82,7 @@ class StockKeluarController extends Controller
      */
     public function edit($id)
     {
-        return view('stockkeluar::edit');
+        return view('stokKeluar::edit');
     }
 
     /**
