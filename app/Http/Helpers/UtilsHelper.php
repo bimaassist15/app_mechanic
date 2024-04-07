@@ -504,7 +504,7 @@ class UtilsHelper
 
     public static function generateKodeTStock()
     {
-        $count = TransferStock::count();
+        $count = TransferStock::where('cabang_id', session()->get('cabang_id'))->max('id');
         $count = $count + 1;
         $kode_tstock = date("Ymd") . $count;
         return $kode_tstock;

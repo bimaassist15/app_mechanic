@@ -96,20 +96,6 @@
                         Print
                     </a>
                 </li>
-                <li>
-                    <a href="#" class="dropdown-item d-flex align-items-center btn-edit"
-                        data-id="{{ $row->id }}">
-                        <i class="bx bx-chevron-right scaleX-n1-rtl"></i>
-                        Edit
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="dropdown-item d-flex align-items-center btn-delete"
-                        data-id="{{ $row->id }}">
-                        <i class="bx bx-chevron-right scaleX-n1-rtl"></i>
-                        Delete
-                    </a>
-                </li>
             </ul>
         </div>
     </div>

@@ -84,6 +84,7 @@ const refreshData = () => {
             refresh: true,
         },
         success: function (data) {
+            console.log('get data', data);
             jsonUsersId = data.usersId;
             jsonPenerimaanServisId = data.penerimaanServisId;
             jsonGetServis = data.getServis;

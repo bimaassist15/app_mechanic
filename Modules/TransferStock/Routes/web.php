@@ -17,6 +17,12 @@ Route::prefix('transferStock')->middleware('auth')->group(function () {
     Route::post('/transaksi/transferBarang', 'TransferStockController@transferBarang')->name('transferStock.transaksi.transferBarang');
 
     Route::get('/masuk', 'StockMasukController@index')->name('masuk.index');
+    Route::get('/masuk/{id}', 'StockMasukController@show')->name('masuk.show');
+    Route::get('/masuk/{id}/print', 'StockMasukController@print')->name('masuk.print');
+    Route::delete('/masuk/{id}/destroy', 'StockMasukController@destroy')->name('masuk.destroy');
+    Route::get('/masuk/checkStatus/validation', 'StockMasukController@checkStatus')->name('transferStock.masuk.checkStatus');
+    Route::put('/masuk/{id}/updateStatus', 'StockMasukController@updateStatus')->name('masuk.updateStatus');
+
 
     Route::get('/keluar', 'StockKeluarController@index')->name('keluar.index');
     Route::get('/keluar/{id}', 'StockKeluarController@show')->name('keluar.show');

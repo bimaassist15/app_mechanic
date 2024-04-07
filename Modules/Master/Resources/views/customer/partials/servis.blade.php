@@ -23,7 +23,7 @@
                     <tbody class="table-border-bottom-0">
                         @php
                             $no = 1;
-                            $setUrl = $pengembalian_servis ? 'pengembalianServis' : 'penerimaanServis';
+                            $setUrl = 'kendaraanServis';
                         @endphp
 
                         @foreach ($row->penerimaanServis as $item)

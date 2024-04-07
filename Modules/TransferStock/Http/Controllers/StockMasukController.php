@@ -2,9 +2,15 @@
 
 namespace Modules\TransferStock\Http\Controllers;
 
+use App\Http\Helpers\UtilsHelper;
+use App\Models\Barang;
+use App\Models\TransferStock;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use DataTables;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class StockMasukController extends Controller
 {
@@ -12,9 +18,46 @@ class StockMasukController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+
+    public $datastatis;
+    public function __construct()
     {
-        return view('transferstock::stockmasuk.index');
+        $this->datastatis = Config::get('datastatis');
+    }
+
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $transferMasuk = new TransferStock();
+            $data = $transferMasuk->getTransferStock()
+                ->where('cabang_id_penerima', session()->get('cabang_id'));
+
+            return DataTables::eloquent($data)
+                ->addColumn('created_at', function ($row) {
+                    return UtilsHelper::tanggalBulanTahunKonversi($row->created_at);
+                })
+                ->addColumn('action', function ($row) {
+                    $buttonDetail = '
+                    <a class="btn btn-info btn-detail btn-sm" 
+                    data-typemodal="extraLargeModal"
+                    data-urlcreate="' . url('transferStock/masuk/' . $row->id) . '"
+                    data-modalId="extraLargeModal"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    ';
+
+                    $button = '
+                <div class="text-center">
+                    ' . $buttonDetail . '
+                </div>
+                ';
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->toJson();
+        }
+        return view('transferstock::stokMasuk.index');
     }
 
     /**
@@ -23,7 +66,7 @@ class StockMasukController extends Controller
      */
     public function create()
     {
-        return view('stockmasuk::create');
+        return view('stokMasuk::create');
     }
 
     /**
@@ -43,37 +86,28 @@ class StockMasukController extends Controller
      */
     public function show($id)
     {
-        return view('stockmasuk::show');
+        $transferMasuk = new TransferStock();
+        $row = $transferMasuk->getTransferStock()->find($id);
+        $status_tstock = $this->datastatis['status_tstock'];
+        $array_status_tstock = [];
+        foreach ($status_tstock as $key => $item) {
+            $array_status_tstock[] = [
+                'id' => $key,
+                'label' => $item
+            ];
+        }
+        return view('transferstock::stokMasuk.detail', compact('row', 'array_status_tstock'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
+    public function updateStatus(Request $request, $id)
     {
-        return view('stockmasuk::edit');
-    }
+        $status_tstock = $request->input('status_tstock');
+        $transferMasuk = TransferStock::find($id);
+        $transferMasuk->status_tstock = $status_tstock;
+        $transferMasuk->tanggalditerima_tstock = date('Y-m-d H:i:s');
+        $transferMasuk->users_id_diterima = Auth::id();
+        $transferMasuk->save();
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        return response()->json('Status berhasil diubah');
     }
 }

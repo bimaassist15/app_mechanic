@@ -7,6 +7,8 @@ var cabangId = $(".cabang_id").data("value");
 var usersId = $(".users_id").data("value");
 var kodeTstock = $(".kode_tstock").data("value");
 var getBarang = $(".barang").data("value");
+var isEdit = $(".isEdit").data("value");
+var idData = $(".id").data("value");
 
 var renderListBarang = (data, isOnlyTotalHarga = false) => {
     let output = ``;
@@ -37,9 +39,11 @@ var renderListBarang = (data, isOnlyTotalHarga = false) => {
      <td>
         <input name="qty_tdetail" class="form-control" placeholder="Masukan data qty..." data-id="${
             v.barang_id
-        }" value="${formatNumber(v.qty_tdetail)}" title="Stok Barang: ${
+        }" value="${formatNumber(
+                v.qty_tdetail
+            )}" title="Stok Barang: ${formatNumber(
                 v.barang_selected.stok_barang
-            }" />
+            )}" />
     </td>
      <td>
          <a href="#" data-id="${v.barang_id}"
@@ -55,7 +59,7 @@ var renderListBarang = (data, isOnlyTotalHarga = false) => {
         if (isOnlyTotalHarga) {
             $(`input[name="qty_tdetail"][data-id="${v.barang_id}" ]`).attr(
                 "title",
-                `Stok Barang: ${v.barang_selected.stok_barang}`
+                `Stok Barang: ${formatNumber(v.barang_selected.stok_barang)}`
             );
         }
     });
@@ -85,6 +89,46 @@ var refreshData = () => {
     });
 };
 
+var editData = () => {
+    if (isEdit) {
+        $.ajax({
+            url: `${urlRoot}/transferStock/transaksi`,
+            type: "get",
+            data: {
+                editData: true,
+                isEdit,
+                id: idData,
+            },
+            dataType: "json",
+            success: function (data) {
+                $('select[name="cabang_id_awal"]')
+                    .val(data.cabang_id_awal)
+                    .trigger("change");
+                $('select[name="cabang_id_penerima"]')
+                    .val(data.cabang_id_penerima)
+                    .trigger("change");
+                $('textarea[name="keterangan_tstock"]').val(
+                    data.keterangan_tstock
+                );
+
+                const transfer_detail = data.transfer_detail;
+                transfer_detail.map((v) => {
+                    setOrderBarang.push({
+                        barang_id: v.barang_id,
+                        qty_tdetail: v.qty_tdetail,
+                        cabang_id: cabangId,
+                        barang_selected: v.barang,
+                    });
+                });
+
+                renderListBarang({
+                    result: setOrderBarang,
+                });
+            },
+        });
+    }
+};
+
 $(document).ready(function () {
     var body = $("body");
     select2Standard({
@@ -96,12 +140,14 @@ $(document).ready(function () {
         selector: "select[name='cabang_id_penerima']",
     });
 
+    const cabang_id_awal = $('select[name="cabang_id_awal"]').val();
+
     select2Server({
         selector: "select[name=barang_id]",
         parent: ".content-wrapper",
         routing: `${urlRoot}/select/barang`,
         passData: {
-            cabang_id: cabangId,
+            cabang_id: cabang_id_awal || cabangId,
         },
     });
 
@@ -132,22 +178,6 @@ $(document).ready(function () {
         }
     };
 
-    const payloadOrderBarang = (id) => {
-        const getFindIndex = setOrderBarang.findIndex(
-            (item) => item.barang_id == id
-        );
-        let payload;
-        if (getFindIndex !== -1) {
-            const dataOrderBarang = setOrderBarang[getFindIndex];
-            payload = {
-                barang_id: dataOrderBarang.barang_id,
-                qty_tdetail: dataOrderBarang.qty_tdetail,
-                cabang_id: cabangId,
-            };
-        }
-        return payload;
-    };
-
     const handleDisplayInput = () => {
         setOrderBarang.map((vItem, iItem) => {
             $(`input[name="qty_tdetail"][data-id="${vItem.barang_id}"]`).val(
@@ -173,6 +203,7 @@ $(document).ready(function () {
     };
 
     refreshData();
+    editData();
 
     body.on("change", "select[name='barang_id']", function () {
         const value = $(this).val();
@@ -250,8 +281,6 @@ $(document).ready(function () {
 
             newOrderBarang(getDataBarang.barang_id);
 
-            payloadOrderBarang(getDataBarang.barang_id);
-
             handleDisplayInput();
         } else {
             const getFindData = getBarang.find((item) => item.id == value);
@@ -320,8 +349,6 @@ $(document).ready(function () {
 
         const value = formatNumber($(this).val());
         $(this).val(value);
-
-        payloadOrderBarang(id);
 
         // update display input
         handleDisplayInput();
@@ -392,6 +419,10 @@ $(document).ready(function () {
         return {
             transfer_stock: payload,
             transfer_detail: payloadDetail,
+            transfer_edit: {
+                isEdit,
+                id: idData,
+            },
         };
     };
 
@@ -440,6 +471,10 @@ $(document).ready(function () {
                 });
                 resetForm();
                 refreshData();
+
+                if (isEdit) {
+                    window.location.href = `${urlRoot}/transferStock/keluar`;
+                }
             },
             complete: function () {
                 $(".btn-submit").attr("disabled", false);

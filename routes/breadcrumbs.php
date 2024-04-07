@@ -140,15 +140,11 @@ Breadcrumbs::for('transferStock', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Transfer Stok', url('transferStock/stock'));
 });
-// Home > stokmasuk
-Breadcrumbs::for('stokmasuk', function (BreadcrumbTrail $trail) {
-    $trail->parent('home');
-    $trail->push('Stok Masuk', url('stokmasuk/stock'));
-});
+
 // Home > stokkeluar
 Breadcrumbs::for('stokkeluar', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Stok Keluar', url('stokkeluar/stock'));
+    $trail->push('Stok Keluar', url('transferStock/keluar'));
 });
 // Home > penerimaanServis
 Breadcrumbs::for('penerimaanServis', function (BreadcrumbTrail $trail) {
@@ -356,4 +352,10 @@ Breadcrumbs::for('reportStatusServis', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('reportStatusServisPeriode', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Laporan Status Servis Periode', url('report/statusServisPeriode'));
+});
+
+// Home > stokmasuk
+Breadcrumbs::for('stokmasuk', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Stok Masuk', url('transferStock/masuk'));
 });

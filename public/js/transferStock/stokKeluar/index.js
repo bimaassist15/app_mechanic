@@ -129,4 +129,24 @@ $(document).ready(function () {
             text: "Apakah anda yakin ingin menghapus item ini?",
         });
     });
+
+    body.on("click", ".btn-edit", function (e) {
+        e.preventDefault();
+
+        const id = $(this).data("id");
+        const outputCheckStatus = checkStatusTransfer({
+            id: id,
+        });
+
+        if (!outputCheckStatus.result) {
+            return runToast({
+                title: "Form Validation",
+                description: outputCheckStatus.message,
+                type: "bg-danger",
+            });
+        }
+
+        window.location.href = `${urlRoot}/transferStock/transaksi?isEdit=true&id=${id}`;
+        myModal.hide();
+    });
 });

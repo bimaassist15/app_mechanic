@@ -57,6 +57,8 @@
         <script class="users_id" data-value="{{ $users_id }}"></script>
         <script class="kode_tstock" data-value="{{ $kodeTStock }}"></script>
         <script class="barang" data-value="{{ $barang }}"></script>
+        <script class="isEdit" data-value="{{ $isEdit }}"></script>
+        <script class="id" data-value="{{ $id }}"></script>
         <script src="{{ asset('js/transferStock/stock/index.js') }}"></script>
     @endpush
 @endsection
