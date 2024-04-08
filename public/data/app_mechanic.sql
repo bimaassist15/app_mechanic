@@ -11,7 +11,7 @@
  Target Server Version : 100428 (10.4.28-MariaDB)
  File Encoding         : 65001
 
- Date: 08/04/2024 03:03:05
+ Date: 08/04/2024 17:11:03
 */
 
 SET NAMES utf8mb4;
@@ -53,8 +53,8 @@ INSERT INTO `barang` VALUES (2, 'KD002', 'Barang2', 2, 'Deskripsi Barang 2', 'sn
 INSERT INTO `barang` VALUES (3, 'KD003', 'Barang3', 3, 'Deskripsi Barang 3', 'sn', 30, 40000, 'A3', 3, 'dijual', 1, '2024-03-09 03:22:12', '2024-04-08 00:01:47');
 INSERT INTO `barang` VALUES (4, 'KD004', 'Barang4', 4, 'Deskripsi Barang 4', 'sn', 53, 50000, 'A4', 3, 'dijual', 1, '2024-03-09 03:22:44', '2024-04-07 03:45:05');
 INSERT INTO `barang` VALUES (5, 'KD005', 'Barang5', 4, 'Deskripsi Barang 5', 'sn', 40, 60000, 'A5', 1, 'dijual', 1, '2024-03-09 03:23:17', '2024-03-16 10:02:40');
-INSERT INTO `barang` VALUES (6, 'ORD001', 'BARANG ORDER SERVIS 1', 2, 'KETERANGAN BARANG ORDER SERVIS 1', 'sn', 90, 30000, 'A3', 1, 'dijual & untuk servis', 1, '2024-03-24 09:55:57', '2024-04-06 15:50:12');
-INSERT INTO `barang` VALUES (7, 'ORD002', 'BARANG ORDER SERVIS 2', 3, 'KETERANGAN BARANG ORDER SERVIS 2', 'sn', 70, 50000, 'A4', 3, 'khusus servis', 1, '2024-03-24 09:56:37', '2024-04-06 10:06:40');
+INSERT INTO `barang` VALUES (6, 'ORD001', 'BARANG ORDER SERVIS 1', 2, 'KETERANGAN BARANG ORDER SERVIS 1', 'sn', 78, 30000, 'A3', 1, 'dijual & untuk servis', 1, '2024-03-24 09:55:57', '2024-04-08 16:59:35');
+INSERT INTO `barang` VALUES (7, 'ORD002', 'BARANG ORDER SERVIS 2', 3, 'KETERANGAN BARANG ORDER SERVIS 2', 'sn', 51, 50000, 'A4', 3, 'khusus servis', 1, '2024-03-24 09:56:37', '2024-04-08 16:59:35');
 INSERT INTO `barang` VALUES (8, 'ORD003', 'BARANG ORDER SERVIS 3', 2, 'KETERANGAN BARANG ORDER SERVIS 1', 'sn', 40, 80000, 'A5', 2, 'khusus servis', 1, '2024-03-24 09:57:14', '2024-04-07 12:21:26');
 INSERT INTO `barang` VALUES (9, 'ORD004', 'BARANG ORDER SERVIS 4', 2, 'KETERANGAN BARANG ORDER SERVIS 4', 'sn', 80, 87000, 'A7', 3, 'khusus servis', 1, '2024-03-24 09:58:14', '2024-04-05 02:31:33');
 INSERT INTO `barang` VALUES (10, 'ORD005', 'BARANG ORDER SERVIS 5', 2, 'KETERANGAN BARANG ORDER SERVIS 5', 'sn', 91, 90000, 'A8', 2, 'khusus servis', 1, '2024-03-24 09:58:53', '2024-04-06 15:47:50');
@@ -358,7 +358,7 @@ CREATE TABLE `migrations`  (
   `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 117 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 120 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of migrations
@@ -456,6 +456,7 @@ INSERT INTO `migrations` VALUES (112, '2024_04_07_113716_create_transfer_stocks_
 INSERT INTO `migrations` VALUES (113, '2024_04_07_114422_create_transfer_details_table', 38);
 INSERT INTO `migrations` VALUES (115, '2024_04_07_200445_add_column_to_transfer_stock', 39);
 INSERT INTO `migrations` VALUES (116, '2024_04_07_204936_add_column_to_transfer_stock', 40);
+INSERT INTO `migrations` VALUES (119, '2024_04_08_135037_add_column_to_penerimaan_servis', 41);
 
 -- ----------------------------
 -- Table structure for model_has_permissions
@@ -523,7 +524,7 @@ CREATE TABLE `order_barang`  (
   CONSTRAINT `order_barang_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `order_barang_penerimaan_servis_id_foreign` FOREIGN KEY (`penerimaan_servis_id`) REFERENCES `penerimaan_servis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `order_barang_users_id_foreign` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 156 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 159 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of order_barang
@@ -547,6 +548,9 @@ INSERT INTO `order_barang` VALUES (151, 8, 10, 88, 5, NULL, NULL, 450000, '2024-
 INSERT INTO `order_barang` VALUES (152, 8, 6, 91, 9, NULL, NULL, 270000, '2024-04-06 15:50:09', '2024-04-06 15:50:12', 1);
 INSERT INTO `order_barang` VALUES (153, 8, 8, 91, 3, NULL, NULL, 240000, '2024-04-06 15:50:16', '2024-04-06 15:50:19', 1);
 INSERT INTO `order_barang` VALUES (154, 8, 8, 90, 0, NULL, NULL, 0, '2024-04-07 12:21:20', '2024-04-07 12:21:26', 1);
+INSERT INTO `order_barang` VALUES (156, 8, 7, 90, 1, NULL, NULL, 50000, '2024-04-08 11:21:31', '2024-04-08 11:21:31', 1);
+INSERT INTO `order_barang` VALUES (157, 8, 6, 92, 2, NULL, NULL, 60000, '2024-04-08 15:00:48', '2024-04-08 15:01:03', 1);
+INSERT INTO `order_barang` VALUES (158, 8, 7, 92, 3, NULL, NULL, 150000, '2024-04-08 15:00:59', '2024-04-08 15:01:07', 1);
 
 -- ----------------------------
 -- Table structure for order_servis
@@ -571,7 +575,7 @@ CREATE TABLE `order_servis`  (
   CONSTRAINT `order_servis_harga_servis_id_foreign` FOREIGN KEY (`harga_servis_id`) REFERENCES `harga_servis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `order_servis_penerimaan_servis_id_foreign` FOREIGN KEY (`penerimaan_servis_id`) REFERENCES `penerimaan_servis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `order_servis_users_id_foreign` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 119 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 121 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of order_servis
@@ -595,6 +599,8 @@ INSERT INTO `order_servis` VALUES (114, 8, 1, 91, 11, 50000, '2024-04-06 15:49:4
 INSERT INTO `order_servis` VALUES (115, 8, 2, 91, 13, 30000, '2024-04-06 15:49:51', '2024-04-06 15:50:04', 1);
 INSERT INTO `order_servis` VALUES (117, 8, 1, 90, NULL, 50000, '2024-04-08 02:52:28', '2024-04-08 02:52:28', 1);
 INSERT INTO `order_servis` VALUES (118, 8, 2, 90, NULL, 30000, '2024-04-08 02:52:34', '2024-04-08 02:52:34', 1);
+INSERT INTO `order_servis` VALUES (119, 8, 1, 92, NULL, 50000, '2024-04-08 15:00:38', '2024-04-08 15:00:38', 1);
+INSERT INTO `order_servis` VALUES (120, 8, 2, 92, NULL, 30000, '2024-04-08 15:00:42', '2024-04-08 15:00:42', 1);
 
 -- ----------------------------
 -- Table structure for password_resets
@@ -880,6 +886,10 @@ CREATE TABLE `penerimaan_servis`  (
   `garansi_pservis` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `users_id_garansi` bigint NULL DEFAULT NULL,
   `is_reminded` tinyint(1) NOT NULL DEFAULT 0,
+  `estimasi_pservis` date NULL DEFAULT NULL,
+  `isrememberestimasi_pservis` tinyint(1) NOT NULL DEFAULT 0,
+  `isestimasi_pservis` tinyint(1) NOT NULL DEFAULT 0,
+  `keteranganestimasi_pservis` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `penerimaan_servis_cabang_id_foreign`(`cabang_id` ASC) USING BTREE,
   INDEX `penerimaan_servis_users_id_foreign`(`users_id` ASC) USING BTREE,
@@ -887,20 +897,21 @@ CREATE TABLE `penerimaan_servis`  (
   CONSTRAINT `penerimaan_servis_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `penerimaan_servis_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `penerimaan_servis_users_id_foreign` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 92 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 95 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of penerimaan_servis
 -- ----------------------------
-INSERT INTO `penerimaan_servis` VALUES (79, 1, 1, 'r', 'k', 'm', '2000', 'data langsung ke bengkel', 1, 200000, '2024-04-05 02:34:10', '2024-04-05 02:36:01', 1, 50000, 0, 1, 'sudah diambil', 8, '1', 1, 450000, 'servis oke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'catatan teknisi', '2024-05-05', 1, 'bulan', '2024-05-05', 500000, '2024-04-05 02:36:01', NULL, NULL, 0);
-INSERT INTO `penerimaan_servis` VALUES (81, 2, 1, 'r', 'k', 'm', '2000', 'data langsung ke bengkel', 1, 200000, '2024-04-05 12:03:52', '2024-04-05 12:05:41', 1, 200000, 0, 2, 'sudah diambil', 8, '2', 2, 700000, 'servis okke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'Catatan teknisi', '2024-05-05', 1, 'bulan', '2024-05-05', 900000, '2024-04-05 12:05:41', NULL, NULL, 0);
-INSERT INTO `penerimaan_servis` VALUES (82, 1, 1, 'R', 'K', 'M', '2000', 'data langsung ke bengkel', 1, 200000, '2024-04-05 21:13:05', '2024-04-05 21:16:57', 1, 10000, 0, 3, 'sudah diambil', 8, '3', 1, 790000, 'Servis oke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'Catatan teknisi', '2024-05-05', 1, 'hari', '2024-04-06', 800000, '2024-04-05 21:16:57', NULL, NULL, 0);
-INSERT INTO `penerimaan_servis` VALUES (83, 3, 1, 'r', 'k', 'm', '2000', 'data langsung ke bengkel', 1, 200000, '2024-04-06 10:02:57', '2024-04-06 10:05:08', 1, 90000, 0, 1, 'sudah diambil', 8, '4', 3, 510000, 'sudah oke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'Note teknisi', '2024-05-06', 1, 'bulan', '2024-05-06', 600000, '2024-04-06 10:05:07', NULL, NULL, 0);
-INSERT INTO `penerimaan_servis` VALUES (84, 5, 2, 'r', 'k', 'masuk', '2000', 'data langsung ke bengkel', 1, 200000, '2024-04-06 10:05:58', '2024-04-06 10:07:38', 1, 80000, 0, 2, 'sudah diambil', 8, '5', 5, 520000, 'Sudah oke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'Teknisi nya turu', '2024-05-06', 1, 'bulan', '2024-05-06', 600000, '2024-04-06 10:07:38', NULL, NULL, 0);
-INSERT INTO `penerimaan_servis` VALUES (88, 1, 1, 'r', 'k', 'm', '2000', 'data langsung ke bengkel', 0, 0, '2024-04-06 15:44:51', '2024-04-06 15:48:21', 1, 0, 585000, 3, 'bisa diambil', 8, '6', 1, 585000, 'servis oke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'note technision', '2024-05-06', NULL, NULL, NULL, 0, NULL, NULL, NULL, 0);
-INSERT INTO `penerimaan_servis` VALUES (89, 2, 2, 'r', 'k', 'm', '2000', 'data langsung ke bengkel', 0, 200000, '2024-04-06 15:45:29', '2024-04-06 15:47:04', 1, 0, 180000, 4, 'proses servis', 8, '7', 2, 380000, NULL, NULL, NULL, 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', NULL, '2024-04-06', NULL, NULL, NULL, 200000, NULL, NULL, NULL, 0);
-INSERT INTO `penerimaan_servis` VALUES (90, 4, 1, 'r2', 'k2', 'm2', '3000', 'data langsung ke bengkel', 0, 0, '2024-04-06 15:45:52', '2024-04-08 02:52:34', 1, 0, 80000, 5, 'antrian servis masuk', 8, '8', 4, 80000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0);
-INSERT INTO `penerimaan_servis` VALUES (91, 4, 4, 'r4', 'k4', 'm4', '2000', 'data langsung ke bengkel', 0, 0, '2024-04-06 15:49:35', '2024-04-06 16:00:11', 1, 10000, 0, 6, 'sudah diambil', 8, '9', 4, 590000, 'servis oke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'note technision', '2024-05-06', 1, 'bulan', '2024-05-06', 600000, '2024-04-06 16:00:11', NULL, NULL, 0);
+INSERT INTO `penerimaan_servis` VALUES (79, 1, 1, 'r', 'k', 'm', '2000', 'data langsung ke bengkel', 1, 200000, '2024-04-05 02:34:10', '2024-04-05 02:36:01', 1, 50000, 0, 1, 'sudah diambil', 8, '1', 1, 450000, 'servis oke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'catatan teknisi', '2024-05-05', 1, 'bulan', '2024-05-05', 500000, '2024-04-05 02:36:01', NULL, NULL, 0, NULL, 0, 0, NULL);
+INSERT INTO `penerimaan_servis` VALUES (81, 2, 1, 'r', 'k', 'm', '2000', 'data langsung ke bengkel', 1, 200000, '2024-04-05 12:03:52', '2024-04-05 12:05:41', 1, 200000, 0, 2, 'sudah diambil', 8, '2', 2, 700000, 'servis okke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'Catatan teknisi', '2024-05-05', 1, 'bulan', '2024-05-05', 900000, '2024-04-05 12:05:41', NULL, NULL, 0, NULL, 0, 0, NULL);
+INSERT INTO `penerimaan_servis` VALUES (82, 1, 1, 'R', 'K', 'M', '2000', 'data langsung ke bengkel', 1, 200000, '2024-04-05 21:13:05', '2024-04-05 21:16:57', 1, 10000, 0, 3, 'sudah diambil', 8, '3', 1, 790000, 'Servis oke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'Catatan teknisi', '2024-05-05', 1, 'hari', '2024-04-06', 800000, '2024-04-05 21:16:57', NULL, NULL, 0, NULL, 0, 0, NULL);
+INSERT INTO `penerimaan_servis` VALUES (83, 3, 1, 'r', 'k', 'm', '2000', 'data langsung ke bengkel', 1, 200000, '2024-04-06 10:02:57', '2024-04-06 10:05:08', 1, 90000, 0, 1, 'sudah diambil', 8, '4', 3, 510000, 'sudah oke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'Note teknisi', '2024-05-06', 1, 'bulan', '2024-05-06', 600000, '2024-04-06 10:05:07', NULL, NULL, 0, NULL, 0, 0, NULL);
+INSERT INTO `penerimaan_servis` VALUES (84, 5, 2, 'r', 'k', 'masuk', '2000', 'data langsung ke bengkel', 1, 200000, '2024-04-06 10:05:58', '2024-04-06 10:07:38', 1, 80000, 0, 2, 'sudah diambil', 8, '5', 5, 520000, 'Sudah oke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'Teknisi nya turu', '2024-05-06', 1, 'bulan', '2024-05-06', 600000, '2024-04-06 10:07:38', NULL, NULL, 0, NULL, 0, 0, NULL);
+INSERT INTO `penerimaan_servis` VALUES (88, 1, 1, 'r', 'k', 'm', '2000', 'data langsung ke bengkel', 0, 0, '2024-04-06 15:44:51', '2024-04-06 15:48:21', 1, 0, 585000, 3, 'bisa diambil', 8, '6', 1, 585000, 'servis oke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'note technision', '2024-05-06', NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, NULL, 0, 0, NULL);
+INSERT INTO `penerimaan_servis` VALUES (89, 2, 2, 'r', 'k', 'm', '2000', 'data langsung ke bengkel', 0, 200000, '2024-04-06 15:45:29', '2024-04-06 15:47:04', 1, 0, 180000, 4, 'proses servis', 8, '7', 2, 380000, NULL, NULL, NULL, 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', NULL, '2024-04-06', NULL, NULL, NULL, 200000, NULL, NULL, NULL, 0, NULL, 0, 0, NULL);
+INSERT INTO `penerimaan_servis` VALUES (90, 4, 1, 'r2', 'k2', 'm2', '3000', 'data langsung ke bengkel', 0, 0, '2024-04-06 15:45:52', '2024-04-08 11:21:31', 1, 0, 130000, 5, 'antrian servis masuk', 8, '8', 4, 130000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, NULL, 0, 0, NULL);
+INSERT INTO `penerimaan_servis` VALUES (91, 4, 4, 'r4', 'k4', 'm4', '2000', 'data langsung ke bengkel', 0, 0, '2024-04-06 15:49:35', '2024-04-06 16:00:11', 1, 10000, 0, 6, 'sudah diambil', 8, '9', 4, 590000, 'servis oke', 1, 'bulan', 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami.', 'note technision', '2024-05-06', 1, 'bulan', '2024-05-06', 600000, '2024-04-06 16:00:11', NULL, NULL, 0, NULL, 0, 0, NULL);
+INSERT INTO `penerimaan_servis` VALUES (92, 4, 1, 'Kerusakan estimasi servis', 'Keluhan estimasi servis', 'Kondisi masuk estimasi servis', '2000', 'data langsung ke bengkel', 0, 0, '2024-04-08 14:39:07', '2024-04-08 16:59:47', 1, 0, 290000, 1, 'menunggu sparepart', 8, '10', 4, 290000, NULL, NULL, NULL, 'Kendaraan Anda Sudah Waktunya Melakukan Servis Berkala sesuai dengan tanggal yang sudah ditentukan dari kami. Terimakasih', NULL, '2024-04-08', NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, '2024-05-08', 1, 1, 'Estimasi Waktu Servis Kendaraan anda sudah mencapai waktunya. Silahkan datang ke bengkel kami untuk servis kendaraan anda.');
 
 -- ----------------------------
 -- Table structure for penjualan
@@ -1300,7 +1311,7 @@ CREATE TABLE `saldo_detail`  (
   INDEX `saldo_detail_cabang_id_foreign`(`cabang_id` ASC) USING BTREE,
   CONSTRAINT `saldo_detail_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `saldo_detail_saldo_customer_id_foreign` FOREIGN KEY (`saldo_customer_id`) REFERENCES `saldo_customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 122 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 123 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of saldo_detail
@@ -1324,6 +1335,7 @@ INSERT INTO `saldo_detail` VALUES (118, 32, 89, '2024-04-06 15:45:29', '2024-04-
 INSERT INTO `saldo_detail` VALUES (119, 35, 90, '2024-04-06 15:45:53', '2024-04-06 15:45:53', 0, 0, 0, 1);
 INSERT INTO `saldo_detail` VALUES (120, 35, 91, '2024-04-06 15:49:35', '2024-04-06 15:49:35', 0, 0, 0, 1);
 INSERT INTO `saldo_detail` VALUES (121, 35, 91, '2024-04-06 16:00:11', '2024-04-06 16:00:11', 600000, 10000, 0, 1);
+INSERT INTO `saldo_detail` VALUES (122, 35, 92, '2024-04-08 14:39:08', '2024-04-08 14:39:08', 0, 0, 0, 1);
 
 -- ----------------------------
 -- Table structure for satuan
@@ -1444,7 +1456,7 @@ CREATE TABLE `service_histori`  (
   INDEX `service_histori_cabang_id_foreign`(`cabang_id` ASC) USING BTREE,
   CONSTRAINT `service_histori_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `service_histori_penerimaan_servis_id_foreign` FOREIGN KEY (`penerimaan_servis_id`) REFERENCES `penerimaan_servis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 323 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 334 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of service_histori
@@ -1487,6 +1499,9 @@ INSERT INTO `service_histori` VALUES (319, 91, 'menunggu sparepart', '2024-04-06
 INSERT INTO `service_histori` VALUES (320, 91, 'proses servis', '2024-04-06 15:50:29', '2024-04-06 15:50:29', 1);
 INSERT INTO `service_histori` VALUES (321, 91, 'bisa diambil', '2024-04-06 15:50:51', '2024-04-06 15:50:51', 1);
 INSERT INTO `service_histori` VALUES (322, 91, 'sudah diambil', '2024-04-06 16:00:11', '2024-04-06 16:00:11', 1);
+INSERT INTO `service_histori` VALUES (323, 92, 'estimasi servis', '2024-04-08 14:39:07', '2024-04-08 14:39:07', 1);
+INSERT INTO `service_histori` VALUES (332, 92, 'antrian servis masuk', '2024-04-08 16:59:35', '2024-04-08 16:59:35', 1);
+INSERT INTO `service_histori` VALUES (333, 92, 'menunggu sparepart', '2024-04-08 16:59:47', '2024-04-08 16:59:47', 1);
 
 -- ----------------------------
 -- Table structure for sub_pembayaran
@@ -1628,8 +1643,8 @@ CREATE TABLE `transfer_detail`  (
   INDEX `transfer_detail_barang_id_foreign`(`barang_id` ASC) USING BTREE,
   INDEX `transfer_detail_cabang_id_foreign`(`cabang_id` ASC) USING BTREE,
   CONSTRAINT `transfer_detail_barang_id_foreign` FOREIGN KEY (`barang_id`) REFERENCES `barang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `transfer_detail_transfer_stock_id_foreign` FOREIGN KEY (`transfer_stock_id`) REFERENCES `transfer_stock` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `transfer_detail_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `transfer_detail_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `transfer_detail_transfer_stock_id_foreign` FOREIGN KEY (`transfer_stock_id`) REFERENCES `transfer_stock` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -1676,8 +1691,8 @@ CREATE TABLE `transfer_stock`  (
   INDEX `transfer_stock_cabang_id_foreign`(`cabang_id` ASC) USING BTREE,
   INDEX `transfer_stock_users_id_foreign`(`users_id` ASC) USING BTREE,
   CONSTRAINT `transfer_stock_cabang_id_awal_foreign` FOREIGN KEY (`cabang_id_awal`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `transfer_stock_cabang_id_penerima_foreign` FOREIGN KEY (`cabang_id_penerima`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `transfer_stock_cabang_id_foreign` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `transfer_stock_cabang_id_penerima_foreign` FOREIGN KEY (`cabang_id_penerima`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `transfer_stock_users_id_foreign` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
