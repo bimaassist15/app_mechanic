@@ -24,12 +24,12 @@ class OrderBarang extends Model
 
     public function barang()
     {
-        return $this->belongsTo(barang::class);
+        return $this->belongsTo(Barang::class);
     }
 
     public function penerimaanServis()
     {
-        return $this->belongsTo(penerimaanServis::class);
+        return $this->belongsTo(PenerimaanServis::class);
     }
 
     public function getOrderBarang()
