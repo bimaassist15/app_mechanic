@@ -56,7 +56,7 @@ class Pembelian extends Model
 
     public function pembelianCicilan()
     {
-        return $this->hasMany(pembelianCicilan::class);
+        return $this->hasMany(PembelianCicilan::class);
     }
 
     public function pembelianPembayaran()
