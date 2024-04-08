@@ -10,6 +10,7 @@ var jsonTipeDiskon = $(".getTipeDiskon").data("value");
 var jsonCabangId = $(".cabangId").data("value");
 var jsonServiceHistory = [];
 
+var statusPservis = "";
 var urlRoot = $(".url_root").data("url");
 const viewServiceHistori = (rowData) => {
     $(".output_created_at").html(formatDateFromDb(rowData.created_at));
@@ -55,6 +56,7 @@ const refreshData = () => {
 
             // output servis history
             const rowData = data.row;
+            statusPservis = rowData.status_pservis;
             viewServiceHistori(rowData);
 
             // check handle berkala
@@ -715,6 +717,17 @@ $(document).ready(function () {
 
     body.on("click", ".btn-submit-data", function (e) {
         e.preventDefault();
+        if (statusPservis == "estimasi servis") {
+            $.ajax({
+                url: `${urlRoot}/service/estimasiServis/${jsonPenerimaanServisId}/nextProcess`,
+                type: "post",
+                dataType: "json",
+                success: function (data) {
+                    refreshData();
+                },
+            });
+        }
+
         const payload = payloadSubmit();
 
         const lastStatus = jsonServiceHistory.length - 1;

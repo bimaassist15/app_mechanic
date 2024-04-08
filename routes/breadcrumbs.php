@@ -359,3 +359,9 @@ Breadcrumbs::for('stokmasuk', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Stok Masuk', url('transferStock/masuk'));
 });
+
+// Home > estimasiServis
+Breadcrumbs::for('estimasiServis', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Estimasi Servis', url('service/estimasiServis'));
+});

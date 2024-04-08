@@ -34,7 +34,7 @@ class LabaBersihController extends Controller
 
             // transaksi servis
             $getTransaksiServis = new PenerimaanServis();
-            $dataTransaksiServis = $getTransaksiServis->dataTable();
+            $dataTransaksiServis = $getTransaksiServis->dataTable()->where('status_pservis', '!=', 'estimasi servis');
             if ($dari_tanggal != '') {
                 $dataTransaksiServis->whereDate('created_at', '>=', $dari_tanggal);
             }

@@ -63,7 +63,7 @@ class PenerimaanServisController extends Controller
                         <li>
                             <a href="' . url('service/penerimaanServis/print/' . $row->id . '/penerimaanServis') . '"
                                 class="dropdown-item d-flex align-items-center btn-print">
-                                <i class="fa-solid fa-print"></i> &nbsp; Print Nota</a>
+                                <i class="fa-solid fa-print"></i> &nbsp; Print Antrian</a>
                         </li>
                     </ul>';
 
@@ -236,6 +236,7 @@ class PenerimaanServisController extends Controller
         $isEdit = $request->query('isEdit');
         $penerimaanServis = new PenerimaanServis();
 
+        $pesanwa_estimasi = $this->datastatis['pesanwa_estimasi'];
         $totalHutang = 0;
         $data = [
             'array_kategori_pembayaran' => $array_kategori_pembayaran,
@@ -253,6 +254,7 @@ class PenerimaanServisController extends Controller
             'array_tipe_servis' => $array_tipe_servis,
             'action' => $action,
             'kendaraanServis' => $kendaraanServis,
+            'pesanwa_estimasi' => $pesanwa_estimasi,
         ];
         if ($request->input('refresh_dataset')) {
             return response()->json($data);
@@ -285,12 +287,17 @@ class PenerimaanServisController extends Controller
         $customer_id = $payloadSaldoCustomer['customer_id'];
         $noAntrianStatis++;
         $noNotaStatis++;
+
+        $status_pservis = 'antrian servis masuk';
+        if ($payloadPenerimaanServis['isestimasi_pservis'] == 1) {
+            $status_pservis = 'estimasi servis';
+        }
         $mergePenerimaanServis = array_merge(
             $payloadPenerimaanServis,
             [
                 'noantrian_pservis' => $noAntrianStatis,
                 'nonota_pservis' => $noNotaStatis,
-                'status_pservis' => 'antrian servis masuk',
+                'status_pservis' => $status_pservis,
                 'users_id' => Auth::id(),
                 'customer_id' => $customer_id,
             ],
@@ -301,7 +308,7 @@ class PenerimaanServisController extends Controller
         // history servis
         ServiceHistory::create([
             'penerimaan_servis_id' => $penerimaan_servis_id,
-            'status_histori' => 'antrian servis masuk',
+            'status_histori' => $status_pservis,
             'cabang_id' => session()->get('cabang_id'),
         ]);
 

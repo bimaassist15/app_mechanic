@@ -1,12 +1,12 @@
 @extends('layouts.app.index')
 
 @section('title')
-    Halaman Penerimaan Servis
+    Halaman Estimasi Servis
 @endsection
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
-        {{ Breadcrumbs::render('penerimaanServis') }}
+        {{ Breadcrumbs::render('estimasiServis') }}
 
         @include('service::estimasiServis.partials.tabEstimasi')
 
@@ -15,11 +15,9 @@
             <h5 class="card-header">
                 <div class="d-flex flex-wrap justify-content-between">
                     <div>
-                        Data Penerimaan Servis
+                        Data Estimasi Servis
                     </div>
                     <div>
-                        <x-button-main title="Tambah" className="btn-add" typeModal="extraLargeModal"
-                            urlCreate="{{ url('service/penerimaanServis/create') }}" />
                     </div>
                 </div>
             </h5>
@@ -34,6 +32,8 @@
                             <th>Kendaraan</th>
                             <th>Tipe</th>
                             <th>Status</th>
+                            <th>Estimasi Servis</th>
+                            <th>Remember Estimasi</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -46,7 +46,7 @@
     </div>
 
     @push('custom_js')
-        <script class="url_datatable" data-url="{{ url('service/penerimaanServis') }}"></script>
-        <script src="{{ asset('js/service/penerimaanServis/index.js') }}"></script>
+        <script class="url_datatable" data-url="{{ url('service/estimasiServis') }}"></script>
+        <script src="{{ asset('js/service/estimasiServis/index.js') }}"></script>
     @endpush
 @endsection

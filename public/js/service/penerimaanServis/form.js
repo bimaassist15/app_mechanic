@@ -13,6 +13,7 @@ var jsonDataKendaraan = $(".data_kendaraan").data("value");
 var body = $("body");
 var metodePembayaran = [];
 var totalHargaItems = $(".totalHutang").data("value");
+datepickerDdMmYyyy(".datepicker");
 
 $(document).ready(function () {
     // benar
@@ -834,6 +835,23 @@ $(document).ready(function () {
             isdp_pservis = 1;
         } else {
             isdp_pservis = 0;
+
+            sumDeposit = 0;
+            sumKembalian = 0;
+            sumHutang = 0;
+            metodePembayaran = [];
+        }
+
+        let isestimasi_pservis = 0;
+        let estimasi_pservis = $('input[name="estimasi_pservis"]').val();
+        let keteranganestimasi_pservis = $('textarea[name="keteranganestimasi_pservis"]').val();
+
+        if ($('input[name="isestimasi_pservis"]').is(":checked")) {
+            isestimasi_pservis = 1;
+        } else {
+            isestimasi_pservis = 0;
+            estimasi_pservis = null;
+            keteranganestimasi_pservis = null;
         }
         const payloadPenerimaanServis = {
             kendaraan_id: kendaraan_id,
@@ -844,6 +862,9 @@ $(document).ready(function () {
             kmsekarang_pservis: $('input[name="kmsekarang_pservis"]').val(),
             tipe_pservis: $('select[name="tipe_pservis"]').val(),
             isdp_pservis,
+            isestimasi_pservis,
+            estimasi_pservis: formatDateToDb(estimasi_pservis),
+            keteranganestimasi_pservis,
             total_dppservis: sumDeposit,
             bayar_pservis: sumDeposit,
             cabang_id: jsonCabangId,

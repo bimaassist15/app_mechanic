@@ -1,7 +1,7 @@
 // "use strict";
 var datatable;
 var myModal;
-
+var body = $("body");
 
 $(document).ready(function () {
     function initDatatable() {
@@ -46,6 +46,18 @@ $(document).ready(function () {
                     searchable: true,
                 },
                 {
+                    data: "estimasi_pservis",
+                    name: "estimasi_pservis",
+                    searchable: false,
+                    orderable: false,
+                },
+                {
+                    data: "isrememberestimasi_pservis",
+                    name: "isrememberestimasi_pservis",
+                    searchable: false,
+                    orderable: false,
+                },
+                {
                     data: "action",
                     name: "action",
                     searchable: false,
@@ -56,17 +68,6 @@ $(document).ready(function () {
         });
     }
     initDatatable();
-
-    var body = $("body");
-    // handle btn add data
-    body.on("click", ".btn-add", function () {
-        showModal({
-            url: $(this).data("urlcreate"),
-            modalId: $(this).data("typemodal"),
-            title: "Form Penerimaan Service",
-            type: "get",
-        });
-    });
 
     body.on("click", ".btn-delete", function (e) {
         e.preventDefault();
@@ -108,11 +109,39 @@ $(document).ready(function () {
         printOutput(output);
     });
 
-    body.on('click', 'input[name="isestimasi_pservis"]', function () {
-        if($(this).is(":checked")){
-            $('.area_estimasi').removeClass('d-none');
-        } else {
-            $('.area_estimasi').addClass('d-none');
-        }
+    body.on("click", ".btn-remember-estimasi", function (e) {
+        e.preventDefault();
+        const url = $(this).attr("href");
+        Swal.fire({
+            title: "Konfirmasi",
+            text: "Apakah anda yakin ingin mengingatkan estimasi servis ini?",
+            icon: "warning",
+            dangerMode: true,
+            showCancelButton: true,
+            confirmButtonText: "Ya, hapus",
+            cancelButtonText: "Tidak",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url,
+                    type: "post",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log("get data", data);
+                        if (data.status == "success") {
+                            runToast({
+                                type: "bg-success",
+                                title: "Berhasil Mengingatkan",
+                                message:
+                                    "Estimasi servis berhasil diingatkan ke customer",
+                            });
+
+                            window.open(data.message, "_blank");
+                            datatable.ajax.reload();
+                        }
+                    },
+                });
+            }
+        });
     });
 });

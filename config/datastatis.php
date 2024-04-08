@@ -67,5 +67,7 @@ return [
         'proses kirim' => 'Proses Kirim',
         'diterima' => 'Diterima',
         'ditolak' => 'Ditolak',
-    ]
+    ],
+    'pesanwa_estimasi' => 'Estimasi Waktu Servis Kendaraan anda sudah mencapai waktunya. Silahkan datang ke bengkel kami untuk servis kendaraan anda.',
+    // status kendaraan servis estimas = estimasi servis
 ];

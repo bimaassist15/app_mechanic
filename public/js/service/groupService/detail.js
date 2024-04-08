@@ -9,6 +9,7 @@ var jsonGetBarang = $(".getBarang").data("value");
 var jsonTipeDiskon = $(".getTipeDiskon").data("value");
 var jsonCabangId = $(".cabangId").data("value");
 var jsonServiceHistory = [];
+var statusPservis = "";
 
 var urlRoot = $(".url_root").data("url");
 var renderListServis = () => {};
@@ -84,7 +85,7 @@ const refreshData = () => {
             refresh: true,
         },
         success: function (data) {
-            console.log('get data', data);
+            console.log("get data", data);
             jsonUsersId = data.usersId;
             jsonPenerimaanServisId = data.penerimaanServisId;
             jsonGetServis = data.getServis;
@@ -95,6 +96,7 @@ const refreshData = () => {
 
             // output servis history
             const rowData = data.row;
+            statusPservis = rowData.status_pservis;
             viewServiceHistori(rowData);
 
             // check handle berkala
@@ -768,6 +770,17 @@ const runDataPenerimaan = () => {
         body.off("click", ".btn-submit-data");
         body.on("click", ".btn-submit-data", function (e) {
             e.preventDefault();
+            if (statusPservis == "estimasi servis") {
+                $.ajax({
+                    url: `${urlRoot}/service/estimasiServis/${jsonPenerimaanServisId}/nextProcess`,
+                    type: "post",
+                    dataType: "json",
+                    success: function (data) {
+                        refreshData();
+                    },
+                });
+            }
+
             const payload = payloadSubmit();
 
             const lastStatus = jsonServiceHistory.length - 1;

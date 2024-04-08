@@ -19,7 +19,13 @@ Route::prefix('service')->middleware('auth')->group(function () {
     Route::get('penerimaanServis/print/{id}/penerimaanServis', 'PenerimaanServisController@print')->name('penerimaanServis.print');
     Route::get('penerimaanServis/detail/{id}/penerimaanServis', 'PenerimaanServisController@detail')->name('penerimaanServis.detail');
 
-    // pengembalian sservis
+
+    // penerimaan servis
+    Route::resource('estimasiServis', 'EstimasiServisController');
+    Route::put('estimasiServis/remember/{id}/estimasi', 'EstimasiServisController@remember')->name('estimasiServis.remember');
+    Route::post('estimasiServis/{id}/nextProcess', 'EstimasiServisController@nextProcess')->name('estimasiServis.nextProcess');
+
+    // pengembalian servis
     Route::get('pengembalianServis', 'PengembalianServisController@index')->name('pengembalianServis.index');
     Route::get('pengembalianServis/{id}', 'PengembalianServisController@show')->name('pengembalianServis.show');
     Route::put('pengembalianServis/{id}/update', 'PengembalianServisController@update')->name('pengembalianServis.update');
