@@ -9,7 +9,7 @@
 @endphp
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h3>Dashboard {{ $myCabang->nama_cabang }} - {{ $myCabang->alamat_cabang }}</h3>
+        <h5>Dashboard {{ $myCabang->nama_cabang }} - {{ $myCabang->alamat_cabang }}</h5>
         @include('dashboard::partials.invoice')
         @include('dashboard::partials.infoItem')
         @include('dashboard::partials.doing')

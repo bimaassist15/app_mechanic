@@ -9,6 +9,7 @@
         {{ Breadcrumbs::render('estimasiServis') }}
 
         @include('service::estimasiServis.partials.tabEstimasi')
+        <br>
 
         <!-- Basic Bootstrap Table -->
         <div class="card">
