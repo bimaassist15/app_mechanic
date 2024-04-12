@@ -144,4 +144,13 @@ $(document).ready(function () {
             }
         });
     });
+
+    body.on("click", ".btn-add", function () {
+        showModal({
+            url: $(this).data("urlcreate"),
+            modalId: $(this).data("typemodal"),
+            title: "Form Penerimaan Service",
+            type: "get",
+        });
+    });
 });

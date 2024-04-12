@@ -18,6 +18,8 @@
                         Data Estimasi Servis
                     </div>
                     <div>
+                        <x-button-main title="Tambah" className="btn-add" typeModal="extraLargeModal"
+                            urlCreate="{{ url('service/penerimaanServis/create') }}" />
                     </div>
                 </div>
             </h5>

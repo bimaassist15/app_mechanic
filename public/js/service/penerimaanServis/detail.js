@@ -700,6 +700,42 @@ $(document).ready(function () {
         });
     });
 
+    body.on("click", ".btn-remember-estimasi", function (e) {
+        e.preventDefault();
+        const url = $(this).attr("href");
+        Swal.fire({
+            title: "Konfirmasi",
+            text: "Apakah anda yakin ingin mengingatkan estimasi servis ini?",
+            icon: "warning",
+            dangerMode: true,
+            showCancelButton: true,
+            confirmButtonText: "Ya, hapus",
+            cancelButtonText: "Tidak",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url,
+                    type: "post",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.status == "success") {
+                            runToast({
+                                type: "bg-success",
+                                title: "Berhasil Mengingatkan",
+                                message:
+                                    "Estimasi servis berhasil diingatkan ke customer",
+                            });
+
+                            window.open(data.message, "_blank");
+                            viewRender();
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+
     const payloadSubmit = () => {
         const getValue = (name) => $(`[name="${name}"]`).val() || "";
 
@@ -865,4 +901,21 @@ $(document).ready(function () {
         const output = renderPrintKasir();
         printOutput(output);
     });
+
+    const viewRender = () => {
+        $.ajax({
+            url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
+            type: 'get',
+            dataType: 'text',
+            data: {
+                loadData: true,
+            },
+            success: function(data){
+                $('#output_data').html(data);
+                refreshData();
+            }
+        })
+    }
+
+    viewRender();
 });

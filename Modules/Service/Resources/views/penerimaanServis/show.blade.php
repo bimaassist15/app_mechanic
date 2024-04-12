@@ -2,8 +2,9 @@
     <div class="modal-body">
         @include('service::penerimaanServis.partials.detailServis')
 
-        @include('service::penerimaanServis.partials.pembayaranServis')
-
+        @if ($row->isdp_pservis)
+            @include('service::penerimaanServis.partials.pembayaranServis')
+        @endif
 
     </div>
     <div class="modal-footer">

@@ -157,6 +157,11 @@ class PenerimaanServisController extends Controller
             if ($refresh) {
                 return response()->json($data);
             }
+
+            $loadData = $request->input('loadData');
+            if ($loadData) {
+                return view('service::penerimaanServis.output_detail', $data);
+            }
         }
 
         return view('service::penerimaanServis.detail', $data);
@@ -276,11 +281,15 @@ class PenerimaanServisController extends Controller
 
         // penerimaan servis
         $dateNow = date('Y-m-d');
-        $noAntrianStatis = PenerimaanServis::whereDate('created_at', $dateNow)
+        $noAntrianStatis = PenerimaanServis::dataTable()
+            ->whereDate('created_at', $dateNow)
+            ->where('status_pservis', '!=', null)
             ->orderBy('id', 'asc')
             ->pluck('noantrian_pservis')
             ->max();
-        $noNotaStatis = PenerimaanServis::orderBy('id', 'asc')
+        $noNotaStatis = PenerimaanServis::dataTable()
+            ->where('status_pservis', '!=', null)
+            ->orderBy('id', 'asc')
             ->pluck('nonota_pservis')
             ->max();
 
@@ -291,7 +300,10 @@ class PenerimaanServisController extends Controller
         $status_pservis = 'antrian servis masuk';
         if ($payloadPenerimaanServis['isestimasi_pservis'] == 1) {
             $status_pservis = 'estimasi servis';
+            $noAntrianStatis = null;
+            $noNotaStatis = null;
         }
+
         $mergePenerimaanServis = array_merge(
             $payloadPenerimaanServis,
             [

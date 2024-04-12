@@ -6,18 +6,7 @@
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
-        @include('service::penerimaanServis.partials.detailInfoAwal')
-
-        @include('service::penerimaanServis.partials.detailCustomer')
-
-        @include('service::penerimaanServis.partials.detailOrderServis')
-
-        @include('service::penerimaanServis.partials.detailOrderBarang')
-
-        @include('service::penerimaanServis.partials.detailHistori')
-
-        @include('service::penerimaanServis.partials.detailInformasiServis')
-
+        <div id="output_data"></div>
     </div>
 @endsection
 

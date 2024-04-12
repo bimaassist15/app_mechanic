@@ -39,6 +39,9 @@ class EstimasiServisController extends Controller
         if ($request->ajax()) {
             $data = PenerimaanServis::dataTable()->where('status_pservis', 'estimasi servis');
             return DataTables::eloquent($data)
+                ->addColumn('noantrian_pservis', function ($row) {
+                    return ($row->noantrian_pservis == null ? '-' : $row->noantrian_pservis);
+                })
                 ->addColumn('estimasi_pservis', function ($row) {
                     return UtilsHelper::formatDateLaporan($row->estimasi_pservis);
                 })
@@ -107,8 +110,8 @@ class EstimasiServisController extends Controller
         $penerimaanServis = new PenerimaanServis();
         $getPenerimaanServis = $penerimaanServis->transaksiServis($id);
 
-        // $nowa_customer = $getPenerimaanServis->customer->nowa_customer;
-        $nowa_customer = 6282277506232;
+        $nowa_customer = $getPenerimaanServis->customer->nowa_customer;
+        // $nowa_customer = 6282277506232;
         $nama_customer = $getPenerimaanServis->customer->nama_customer;
         $message = $this->datastatis['pesanwa_estimasi'];
         $created_at = UtilsHelper::formatDateLaporan($getPenerimaanServis->created_at);

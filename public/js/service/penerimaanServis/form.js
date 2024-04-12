@@ -809,6 +809,15 @@ $(document).ready(function () {
     });
     // end benar
 
+    body.off("input", 'input[name="isestimasi_pservis"]');
+    body.on('click', 'input[name="isestimasi_pservis"]', function () {        
+        if($(this).is(":checked")){
+            $('.area_estimasi').removeClass('d-none');
+        } else {
+            $('.area_estimasi').addClass('d-none');
+        }
+    });
+
     // pending
     const payloadKasir = () => {
         let sumDeposit = 0;

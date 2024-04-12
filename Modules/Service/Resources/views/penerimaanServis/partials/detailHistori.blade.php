@@ -13,6 +13,27 @@
                     value="{{ ucwords($row->status_pservis) }}" class="output_status_pservis" />
                 <x-data-customer label="Penerima / Pembuat Nota Penerimaan Servis"
                     value="{{ ucfirst($row->users->name) }}" class="output_name" />
+                @if ($row->estimasi_pservis)
+                    <x-data-customer label="Tanggal Estimasi"
+                        value="{{ UtilsHelp::formatDateLaporan($row->estimasi_pservis) }}" />
+                    <x-data-customer label="Keterangan Estimasi" value="{{ $row->keteranganestimasi_pservis }}" />
+
+                    @php
+                        $output_estimasi =
+                            '<a href="' .
+                            url('service/estimasiServis/remember/' . $row->id . '/estimasi?_method=put') .
+                            '"
+                                class="btn btn-success btn-remember-estimasi">
+                                <i class="fa-brands fa-whatsapp"></i> &nbsp; Ingatkan Customer</a>';
+
+                        if ($row->keteranganestimasi_pservis) {
+                            $output_estimasi = '
+                            <span class="badge bg-primary"><i class="fa-brands fa-whatsapp"></i> Sudah Diingatkan</span>
+                            ';
+                        }
+                    @endphp
+                    <x-data-customer label="Ingatkan estimasi servis" value="{!! $output_estimasi !!}" />
+                @endif
             </div>
         </div>
         <hr>
