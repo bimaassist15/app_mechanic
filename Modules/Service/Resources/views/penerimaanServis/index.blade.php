@@ -9,13 +9,14 @@
         {{ Breadcrumbs::render('penerimaanServis') }}
 
         @include('service::estimasiServis.partials.tabEstimasi')
+        <br>
 
         <!-- Basic Bootstrap Table -->
         <div class="card">
             <h5 class="card-header">
                 <div class="d-flex flex-wrap justify-content-between">
                     <div>
-                        Data Penerimaan Servis
+                        Data Penerimaan Service
                     </div>
                     <div>
                         <x-button-main title="Tambah" className="btn-add" typeModal="extraLargeModal"
