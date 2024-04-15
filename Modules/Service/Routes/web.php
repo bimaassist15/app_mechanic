@@ -66,4 +66,7 @@ Route::prefix('service')->middleware('auth')->group(function () {
     // service mekanik garansi
     Route::get('mekanikGaransi', 'MekanikGaransiController@index')->name('mekanikGaransi.index');
     Route::get('mekanikGaransi/{id}', 'MekanikGaransiController@show')->name('mekanikGaransi.show');
+
+    // load data
+    Route::get('outputUpdateService/{id}', 'PenerimaanServisController@outputUpdateService')->name('service.outputUpdateService');
 });

@@ -70,6 +70,11 @@ class EstimasiServisController extends Controller
                                 <i class="fa-solid fa-trash"></i> &nbsp; Delete</a>
                         </li>
                         <li>
+                            <a href="' . url('service/penerimaanServis/create?isEdit=true&id=' . $row->id) . '"
+                                class="dropdown-item d-flex align-items-center btn-edit" data-typemodal="extraLargeModal">
+                                <i class="fa-solid fa-pencil"></i> &nbsp; Edit</a>
+                        </li>
+                        <li>
                             <a href="' . url('service/penerimaanServis/print/' . $row->id . '/penerimaanServis') . '"
                                 class="dropdown-item d-flex align-items-center btn-print">
                                 <i class="fa-solid fa-print"></i> &nbsp; Print Antrian</a>
@@ -156,6 +161,27 @@ class EstimasiServisController extends Controller
             $barang->stok_barang = floatval($barang->stok_barang) - floatval($qty_orderbarang);
             $barang->save();
         }
+
+        // update penerimaan servis
+        $dateNow = date('Y-m-d');
+        $noAntrianStatis = PenerimaanServis::dataTable()
+            ->whereDate('created_at', $dateNow)
+            ->where('status_pservis', '!=', null)
+            ->orderBy('id', 'asc')
+            ->pluck('noantrian_pservis')
+            ->max();
+        $noNotaStatis = PenerimaanServis::dataTable()
+            ->where('status_pservis', '!=', null)
+            ->orderBy('id', 'asc')
+            ->pluck('nonota_pservis')
+            ->max();
+
+        $noAntrianStatis++;
+        $noNotaStatis++;
+        PenerimaanServis::find($id)->update([
+            'noantrian_pservis' => $noAntrianStatis,
+            'nonota_pservis' => $noNotaStatis,
+        ]);
 
         return response()->json('Berhasil melanjutkan proses dari estimasi servis ke antrian servis masuk');
     }

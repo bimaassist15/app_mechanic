@@ -13,6 +13,11 @@ var jsonDataKendaraan = $(".data_kendaraan").data("value");
 var body = $("body");
 var metodePembayaran = [];
 var totalHargaItems = $(".totalHutang").data("value");
+var urlRoot = $(".url_root").data("value");
+var penerimaanServisId = $('.penerimaanServisId').data('value');
+var isEdit = $(".isEdit").data("value");
+
+
 datepickerDdMmYyyy(".datepicker");
 
 $(document).ready(function () {
@@ -574,20 +579,40 @@ $(document).ready(function () {
 
     // pending
     const renderEditData = () => {
-        const isEdit = $(".isEdit").data("value");
         if (isEdit == true) {
             $.ajax({
-                url: $(".url_transaction_kasir").data("url"),
+                url: `${urlRoot}/service/penerimaanServis/create?isEdit=true&id=${penerimaanServisId}`,
                 type: "get",
                 data: {
                     refresh_dataset: true,
                 },
                 dataType: "json",
                 success: function (data) {
-                    const pembelian = data.pembelian;
-                    handleDisplayInput();
-                    handleButtonBayar();
+                    const pembayaran_servis = data.row.pembayaran_servis;
+                    pembayaran_servis.map(v => {
+                        const getSubPembayaran = jsonSubPembayaran.filter(
+                            (item) =>
+                                item.kategori_pembayaran_id == v.kategori_pembayaran.id
+                        );
+                        let dataMetodePembayaran = {};
+                        dataMetodePembayaran.kategori_pembayaran = jsonKategoriPembayaran;
+                        dataMetodePembayaran.kategori_pembayaran_selected = v.kategori_pembayaran;
+                        dataMetodePembayaran.sub_pembayaran = getSubPembayaran;
+                        dataMetodePembayaran.sub_pembayaran_selected = v.sub_pembayaran;
+                        dataMetodePembayaran.user = jsonDataUser;
+                        dataMetodePembayaran.user_selected = v.users;
+                        dataMetodePembayaran.bayar = v.bayar_pservis;
+                        dataMetodePembayaran.jumlah_deposit = v.deposit_pservis;
+                        dataMetodePembayaran.dibayarkan_oleh = v.dibayaroleh_pservis;
+                        dataMetodePembayaran.kembalian = v.kembalian_pservis;
+                        dataMetodePembayaran.hutang = v.hutang_pservis;
+                        dataMetodePembayaran.nomor_kartu = v.nomorkartu_pservis;
+                        dataMetodePembayaran.nama_pemilik_kartu = v.pemilikkartu_pservis;
 
+                        metodePembayaran.push(dataMetodePembayaran);
+                    })
+
+                    handleButtonBayar();
                     const output = viewMetodePembayaran();
                     $(".output_metode_pembayaran").html(output);
                 },
@@ -677,6 +702,16 @@ $(document).ready(function () {
         }
         return boolean;
     };
+
+    const initialAwal = () => {
+        if($('input[name="isdp_pservis"]').is(':checked')){
+            $('.area-pembayaran').removeClass('d-none');
+        } else {
+            $('.area-pembayaran').addClass('d-none');
+        }
+    }
+
+    initialAwal();
 
     // benar
     body.off("click", ".btn-add-pembayaran");
@@ -862,6 +897,7 @@ $(document).ready(function () {
             estimasi_pservis = null;
             keteranganestimasi_pservis = null;
         }
+
         const payloadPenerimaanServis = {
             kendaraan_id: kendaraan_id,
             kategori_servis_id: $('select[name="kategori_servis_id"]').val(),
@@ -872,7 +908,7 @@ $(document).ready(function () {
             tipe_pservis: $('select[name="tipe_pservis"]').val(),
             isdp_pservis,
             isestimasi_pservis,
-            estimasi_pservis: formatDateToDb(estimasi_pservis),
+            estimasi_pservis: estimasi_pservis == null ? null : formatDateToDb(estimasi_pservis),
             keteranganestimasi_pservis,
             total_dppservis: sumDeposit,
             bayar_pservis: sumDeposit,
@@ -924,10 +960,16 @@ $(document).ready(function () {
             cabang_id: jsonCabangId,
         };
 
+        payloadEdit = {
+            isEdit: isEdit,
+            penerimaan_servis_id: penerimaanServisId,
+        }
+
         return {
             payloadPenerimaanServis,
             payloadPembayaranServis,
             payloadSaldoCustomer,
+            payloadEdit,
         };
     };
     // end pending

@@ -1,47 +1,27 @@
 @extends('layouts.app.index')
 
 @section('title')
-    Detail Kendaraan Servis
+    Detail Pengambilan Servis
 @endsection
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
-        <div class="areaPenerimaanServis">
-            @include('service::kendaraanServis.partialsPenerimaan.detailInfoAwal')
+        @include('service::kendaraanServis.partials.detailInfoAwal')
 
-            @include('service::viewGroupService.partialsPenerimaan.detailCustomer')
-
-            @include('service::viewGroupService.partialsPenerimaan.detailOrderServis')
-
-            @include('service::viewGroupService.partialsPenerimaan.detailOrderBarang')
-
-            @include('service::viewGroupService.partialsPenerimaan.detailHistori')
-
-            @include('service::viewGroupService.partialsPenerimaan.detailInformasiServis')
+        <div id="load_viewdata" class="text-center">
+            <div>
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <strong>Loading...</strong>
         </div>
-
-        <div class="areaPengembalianServis">
-            @include('service::kendaraanServis.partialsPengembalian.detailInfoAwal')
-
-            @include('service::viewGroupService.partialsPengembalian.detailCustomer')
-
-            @include('service::viewGroupService.partialsPengembalian.detailOrderServis')
-
-            @include('service::viewGroupService.partialsPengembalian.detailOrderBarang')
-
-            @include('service::viewGroupService.partialsPengembalian.detailHistori')
-
-            @include('service::viewGroupService.partialsPengembalian.detailInformasiServis')
-        </div>
+        <div id="output_data"></div>
     </div>
 @endsection
 
 @push('custom_js')
-    @include('service::groupService.globalRefresh')
-
-    @include('service::groupService.penerimaan')
-
-    @include('service::groupService.pengembalian')
-
-    @include('service::groupService.actionRefresh')
+    <script class="url_root" data-url="{{ url('/') }}"></script>
+    <script class="penerimaanServisId" data-value="{{ $penerimaanServisId }}"></script>
+    <script src="{{ asset('js/service/main/index.js') }}"></script>
 @endpush

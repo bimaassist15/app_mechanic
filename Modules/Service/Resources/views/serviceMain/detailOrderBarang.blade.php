@@ -1,3 +1,6 @@
+@php
+    $allowedSudahDiambil = ['sudah diambil', 'komplain garansi'];
+@endphp
 <div class="card mt-4">
     <div class="card-header">
         <div class="d-flex justify-content-between">
@@ -6,7 +9,8 @@
                     {{ $row->nonota_pservis }}</strong>
             </div>
             <div class="w-50">
-                <x-form-select-vertical label="Cari Barang" name="barang_id" :data="$array_barang" value="" />
+                <x-form-select-vertical label="Cari Barang" name="barang_id" :data="$array_barang" value=""
+                    disabled="{{ in_array($row->status_pservis, $allowedSudahDiambil) ? 'disabled' : '' }}" />
             </div>
         </div>
 
@@ -26,17 +30,9 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody class="table-border-bottom-0 loadOrderBarang" id="">
+                <tbody class="table-border-bottom-0 output_order_barang" id="">
+                    @include('service::penerimaanServis.output.orderBarang')
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="6" class="text-end">
-                            <strong>Total Biaya Sparepart</strong>
-                        </td>
-                        <td class="totalHargaBarang">Rp. 0</td>
-                        <td></td>
-                    </tr>
-                </tfoot>
             </table>
         </div>
     </div>

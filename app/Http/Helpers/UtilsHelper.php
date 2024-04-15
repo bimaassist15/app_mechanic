@@ -2,10 +2,14 @@
 
 namespace App\Http\Helpers;
 
+use App\Models\Barang;
 use App\Models\Cabang;
+use App\Models\HargaServis;
+use App\Models\KategoriPembayaran;
 use App\Models\Pembelian;
 use App\Models\PenerimaanServis;
 use App\Models\Penjualan;
+use App\Models\SubPembayaran;
 use App\Models\TransferStock;
 use App\Models\User;
 use Carbon\Carbon;
@@ -508,5 +512,126 @@ class UtilsHelper
         $count = $count + 1;
         $kode_tstock = date("Ymd") . $count;
         return $kode_tstock;
+    }
+
+    public static function dataUpdateServis($id, $datastatis)
+    {
+        $penerimaanServis = new PenerimaanServis();
+        $row = $penerimaanServis->transaksiServis($id);
+
+        $hargaServis = new HargaServis();
+        $getServis = $hargaServis->getServis()->get();
+
+        foreach ($getServis as $key => $item) {
+            $array_harga_servis[] = [
+                'label' => '<strong>Nama Servis: ' . $item->nama_hargaservis . '</strong> <br />
+                <span>Harga Servis: ' . UtilsHelper::formatUang($item->total_hargaservis) . '</span>',
+                'id' => $item->id,
+            ];
+        }
+        $usersId = Auth::id();
+        $penerimaanServisId = $id;
+
+        $barang = Barang::dataTable()
+            ->with('satuan', 'kategori')
+            ->where('status_barang', 'dijual & untuk servis')
+            ->orWhere('status_barang', 'khusus servis')
+            ->get();
+        $array_barang = [];
+        foreach ($barang as $key => $item) {
+            $array_barang[] = [
+                'id' => $item->id,
+                'label' => '
+            <strong>[' . $item->barcode_barang . '] ' . $item->nama_barang . '</strong> <br />
+            <span>Stok: ' . $item->stok_barang . '</span>
+            '
+            ];
+        }
+        $tipeDiskon = ($datastatis['tipe_diskon']);
+        $statusKendaraanServis = ($datastatis['status_kendaraan_servis']);
+        $serviceBerkala = ($datastatis['servis_berkala']);
+        $cabangId = session()->get('cabang_id');
+
+        $array_status_kendaraan = [];
+        foreach ($statusKendaraanServis as $key => $item) {
+            $array_status_kendaraan[] = [
+                'label' => $item,
+                'id' => $key,
+            ];
+        }
+
+        $array_service_berkala = [];
+        foreach ($serviceBerkala as $key => $item) {
+            $array_service_berkala[] = [
+                'label' => $item,
+                'id' => $key,
+            ];
+        }
+
+        $pesanwa_berkala = $datastatis['pesanwa_berkala'];
+
+        // data pengembalian
+        $array_kategori_pembayaran = [];
+        $kategoriPembayaran = KategoriPembayaran::dataTable()->where('status_kpembayaran', true)
+            ->get();
+        foreach ($kategoriPembayaran as $value => $item) {
+            $array_kategori_pembayaran[] = [
+                'id' => $item->id,
+                'label' => $item->nama_kpembayaran
+            ];
+        }
+        $kategoriPembayaran = json_encode($kategoriPembayaran);
+        $array_kategori_pembayaran = json_encode($array_kategori_pembayaran);
+
+        $array_sub_pembayaran = [];
+        $subPembayaran = SubPembayaran::dataTable()->where('status_spembayaran', true)
+            ->get();
+        foreach ($subPembayaran as $value => $item) {
+            $array_sub_pembayaran[] = [
+                'id' => $item->id,
+                'label' => $item->nama_spembayaran,
+                'kategori_pembayaran_id' => $item->kategori_pembayaran_id
+            ];
+        }
+        $subPembayaran = json_encode($subPembayaran);
+        $array_sub_pembayaran = json_encode($array_sub_pembayaran);
+
+        $dataUser = User::dataTable()
+            ->join('roles', 'roles.id', '=', 'users.roles_id')
+            ->with('profile')
+            ->select('users.*', 'roles.id as roles_id', 'roles.name as roles_name', 'roles.guard_name as roles_guard')
+            ->get();
+        $dataUser = json_encode($dataUser);
+        $defaultUser = Auth::id();
+        $cabangId = session()->get('cabang_id');
+        // end pengembalian
+
+
+        $data = [
+            'row' => $row,
+            'array_harga_servis' => $array_harga_servis,
+            'getServis' => $getServis,
+            'usersId' => $usersId,
+            'penerimaanServisId' => $penerimaanServisId,
+            'barang' => $barang,
+            'array_barang' => $array_barang,
+            'tipeDiskon' => $tipeDiskon,
+            'statusKendaraanServis' => $array_status_kendaraan,
+            'serviceBerkala' => $array_service_berkala,
+            'serviceGaransi' => $array_service_berkala,
+
+            'jsonRow' => json_encode($row),
+            'kategoriPembayaran' => $kategoriPembayaran,
+            'array_kategori_pembayaran' => $array_kategori_pembayaran,
+            'subPembayaran' => $subPembayaran,
+            'array_sub_pembayaran' => $array_sub_pembayaran,
+            'dataUser' => $dataUser,
+            'defaultUser' => $defaultUser,
+            'cabangId' => $cabangId,
+            'is_deposit' => $row->isdp_pservis,
+            'getPembayaranServis' => json_encode(UtilsHelper::paymentStatisPenerimaanServis($penerimaanServisId)),
+            'pesanwa_berkala' => $pesanwa_berkala,
+        ];
+        return $data;
     }
 }

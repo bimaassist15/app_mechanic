@@ -93,6 +93,7 @@ function basicDeleteConfirmDatatable({
     data = {},
     text = "",
     dataFunction = () => {},
+    isRenderView = false,
 }) {
     var text = text ? text : "Benar ingin menghapus data ini?";
 
@@ -112,20 +113,15 @@ function basicDeleteConfirmDatatable({
                 dataType: "json",
                 data: data,
                 success: function (data) {
-                    if (data.is_bring_data) {
-                        runToast({
-                            type: "bg-success",
-                            title: "Successfully",
-                            description: data.message,
-                        });
-                        dataFunction(data);
-                    } else {
-                        runToast({
-                            type: "bg-success",
-                            title: "Successfully",
-                            description: data,
-                        });
+                    runToast({
+                        type: "bg-success",
+                        title: "Successfully",
+                        description: data,
+                    });
+                    
+                    if(!isRenderView){
                         datatable.ajax.reload();
+                    } else {
                         dataFunction();
                     }
                 },

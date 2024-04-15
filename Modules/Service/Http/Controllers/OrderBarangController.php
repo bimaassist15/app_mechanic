@@ -162,8 +162,6 @@ class OrderBarangController extends Controller
         return response()->json([
             'result' => $getOrder,
             'totalHargaBarang' => $totalHargaBarang,
-
-            'is_bring_data' => true,
             'message' => 'Berhasil update data'
         ], 200);
     }
@@ -230,8 +228,6 @@ class OrderBarangController extends Controller
         return response()->json([
             'result' => $getOrder,
             'totalHargaBarang' => $totalHargaBarang,
-
-            'is_bring_data' => true,
             'message' => 'Berhasil hapus data',
         ], 200);
     }

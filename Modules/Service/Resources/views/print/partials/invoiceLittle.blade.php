@@ -4,7 +4,30 @@
         <td>:</td>
         <td style="width: 20%; text-align: right;">{{ UtilsHelp::formatUang($row->totalbiaya_pservis) }}</td>
     </tr>
-    @foreach ($row->pembayaranServis as $item)
+    @php
+        $pembayaranServis = $row->pembayaranServis;
+        $is_deposit = false;
+        $dataPembayaranServis = $row->pembayaranServis;
+        foreach ($pembayaranServis as $key => $item) {
+            if (strtolower($item->kategoriPembayaran->nama_kpembayaran) === 'deposit') {
+                $is_deposit = true;
+            }
+        }
+        if ($is_deposit) {
+            $is_deposit2 = false;
+            $dataPembayaranServis = [];
+            foreach ($pembayaranServis as $key => $item) {
+                if (strtolower($item->kategoriPembayaran->nama_kpembayaran) === 'deposit') {
+                    $is_deposit2 = true;
+                }
+
+                if ($is_deposit2) {
+                    $dataPembayaranServis[] = $item;
+                }
+            }
+        }
+    @endphp
+    @foreach ($dataPembayaranServis as $item)
         <tr>
             <td style="width: 80%; text-align: right;">{{ $item->kategoriPembayaran->nama_kpembayaran }}</td>
             <td>:</td>
