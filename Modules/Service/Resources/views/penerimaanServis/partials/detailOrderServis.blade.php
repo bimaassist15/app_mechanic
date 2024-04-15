@@ -11,32 +11,8 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="table-responsive text-nowrap px-3">
-            <table class="table" id="dataTable">
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Kategori Servis</th>
-                        <th>Nama Servis</th>
-                        <th>Mekanik</th>
-                        <th>Biaya</th>
-                        <th style="width: 15%;">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="table-border-bottom-0 onLoadServis" id="">
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4" class="text-end">
-                            <strong>Total Biaya Jasa</strong>
-                        </td>
-                        <td>
-                            <span class="totalHargaServis"></span>
-                        </td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
+        <div class="output_data_servis">
+            @include('service::penerimaanServis.output.servis')
         </div>
     </div>
 </div>

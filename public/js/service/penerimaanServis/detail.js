@@ -37,6 +37,40 @@ const viewServiceHistori = (rowData) => {
     $(".loadServiceHistory").html(outputService);
 };
 
+const viewRender = () => {
+    $.ajax({
+        url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
+        type: 'get',
+        dataType: 'text',
+        data: {
+            loadData: true,
+        },
+        beforeSend: function(){
+            $('#load_viewdata').removeClass("d-none");
+        },
+        success: function(data){
+            $('#output_data').html(data);
+        },
+        complete: function(){
+            $('#load_viewdata').addClass("d-none");
+        }
+    })
+}
+
+const viewRenderServis = () => {
+    $.ajax({
+        url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
+        type: 'get',
+        dataType: 'text',
+        data: {
+            loadDataServis: true,
+        },
+        success: function(data){
+            $('.output_data_servis').html(data);
+        },
+    })
+}
+
 const refreshData = () => {
     $.ajax({
         url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
@@ -46,53 +80,7 @@ const refreshData = () => {
             refresh: true,
         },
         success: function (data) {
-            jsonUsersId = data.usersId;
-            jsonPenerimaanServisId = data.penerimaanServisId;
-            jsonGetServis = data.getServis;
-            jsonGetBarang = data.barang;
-            jsonTipeDiskon = JSON.parse(data.tipeDiskon);
-            jsonCabangId = data.cabangId;
-            jsonServiceHistory = data.row.service_history;
-
-            // output servis history
-            const rowData = data.row;
-            statusPservis = rowData.status_pservis;
-            viewServiceHistori(rowData);
-
-            // check handle berkala
-            const statusAllowed = ["proses servis", "bisa diambil"];
-            if (statusAllowed.includes(rowData.status_pservis)) {
-                $(".handle-berkala").removeClass("d-none");
-            } else {
-                $(".handle-berkala").addClass("d-none");
-            }
-
-            // handle output transaksi
-            $(".output_totalbiaya_pservis").html(
-                formatUang(rowData.totalbiaya_pservis)
-            );
-            $(".output_hutang_pservis").html(
-                formatUang(rowData.hutang_pservis)
-            );
-            $(".output_total_dppservis").html(
-                formatUang(rowData.total_dppservis)
-            );
-
-            // handle status cancel
-            const getStatus = rowData.status_pservis;
-            const statusCancel = [
-                "tidak bisa",
-                "cancel",
-                "komplain garansi",
-                "sudah diambil",
-            ];
-            if (statusCancel.includes(getStatus)) {
-                $(".display_if_status_cancel").removeClass("d-none");
-                $(".hidden_if_status_cancel").addClass("d-none");
-            } else {
-                $(".hidden_if_status_cancel").removeClass("d-none");
-                $(".display_if_status_cancel").addClass("d-none");
-            }
+            viewRender();
         },
     });
 };
@@ -244,32 +232,6 @@ renderListBarang = (data, isOnlyTotalHarga = false) => {
 };
 
 $(document).ready(function () {
-    select2Server({
-        selector: "select[name=harga_servis_id]",
-        parent: ".content-wrapper",
-        routing: `${urlRoot}/select/hargaServis`,
-        passData: {},
-    });
-
-    select2Server({
-        selector: "select[name=barang_id]",
-        parent: ".content-wrapper",
-        routing: `${urlRoot}/select/barang`,
-        passData: {
-            status_barang: "dijual & untuk servis, khusus servis",
-        },
-    });
-
-    select2Standard({
-        parent: ".content-wrapper",
-        selector: "select[name='status_pservis']",
-    });
-
-    select2Standard({
-        parent: ".content-wrapper",
-        selector: "select[name='tipeberkala_pservis']",
-    });
-
     refreshData();
 
     var body = $("body");
@@ -341,10 +303,11 @@ $(document).ready(function () {
             dataType: "json",
             data: payload,
             success: function (data) {
-                renderListServis(data);
-                refreshData();
+                viewRenderServis();
             },
         });
+
+        
     });
 
     body.on("click", ".delete-order-servis", function (e) {
@@ -900,22 +863,5 @@ $(document).ready(function () {
         e.preventDefault();
         const output = renderPrintKasir();
         printOutput(output);
-    });
-
-    const viewRender = () => {
-        $.ajax({
-            url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
-            type: 'get',
-            dataType: 'text',
-            data: {
-                loadData: true,
-            },
-            success: function(data){
-                $('#output_data').html(data);
-                refreshData();
-            }
-        })
-    }
-
-    viewRender();
+    });   
 });

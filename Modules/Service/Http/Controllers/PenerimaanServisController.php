@@ -162,6 +162,11 @@ class PenerimaanServisController extends Controller
             if ($loadData) {
                 return view('service::penerimaanServis.output_detail', $data);
             }
+
+            $loadDataServis = $request->input('loadDataServis');
+            if ($loadDataServis) {
+                return view('service::penerimaanServis.output.servis', $data);
+            }
         }
 
         return view('service::penerimaanServis.detail', $data);

@@ -11,3 +11,5 @@
 
     @include('service::penerimaanServis.partials.detailInformasiServis')
 </div>
+
+<script src="{{ asset('js/service/updateServis/index.js') }}"></script>

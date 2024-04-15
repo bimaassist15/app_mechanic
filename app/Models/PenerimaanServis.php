@@ -49,7 +49,7 @@ class PenerimaanServis extends Model
 
     public function getReportServis()
     {
-        $data = PenerimaanServis::with('kendaraan', 'kendaraan.customer', 'kategoriServis', 'pembayaranServis', 'users', 'pembayaranServis.kategoriPembayaran', 'pembayaranServis.subPembayaran', 'pembayaranServis.users', 'serviceHistory', 'orderServis', 'orderServis.usersMekanik', 'orderBarang', 'orderBarang.barang', 'customer', 'customer.saldoCustomer', 'usersIdGaransi')
+        $data = PenerimaanServis::with('kendaraan', 'kendaraan.customer', 'kategoriServis', 'pembayaranServis', 'users', 'pembayaranServis.kategoriPembayaran', 'pembayaranServis.subPembayaran', 'pembayaranServis.users', 'serviceHistory', 'orderServis', 'orderServis.usersMekanik', 'orderServis.hargaServis', 'orderServis.hargaServis.kategoriServis', 'orderBarang', 'orderBarang.barang', 'customer', 'customer.saldoCustomer', 'usersIdGaransi')
             ->where('penerimaan_servis.cabang_id', session()->get('cabang_id'));
         return $data;
     }

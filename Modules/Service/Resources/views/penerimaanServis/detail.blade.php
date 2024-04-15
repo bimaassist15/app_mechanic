@@ -7,6 +7,14 @@
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         <div id="output_data"></div>
+        <div id="load_viewdata" class="text-center">
+            <div>
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <strong>Loading...</strong>
+        </div>
     </div>
 @endsection
 

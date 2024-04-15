@@ -862,6 +862,7 @@ $(document).ready(function () {
             estimasi_pservis = null;
             keteranganestimasi_pservis = null;
         }
+
         const payloadPenerimaanServis = {
             kendaraan_id: kendaraan_id,
             kategori_servis_id: $('select[name="kategori_servis_id"]').val(),
@@ -872,7 +873,7 @@ $(document).ready(function () {
             tipe_pservis: $('select[name="tipe_pservis"]').val(),
             isdp_pservis,
             isestimasi_pservis,
-            estimasi_pservis: formatDateToDb(estimasi_pservis),
+            estimasi_pservis: estimasi_pservis == null ? null : formatDateToDb(estimasi_pservis),
             keteranganestimasi_pservis,
             total_dppservis: sumDeposit,
             bayar_pservis: sumDeposit,
