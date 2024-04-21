@@ -2,7 +2,12 @@
     <form action="{{ $action }}" method="post">
         @include('service::penerimaanServis.partials.pengisianAwal')
 
-        @include('service::penerimaanServis.partials.metodePembayaran')
+        @php
+            $isdp_pservis = isset($row) ? $row->isdp_pservis ?? '' : '';
+        @endphp
+        <div class="area-pembayaran @if (!$isdp_pservis) d-none @endif">
+            @include('service::penerimaanServis.partials.metodePembayaran')
+        </div>
 
         <div class="row mt-3 me-3 mb-3" class="handle-metode-pembayaran">
             <div class="col-lg-12">
@@ -41,6 +46,8 @@
 <script class="url_transaction_kasir" data-url="{{ url('service/penerimaanServis/create') }}"></script>
 <script class="totalHutang" data-value="{{ $totalHutang }}"></script>
 <script class="data_kendaraan" data-value="{{ $kendaraanServis }}"></script>
+<script class="url_root" data-value="{{ url('/') }}"></script>
+<script class="penerimaanServisId" data-value="{{ isset($row) ? $row->id ?? '' : '' }}"></script>
 
 <script src="{{ asset('js/service/penerimaanServis/form.js') }}"></script>
 <script src="{{ asset('backend/sneat-bootstrap-html-admin-template-free/assets/js/ui-popover.js') }}"></script>

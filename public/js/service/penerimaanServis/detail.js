@@ -12,36 +12,17 @@ var jsonServiceHistory = [];
 
 var statusPservis = "";
 var urlRoot = $(".url_root").data("url");
-const viewServiceHistori = (rowData) => {
-    $(".output_created_at").html(formatDateFromDb(rowData.created_at));
-    $(".status_pservis_label").html(
-        `Status Servis (${formatDateFromDb(rowData.updated_at)})`
-    );
-    $(".output_status_pservis").html(
-        capitalizeEachWord(rowData.status_pservis)
-    );
-    $(".output_name").html(capitalizeEachWord(rowData.users.name));
 
-    let outputService = ``;
-    let no = 1;
-    rowData.service_history.map((vData) => {
-        outputService += `
-        <tr>
-            <td class="w-25">${no++}</td>
-            <td>${formatDateFromDb(vData.created_at)}</td>
-            <td>${capitalizeEachWord(vData.status_histori)}</td>
-        </tr>
-        `;
-    });
-
-    $(".loadServiceHistory").html(outputService);
-};
+select2Standard({
+    parent: ".content-wrapper",
+    selector: "select[name='status_pservis']",
+});
 
 const viewRender = () => {
     $.ajax({
         url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
         type: 'get',
-        dataType: 'text',
+        dataType: 'json',
         data: {
             loadData: true,
         },
@@ -49,91 +30,12 @@ const viewRender = () => {
             $('#load_viewdata').removeClass("d-none");
         },
         success: function(data){
-            $('#output_data').html(data);
-        },
-        complete: function(){
-            $('#load_viewdata').addClass("d-none");
-        }
-    })
-}
+            const result = data.data.row.order_barang;
+            const serviceHistory = data.data.row.service_history;
+            jsonServiceHistory = serviceHistory;
+            statusPservis = data.data.row.status_pservis;;
 
-const viewRenderServis = () => {
-    $.ajax({
-        url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
-        type: 'get',
-        dataType: 'text',
-        data: {
-            loadDataServis: true,
-        },
-        success: function(data){
-            $('.output_data_servis').html(data);
-        },
-    })
-}
-
-const refreshData = () => {
-    $.ajax({
-        url: `${urlRoot}/service/penerimaanServis/${jsonPenerimaanServisId}`,
-        dataType: "json",
-        type: "get",
-        data: {
-            refresh: true,
-        },
-        success: function (data) {
-            viewRender();
-        },
-    });
-};
-var renderListServis = () => {};
-var renderListBarang = () => {};
-var setOrderBarang = [];
-
-renderListServis = (data) => {
-    let output = ``;
-    const { result, totalHargaServis } = data;
-    let no = 1;
-    result.map((v) => {
-        output += `
-    <tr>
-        <td>${no++}</td>
-        <td>${v.harga_servis.kategori_servis.nama_kservis}</td>
-        <td>${v.harga_servis.nama_hargaservis}</td>
-        <td>${v.users_mekanik != null ? v.users_mekanik.name : "-"}</td>
-        <td>${formatUang(v.harga_servis.total_hargaservis)}</td>
-        <td>
-            <a href="#" 
-                data-urlcreate="${urlRoot}/service/orderServis/${v.id}/edit"
-                data-typemodal="mediumModal"
-                class="btn btn-primary update-users-mekanik btn-small"
-                title="Masukan Data Mekanik">
-                <i class="fa-solid fa-wrench"></i>
-            </a>
-            <a href="${urlRoot}/service/orderServis/${
-            v.id
-        }?_method=delete" data-id="${v.id}"
-                class="btn btn-danger delete-order-servis btn-small"
-                title="Delete Order Servis">
-                <i class="fa-solid fa-trash"></i>
-            </a>
-        </td>
-    </tr>
-    `;
-    });
-    $(".onLoadServis").html(output);
-    $(".totalHargaServis").html(formatUang(totalHargaServis));
-    refreshData();
-};
-
-renderListBarang = (data, isOnlyTotalHarga = false) => {
-    let output = ``;
-    const { result, totalHargaBarang } = data;
-    let no = 1;
-    result.map((v) => {
-        if (!isOnlyTotalHarga) {
-            const checkFindIndex = setOrderBarang.findIndex(
-                (item) => item.id === v.id
-            );
-            if (checkFindIndex == -1) {
+            result.map(v => {
                 setOrderBarang.push({
                     id: v.id,
                     barang_id: v.barang.id,
@@ -151,89 +53,115 @@ renderListBarang = (data, isOnlyTotalHarga = false) => {
                             : v.diskon_orderbarang,
                     subtotal_orderbarang: v.subtotal_orderbarang,
                 });
-            }
+            })
+            $('#output_data').html(data.view);
+        },
+        complete: function(){
+            $('#load_viewdata').addClass("d-none");
         }
+    })
+}
 
-        if (!isOnlyTotalHarga) {
-            output += `
-    <tr>
-        <td>${no++}</td>
-        <td>${v.barang.nama_barang}</td>
-        <td>${formatUang(v.barang.hargajual_barang)}</td>
-        <td>
-            <input
-                name="qty_orderbarang"
-                class="qty_orderbarang form-control" 
-                data-id="${v.id}" 
-                value="${formatUang(v.qty_orderbarang)}"
-                title="Stok Barang: ${v.barang.stok_barang}"
-                />
-        </td>
-        <td>
-            <select name="typediskon_orderbarang" class="form-select" data-id="${
-                v.id
-            }">
-                <option value="" selected>Tipe Diskon</option>`;
-            Object.keys(jsonTipeDiskon).map((item, i) => {
-                output += `
-                    <option value="${item}" ${
-                    v.typediskon_orderbarang == item ? "selected" : ""
-                }>${jsonTipeDiskon[item]}</option>
-                    `;
-            });
-
-            output += `
-            </select>
-        </td>
-        <td>
-            <input
-                name="diskon_orderbarang"
-                class="diskon_orderbarang form-control" 
-                data-id="${v.id}" 
-                value="${
-                    v.diskon_orderbarang == null
-                        ? ""
-                        : formatUang(v.diskon_orderbarang)
-                }"
-                ${v.typediskon_orderbarang == null ? "disabled" : ""} />
-        </td>
-        <td>
-            <span class="output_subtotal_orderbarang" data-id="${v.id}">
-                ${formatUang(v.subtotal_orderbarang)}
-            </span>
-        </td>
-        <td>
-            <a href="${urlRoot}/service/orderBarang/${
-                v.id
-            }?_method=delete" data-id="${v.id}"
-                class="btn btn-danger delete-order-barang btn-small"
-                title="Delete Order Barang">
-                <i class="fa-solid fa-trash"></i>
-            </a>
-        </td>
-    </tr>
-    `;
+const viewServiceHistori = () => {
+    $.ajax({
+        url: `${urlRoot}/service/outputUpdateService/${jsonPenerimaanServisId}`,
+        type: 'get',
+        dataType: 'json',
+        beforeSend: function(){
+            $('#load_view_data_history').removeClass('d-none');
+        },
+        data: {
+            loadDataHistory: true,
+        },
+        success: function(data){
+            $('.output_data_history').html(data.service_history);
+        },
+        complete: function(){
+            $('#load_view_data_history').addClass('d-none');
         }
+    })
+}
 
-        if (isOnlyTotalHarga) {
-            $(`input[name="qty_orderbarang"][data-id="${v.id}" ]`).attr(
-                "title",
-                `Stok Barang: ${v.barang.stok_barang}`
-            );
+const viewRenderServis = () => {
+    $.ajax({
+        url: `${urlRoot}/service/outputUpdateService/${jsonPenerimaanServisId}`,
+        type: 'get',
+        dataType: 'json',
+        beforeSend: function(){
+            $('#load_viewdata_orderservis').removeClass('d-none');
+            $('#load_output_informasi_servis').removeClass('d-none');
+            
+            $('.output_informasi_servis').html('');
+
+        },
+        data: {
+            loadDataServis: true,
+        },
+        success: function(data){
+            $('.output_data_servis').html(data.order_servis);
+            $('.output_informasi_servis').html(data.informasi_servis);
+        },
+        complete: function(){
+            $('#load_viewdata_orderservis').addClass('d-none');
+            $('#load_output_informasi_servis').addClass('d-none');
         }
-    });
+    })
+}
 
-    if (!isOnlyTotalHarga) {
-        $(".loadOrderBarang").html(output);
-    }
+const viewRenderSparepart = () => {
+    $.ajax({
+        url: `${urlRoot}/service/outputUpdateService/${jsonPenerimaanServisId}`,
+        type: 'get',
+        dataType: 'json',
+        beforeSend: function(){
+            $('#load_viewdata_order_barang').removeClass('d-none');
+            $('#load_output_informasi_servis').removeClass('d-none');
+            
+            $('.output_informasi_servis').html('');
 
-    $(".totalHargaBarang").html(formatUang(totalHargaBarang));
-    refreshData();
-};
+        },
+        data: {
+            loadDataSparepart: true,
+        },
+        success: function(data){
+            $('.output_order_barang').html(data.order_barang);
+            $('.output_informasi_servis').html(data.informasi_servis);
 
+            const result = data.row.order_barang;
+            result.map(v => {
+                const searchData = setOrderBarang.findIndex(item => item.id === v.id);
+                if(searchData === -1){
+                    setOrderBarang.push({
+                        id: v.id,
+                        barang_id: v.barang.id,
+                        nama_barang: v.barang.nama_barang,
+                        hargajual_barang: v.barang.hargajual_barang,
+                        stok_barang: v.barang.stok_barang,
+                        qty_orderbarang: v.qty_orderbarang,
+                        typediskon_orderbarang:
+                            v.typediskon_orderbarang == null
+                                ? ""
+                                : v.typediskon_orderbarang,
+                        diskon_orderbarang:
+                            v.diskon_orderbarang == null
+                                ? ""
+                                : v.diskon_orderbarang,
+                        subtotal_orderbarang: v.subtotal_orderbarang,
+                    });
+                }
+            })
+        },
+        complete: function(){
+            $('#load_viewdata_order_barang').addClass('d-none');
+            $('#load_output_informasi_servis').addClass('d-none');
+        }
+    })
+}
+
+var setOrderBarang = [];
 $(document).ready(function () {
-    refreshData();
-
+    viewRender();
+    
     var body = $("body");
     body.on("click", ".detail-customer", function () {
         showModal({
@@ -261,21 +189,6 @@ $(document).ready(function () {
             type: "get",
         });
     });
-
-    const getListServis = () => {
-        $.ajax({
-            url: $(".url_get_order_servis").data("url"),
-            type: "get",
-            dataType: "json",
-            data: {
-                penerimaan_servis_id: jsonPenerimaanServisId,
-            },
-            success: function (data) {
-                renderListServis(data);
-            },
-        });
-    };
-    getListServis();
 
     body.on("change", "select[name='harga_servis_id']", function () {
         const value = $(this).val();
@@ -305,9 +218,7 @@ $(document).ready(function () {
             success: function (data) {
                 viewRenderServis();
             },
-        });
-
-        
+        });        
     });
 
     body.on("click", ".delete-order-servis", function (e) {
@@ -319,7 +230,8 @@ $(document).ready(function () {
                 penerimaan_servis_id: jsonPenerimaanServisId,
             },
             text: "Apakah anda yakin ingin menghapus item ini?",
-            dataFunction: renderListServis,
+            dataFunction: viewRenderServis,
+            isRenderView: true,
         });
     });
 
@@ -331,25 +243,9 @@ $(document).ready(function () {
             modalId: $(this).data("typemodal"),
             title: "Form Pilih Mekanik",
             type: "get",
-            renderData: renderListServis,
+            renderData: viewRenderServis
         });
     });
-
-    // barang
-    const getListBarang = () => {
-        $.ajax({
-            url: `${urlRoot}/service/orderBarang`,
-            type: "get",
-            dataType: "json",
-            data: {
-                penerimaan_servis_id: jsonPenerimaanServisId,
-            },
-            success: function (data) {
-                renderListBarang(data);
-            },
-        });
-    };
-    getListBarang();
 
     body.on("change", "select[name='barang_id']", function () {
         const value = $(this).val();
@@ -417,8 +313,7 @@ $(document).ready(function () {
             dataType: "json",
             data: payload,
             success: function (data) {
-                renderListBarang(data);
-                refreshData();
+                viewRenderSparepart();
             },
         });
     });
@@ -430,8 +325,8 @@ $(document).ready(function () {
             dataType: "json",
             data: payload,
             success: function (data) {
-                renderListBarang(data, true);
-                refreshData();
+                viewRenderSparepart();
+            
             },
         });
     };
@@ -659,7 +554,8 @@ $(document).ready(function () {
                 penerimaan_servis_id: jsonPenerimaanServisId,
             },
             text: "Apakah anda yakin ingin menghapus item ini?",
-            dataFunction: renderListBarang,
+            dataFunction: viewRenderSparepart,
+            isRenderView: true,
         });
     });
 
@@ -721,9 +617,6 @@ $(document).ready(function () {
                 url: `${urlRoot}/service/estimasiServis/${jsonPenerimaanServisId}/nextProcess`,
                 type: "post",
                 dataType: "json",
-                success: function (data) {
-                    refreshData();
-                },
             });
         }
 
@@ -776,20 +669,7 @@ $(document).ready(function () {
                         description: data,
                         type: "bg-success",
                     });
-                    refreshData();
-                    if (payload.status_pservis == "bisa diambil") {
-                        window.location.href = `${urlRoot}/service/pengembalianServis/${jsonPenerimaanServisId}`;
-                    }
-
-                    const statusCancel = [
-                        "tidak bisa",
-                        "cancel",
-                        "komplain garansi",
-                        "sudah diambil",
-                    ];
-                    if (statusCancel.includes(payload.status_pservis)) {
-                        window.location.href = `${urlRoot}/service/kendaraanServis/${jsonPenerimaanServisId}`;
-                    }
+                    viewRenderSparepart();
                 },
                 error: function (jqXHR, exception) {
                     $(".btn-submit-data").attr("disabled", false);
@@ -805,31 +685,8 @@ $(document).ready(function () {
             });
         };
 
-        let booleanStatus = false;
-        if (getValueStatus == "bisa diambil") {
-            Swal.fire({
-                title: "Konfirmasi",
-                html: `Apakah anda yakin ingin konfirmasi bahwa servis sudah bisa diambil ? <br /><br /> 
-                <strong> Proses ini tidak dapat diedit kembali, 
-                jika terjadi kesalahan maka wajib menghapus dan buat dari awal</strong>`,
-                icon: "warning",
-                dangerMode: true,
-                showCancelButton: true,
-                confirmButtonText: "Ya, hapus",
-                cancelButtonText: "Tidak",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    booleanStatus = true;
-                    submitAjaxData();
-                }
-            });
-        } else {
-            booleanStatus = true;
-        }
 
-        if (booleanStatus) {
-            submitAjaxData();
-        }
+        submitAjaxData();
     });
 
     const renderPrintKasir = () => {

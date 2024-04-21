@@ -32,15 +32,13 @@ function submitData() {
             $("#btn-submit").html(disableButton);
         },
         success: function (data) {
-            if (data.is_bring_data) {
-                renderListServis(data);
-                myModal.hide();
-                runToast({
-                    title: "Successfully",
-                    description: data.message,
-                    type: "bg-success",
-                });
-            }
+            myModal.hide();
+            runToast({
+                title: "Successfully",
+                description: data.message,
+                type: "bg-success",
+            });
+            viewRenderServis();
         },
         error: function (jqXHR, exception) {
             $("#btn-submit").attr("disabled", false);

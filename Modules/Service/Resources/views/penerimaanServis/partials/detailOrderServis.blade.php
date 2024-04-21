@@ -11,8 +11,22 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="output_data_servis">
-            @include('service::penerimaanServis.output.servis')
+        <div class="table-responsive text-nowrap px-3">
+            <table class="table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Kategori Servis</th>
+                        <th>Nama Servis</th>
+                        <th>Mekanik</th>
+                        <th>Biaya</th>
+                        <th style="width: 15%;">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="output_data_servis">
+                    @include('service::penerimaanServis.output.servis')
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

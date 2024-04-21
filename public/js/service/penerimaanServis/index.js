@@ -68,6 +68,16 @@ $(document).ready(function () {
         });
     });
 
+    body.on("click", ".btn-edit", function (e) {
+        e.preventDefault();
+        showModal({
+            url: $(this).attr("href"),
+            modalId: $(this).data("typemodal"),
+            title: "Form Penerimaan Service",
+            type: "get",
+        });
+    });
+
     body.on("click", ".btn-delete", function (e) {
         e.preventDefault();
         basicDeleteConfirmDatatable({

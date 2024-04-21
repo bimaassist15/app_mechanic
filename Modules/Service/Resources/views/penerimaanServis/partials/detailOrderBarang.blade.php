@@ -26,17 +26,9 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody class="table-border-bottom-0 loadOrderBarang" id="">
+                <tbody class="table-border-bottom-0 output_order_barang" id="">
+                    @include('service::penerimaanServis.output.orderBarang')
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="6" class="text-end">
-                            <strong>Total Biaya Sparepart</strong>
-                        </td>
-                        <td class="totalHargaBarang">Rp. 0</td>
-                        <td></td>
-                    </tr>
-                </tfoot>
             </table>
         </div>
     </div>

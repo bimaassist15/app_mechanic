@@ -70,6 +70,11 @@ class EstimasiServisController extends Controller
                                 <i class="fa-solid fa-trash"></i> &nbsp; Delete</a>
                         </li>
                         <li>
+                            <a href="' . url('service/penerimaanServis/create?isEdit=true&id=' . $row->id) . '"
+                                class="dropdown-item d-flex align-items-center btn-edit" data-typemodal="extraLargeModal">
+                                <i class="fa-solid fa-pencil"></i> &nbsp; Edit</a>
+                        </li>
+                        <li>
                             <a href="' . url('service/penerimaanServis/print/' . $row->id . '/penerimaanServis') . '"
                                 class="dropdown-item d-flex align-items-center btn-print">
                                 <i class="fa-solid fa-print"></i> &nbsp; Print Antrian</a>

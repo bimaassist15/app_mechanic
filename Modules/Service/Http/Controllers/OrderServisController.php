@@ -108,8 +108,6 @@ class OrderServisController extends Controller
         return response()->json([
             'result' => $getOrder,
             'totalHargaServis' => $totalHargaServis,
-
-            'is_bring_data' => true,
             'message' => 'Berhasil tambah mekanik'
         ], 200);
     }
@@ -156,12 +154,6 @@ class OrderServisController extends Controller
         $getOrder = $order->getOrderServis()->where('penerimaan_servis_id', $penerimaan_servis_id)->get();
         $totalHargaServis = $getOrder->sum('harga_orderservis');
 
-        return response()->json([
-            'result' => $getOrder,
-            'totalHargaServis' => $totalHargaServis,
-
-            'is_bring_data' => true,
-            'message' => 'Berhasil hapus data',
-        ], 200);
+        return response()->json('Berhasil hapus data');
     }
 }

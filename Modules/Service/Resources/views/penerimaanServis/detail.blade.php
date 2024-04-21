@@ -27,7 +27,6 @@
     <script class="penerimaanServisId" data-value="{{ $penerimaanServisId }}"></script>
     <script class="getServis" data-value="{{ $getServis }}"></script>
     <script class="getBarang" data-value="{{ $barang }}"></script>
-    <script class="getTipeDiskon" data-value="{{ $tipeDiskon }}"></script>
     <script class="cabangId" data-value="{{ $cabangId }}"></script>
     <script src="{{ asset('js/service/penerimaanServis/detail.js') }}"></script>
 @endpush

@@ -26,7 +26,7 @@
                                 class="btn btn-success btn-remember-estimasi">
                                 <i class="fa-brands fa-whatsapp"></i> &nbsp; Ingatkan Customer</a>';
 
-                        if ($row->keteranganestimasi_pservis) {
+                        if ($row->isrememberestimasi_pservis) {
                             $output_estimasi = '
                             <span class="badge bg-primary"><i class="fa-brands fa-whatsapp"></i> Sudah Diingatkan</span>
                             ';

@@ -61,6 +61,11 @@ class PenerimaanServisController extends Controller
                                 <i class="fa-solid fa-trash"></i> &nbsp; Delete</a>
                         </li>
                         <li>
+                            <a href="' . url('service/penerimaanServis/create?isEdit=true&id=' . $row->id) . '"
+                                class="dropdown-item d-flex align-items-center btn-edit" data-typemodal="extraLargeModal">
+                                <i class="fa-solid fa-pencil"></i> &nbsp; Edit</a>
+                        </li>
+                        <li>
                             <a href="' . url('service/penerimaanServis/print/' . $row->id . '/penerimaanServis') . '"
                                 class="dropdown-item d-flex align-items-center btn-print">
                                 <i class="fa-solid fa-print"></i> &nbsp; Print Antrian</a>
@@ -116,7 +121,7 @@ class PenerimaanServisController extends Controller
             '
             ];
         }
-        $tipeDiskon = json_encode($this->datastatis['tipe_diskon']);
+        $tipeDiskon = ($this->datastatis['tipe_diskon']);
         $statusKendaraanServis = ($this->datastatis['status_kendaraan_servis']);
         $serviceBerkala = ($this->datastatis['servis_berkala']);
         $cabangId = session()->get('cabang_id');
@@ -153,19 +158,12 @@ class PenerimaanServisController extends Controller
             'pesanwa_berkala' => $pesanwa_berkala,
         ];
         if ($request->ajax()) {
-            $refresh = $request->input('refresh');
-            if ($refresh) {
-                return response()->json($data);
-            }
-
             $loadData = $request->input('loadData');
             if ($loadData) {
-                return view('service::penerimaanServis.output_detail', $data);
-            }
-
-            $loadDataServis = $request->input('loadDataServis');
-            if ($loadDataServis) {
-                return view('service::penerimaanServis.output.servis', $data);
+                return response()->json([
+                    'view' => view('service::penerimaanServis.output_detail', $data)->render(),
+                    'data' => $data,
+                ], 200);
             }
         }
 
@@ -243,11 +241,12 @@ class PenerimaanServisController extends Controller
         $dataUser = json_encode($dataUser);
         $defaultUser = Auth::id();
         $cabangId = session()->get('cabang_id');
-        $isEdit = $request->query('isEdit');
         $penerimaanServis = new PenerimaanServis();
 
         $pesanwa_estimasi = $this->datastatis['pesanwa_estimasi'];
         $totalHutang = 0;
+        $id = $request->input('id');
+        $isEdit = $request->input('isEdit');
         $data = [
             'array_kategori_pembayaran' => $array_kategori_pembayaran,
             'kategoriPembayaran' => $kategoriPembayaran,
@@ -256,7 +255,6 @@ class PenerimaanServisController extends Controller
             'dataUser' => $dataUser,
             'defaultUser' => $defaultUser,
             'cabangId' => $cabangId,
-            'isEdit' => $isEdit,
             'penerimaanServis' => $penerimaanServis,
             'totalHutang' => $totalHutang,
             'array_kategori_servis' => $array_kategori_servis,
@@ -265,6 +263,8 @@ class PenerimaanServisController extends Controller
             'action' => $action,
             'kendaraanServis' => $kendaraanServis,
             'pesanwa_estimasi' => $pesanwa_estimasi,
+            'row' => $penerimaanServis->transaksiServis($id),
+            'isEdit' => $isEdit,
         ];
         if ($request->input('refresh_dataset')) {
             return response()->json($data);
@@ -280,6 +280,13 @@ class PenerimaanServisController extends Controller
      */
     public function store(Request $request)
     {
+        $payloadEdit = $request->input('payloadEdit');
+        $isEdit = $payloadEdit['isEdit'];
+        if ($isEdit) {
+            $penerimaan_servis_id = $payloadEdit['penerimaan_servis_id'];
+            $this->deletePenerimaanServis($penerimaan_servis_id);
+        }
+
         $payloadPenerimaanServis = $request->input('payloadPenerimaanServis');
         $payloadPembayaranServis = $request->input('payloadPembayaranServis');
         $payloadSaldoCustomer = $request->input('payloadSaldoCustomer');
@@ -376,7 +383,7 @@ class PenerimaanServisController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    private function deletePenerimaanServis($id)
     {
         //
         $penerimaanServis = new PenerimaanServis();
@@ -412,6 +419,11 @@ class PenerimaanServisController extends Controller
         }
 
         PenerimaanServis::destroy($id);
+    }
+
+    public function destroy($id)
+    {
+        $this->deletePenerimaanServis($id);
         return response()->json('Berhasil hapus data', 200);
     }
 
@@ -483,5 +495,80 @@ class PenerimaanServisController extends Controller
         }
 
         return response()->json('Berhasil menambahkan progress pengerjaan');
+    }
+
+    // output
+    public function outputUpdateService(Request $request, $id)
+    {
+        $loadDataServis = $request->input('loadDataServis');
+        if ($loadDataServis) {
+            $penerimaanServis = new PenerimaanServis();
+            $row = $penerimaanServis->transaksiServis($id);
+            $statusKendaraanServis = ($this->datastatis['status_kendaraan_servis']);
+            $array_status_kendaraan = [];
+            foreach ($statusKendaraanServis as $key => $item) {
+                $array_status_kendaraan[] = [
+                    'label' => $item,
+                    'id' => $key,
+                ];
+            }
+            // servis
+            $data = [
+                'row' => $row,
+                'statusKendaraanServis' => $array_status_kendaraan
+            ];
+
+            $htmlOrderServis = view('service::penerimaanServis.output.servis', $data)->render();
+
+            // informasi servis
+            $row = $penerimaanServis->transaksiServis($id);
+            $data = [
+                'row' => $row,
+                'statusKendaraanServis' => $array_status_kendaraan
+            ];
+            $htmlInformasiServis = view('service::penerimaanServis.output.informasiServis', $data)->render();
+
+            return response()->json([
+                'order_servis' => $htmlOrderServis,
+                'informasi_servis' => $htmlInformasiServis,
+            ]);
+        }
+
+        $loadDataSparepart = $request->input('loadDataSparepart');
+        if ($loadDataSparepart) {
+            $penerimaanServis = new PenerimaanServis();
+            $row = $penerimaanServis->transaksiServis($id);
+            $statusKendaraanServis = ($this->datastatis['status_kendaraan_servis']);
+            $array_status_kendaraan = [];
+            foreach ($statusKendaraanServis as $key => $item) {
+                $array_status_kendaraan[] = [
+                    'label' => $item,
+                    'id' => $key,
+                ];
+            }
+            // servis
+            $tipeDiskon = ($this->datastatis['tipe_diskon']);
+            $data = [
+                'row' => $row,
+                'statusKendaraanServis' => $array_status_kendaraan,
+                'tipeDiskon' => $tipeDiskon,
+            ];
+
+            $htmlOrderBarang = view('service::penerimaanServis.output.orderBarang', $data)->render();
+
+            // informasi servis
+            $row = $penerimaanServis->transaksiServis($id);
+            $data = [
+                'row' => $row,
+                'statusKendaraanServis' => $array_status_kendaraan
+            ];
+            $htmlInformasiServis = view('service::penerimaanServis.output.informasiServis', $data)->render();
+
+            return response()->json([
+                'row' => $row,
+                'order_barang' => $htmlOrderBarang,
+                'informasi_servis' => $htmlInformasiServis,
+            ]);
+        }
     }
 }
