@@ -21,5 +21,10 @@ select2Standard({
 
 select2Standard({
     parent: ".content-wrapper",
+    selector: "select[name='kategori_pembayaran_id']",
+});
+
+select2Standard({
+    parent: ".content-wrapper",
     selector: "select[name='tipeberkala_pservis']",
 });

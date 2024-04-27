@@ -162,6 +162,27 @@ class EstimasiServisController extends Controller
             $barang->save();
         }
 
+        // update penerimaan servis
+        $dateNow = date('Y-m-d');
+        $noAntrianStatis = PenerimaanServis::dataTable()
+            ->whereDate('created_at', $dateNow)
+            ->where('status_pservis', '!=', null)
+            ->orderBy('id', 'asc')
+            ->pluck('noantrian_pservis')
+            ->max();
+        $noNotaStatis = PenerimaanServis::dataTable()
+            ->where('status_pservis', '!=', null)
+            ->orderBy('id', 'asc')
+            ->pluck('nonota_pservis')
+            ->max();
+
+        $noAntrianStatis++;
+        $noNotaStatis++;
+        PenerimaanServis::find($id)->update([
+            'noantrian_pservis' => $noAntrianStatis,
+            'nonota_pservis' => $noNotaStatis,
+        ]);
+
         return response()->json('Berhasil melanjutkan proses dari estimasi servis ke antrian servis masuk');
     }
 }

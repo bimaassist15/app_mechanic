@@ -1,30 +1,27 @@
 @extends('layouts.app.index')
 
 @section('title')
-    Detail Garansi
+    Detail Garansi Servis
 @endsection
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
-        <div class="areaPengembalianServis">
-            @include('service::garansi.partialsPengembalian.detailInfoAwal')
+        @include('service::garansi.partials.detailInfoAwal')
 
-            @include('service::viewGroupService.partialsPengembalian.detailCustomer')
-
-            @include('service::viewGroupService.partialsPengembalian.detailOrderServis')
-
-            @include('service::viewGroupService.partialsPengembalian.detailOrderBarang')
-
-            @include('service::viewGroupService.partialsPengembalian.detailHistori')
-
-            @include('service::viewGroupService.partialsPengembalian.detailInformasiServis')
+        <div id="load_viewdata" class="text-center">
+            <div>
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <strong>Loading...</strong>
         </div>
+        <div id="output_data"></div>
     </div>
 @endsection
 
 @push('custom_js')
-    @include('service::groupService.pengembalian')
-    <script>
-        runDataPengembalian();
-    </script>
+    <script class="url_root" data-url="{{ url('/') }}"></script>
+    <script class="penerimaanServisId" data-value="{{ $penerimaanServisId }}"></script>
+    <script src="{{ asset('js/service/main/index.js') }}"></script>
 @endpush

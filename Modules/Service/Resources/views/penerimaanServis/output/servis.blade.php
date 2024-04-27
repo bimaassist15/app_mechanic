@@ -1,7 +1,10 @@
 @php
     $no = 1;
     $totalHargaServis = $row->orderServis->sum('harga_orderservis');
+    $allowedSudahDiambil = ['sudah diambil', 'komplain garansi'];
+
 @endphp
+
 @foreach ($row->orderServis as $item)
     @php
         $kategoriServis = $item->hargaServis->kategoriServis;
@@ -15,15 +18,16 @@
         <td>{{ $usersMekanik->name ?? '-' }}</td>
         <td>{{ UtilsHelp::formatUang($hargaServis->total_hargaservis) }}</td>
         <td>
-            <a href="#" data-urlcreate="{{ url('/service/orderServis/' . $item->id . '/edit') }}"
-                data-typemodal="mediumModal" class="btn btn-primary update-users-mekanik btn-small"
-                title="Masukan Data Mekanik">
+            <button data-urlcreate="{{ url('/service/orderServis/' . $item->id . '/edit') }}" data-typemodal="mediumModal"
+                class="btn btn-primary update-users-mekanik btn-small" title="Masukan Data Mekanik"
+                {{ in_array($row->status_pservis, $allowedSudahDiambil) ? 'disabled' : '' }}>
                 <i class="fa-solid fa-wrench"></i>
-            </a>
-            <a href="{{ url('/service/orderServis/' . $item->id . '?_method=delete') }}" data-id="{{ $item->id }}"
-                class="btn btn-danger delete-order-servis btn-small" title="Delete Order Servis">
+            </button>
+            <button data-urlcreate="{{ url('/service/orderServis/' . $item->id . '?_method=delete') }}"
+                data-id="{{ $item->id }}" class="btn btn-danger delete-order-servis btn-small"
+                title="Delete Order Servis" {{ in_array($row->status_pservis, $allowedSudahDiambil) ? 'disabled' : '' }}>
                 <i class="fa-solid fa-trash"></i>
-            </a>
+            </button>
         </td>
     </tr>
 @endforeach

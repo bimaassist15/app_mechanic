@@ -1,3 +1,6 @@
+@php
+    $allowedSudahDiambil = ['sudah diambil', 'komplain garansi'];
+@endphp
 <div class="card mt-4">
     <div class="card-header">
         <div class="d-flex justify-content-between">
@@ -6,7 +9,8 @@
                     {{ $row->nonota_pservis }}</strong>
             </div>
             <div class="w-50">
-                <x-form-select-vertical label="Cari Barang" name="barang_id" :data="$array_barang" value="" />
+                <x-form-select-vertical label="Cari Barang" name="barang_id" :data="$array_barang" value=""
+                    disabled="{{ in_array($row->status_pservis, $allowedSudahDiambil) ? 'disabled' : '' }}" />
             </div>
         </div>
 

@@ -1,44 +1,27 @@
 @extends('layouts.app.index')
 
 @section('title')
-    Detail Pengembalian Servis
+    Detail Pengambilan Servis
 @endsection
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         @include('service::pengembalianServis.partials.detailInfoAwal')
 
-        @include('service::pengembalianServis.partials.detailCustomer')
-
-        @include('service::pengembalianServis.partials.detailOrderServis')
-
-        @include('service::pengembalianServis.partials.detailOrderBarang')
-
-        @include('service::pengembalianServis.partials.detailHistori')
-
-        @include('service::pengembalianServis.partials.detailInformasiServis')
-
+        <div id="load_viewdata" class="text-center">
+            <div>
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <strong>Loading...</strong>
+        </div>
+        <div id="output_data"></div>
     </div>
 @endsection
 
 @push('custom_js')
     <script class="url_root" data-url="{{ url('/') }}"></script>
-    <script class="penerimaan_servis_id" data-value="{{ $row->id }}"></script>
-
-    {{-- pembayaran --}}
-    <script class="json_kategori_pembayaran" data-json="{{ $kategoriPembayaran }}"></script>
-    <script class="json_array_kategori_pembayaran" data-json="{{ $array_kategori_pembayaran }}"></script>
-    <script class="json_sub_pembayaran" data-json="{{ $subPembayaran }}"></script>
-    <script class="json_array_sub_pembayaran" data-json="{{ $array_sub_pembayaran }}"></script>
-    <script class="json_data_user" data-json="{{ $dataUser }}"></script>
-    <script class="json_cabang_id" data-json="{{ $cabangId }}"></script>
-    <script class="jsonRow" data-json="{{ $jsonRow }}"></script>
-
-    <script class="getPembayaranServis" data-value="{{ $getPembayaranServis }}"></script>
-    <script class="is_deposit" data-value="{{ $is_deposit }}"></script>
-    <script class="totalHutang" data-value="{{ $totalHutang }}"></script>
-    <script class="defaultUser" data-value="{{ $defaultUser }}"></script>
-
-    {{-- end pembayaran --}}
-    <script src="{{ asset('js/service/pengembalianServis/detail.js') }}"></script>
+    <script class="penerimaanServisId" data-value="{{ $penerimaanServisId }}"></script>
+    <script src="{{ asset('js/service/main/index.js') }}"></script>
 @endpush

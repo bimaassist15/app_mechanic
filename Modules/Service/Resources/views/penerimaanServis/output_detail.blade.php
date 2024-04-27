@@ -1,15 +1,13 @@
 <div>
-    @include('service::penerimaanServis.partials.detailInfoAwal')
+    @include('service::serviceMain.detailCustomer')
 
-    @include('service::penerimaanServis.partials.detailCustomer')
+    @include('service::serviceMain.detailOrderServis')
 
-    @include('service::penerimaanServis.partials.detailOrderServis')
+    @include('service::serviceMain.detailOrderBarang')
 
-    @include('service::penerimaanServis.partials.detailOrderBarang')
+    @include('service::serviceMain.detailHistori')
 
-    @include('service::penerimaanServis.partials.detailHistori')
-
-    @include('service::penerimaanServis.partials.detailInformasiServis')
+    @include('service::serviceMain.detailInformasiServis')
 </div>
 
 <script src="{{ asset('js/service/updateServis/index.js') }}"></script>

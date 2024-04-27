@@ -1,3 +1,6 @@
+@php
+    $allowedSudahDiambil = ['sudah diambil', 'komplain garansi'];
+@endphp
 <div class="card mt-4">
     <div class="card-header">
         Informasi Servis <strong style="font-weight: 800; color:rgb(102, 102, 230);">No. Nota
